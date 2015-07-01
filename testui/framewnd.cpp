@@ -7,18 +7,9 @@
 CFrameWnd::CFrameWnd( LPCTSTR pszXMLPath )
 : CXMLWnd(pszXMLPath)
 {
-	pWebBrowser = NULL;
 	m_pLastClickBtn = NULL;
 }
 
-HRESULT STDMETHODCALLTYPE CFrameWnd::GetHostInfo( DOCHOSTUIINFO __RPC_FAR *pInfo)
-{
-	if (pInfo != NULL)
-	{
-		pInfo->dwFlags |= DOCHOSTUIFLAG_NO3DBORDER|DOCHOSTUIFLAG_THEME |DOCHOSTUIFLAG_NO3DOUTERBORDER ;
-	}
-	return S_OK;
-}
 
 void CFrameWnd::InitWindow()
 {
@@ -63,11 +54,26 @@ void CFrameWnd::InitWindow()
 	}
 	// 初始化CActiveXUI控件
 	//CActiveXUI* pActiveXUI = static_cast<CActiveXUI*>(m_PaintManager.FindControl(_T("ActiveXDemo1")));
-	pWebBrowser = static_cast<CWebBrowserUI*>(m_PaintManager.FindControl(_T("ie")));
-	pWebBrowser->SetWebBrowserEventHandler(this);
+	m_pWke = static_cast<CWkeWebkitUI*>(m_PaintManager.FindControl(_T("ie")));
+	if (m_pWke)
+	{
+		//jsBindFunction("msgBox", js_msgBox, 2);//这里绑定js函数，让js主动调用c++函数
+		//static wkeClientHandler hander;        //网页标题改变和URL改变的回调
+		//	hander.onTitleChanged = onTitleChanged;
+		//	hander.onURLChanged = onURLChanged;
+		//m_pWke->SetClientHandler(&hander);
+		//m_pWke->SetFile(_T("Html/index.html")/*msg.pSender->GetText().GetData()*/);
+		//m_pWke->d
+		m_pWke->SetURL(StringToWstring(m_shouye)); //一个漂亮的网站，大家可以自己试试
+		
+		//m_pWke->Invalidate();
 
-	pWebBrowser->NavigateUrl("about:blank");
-	pWebBrowser->NavigateUrl(m_shouye.c_str());
+	}
+	//pWebBrowser = static_cast<CWebBrowserUI*>(m_PaintManager.FindControl(_T("ie")));
+	//pWebBrowser->SetWebBrowserEventHandler(this);
+
+	//pWebBrowser->NavigateUrl("about:blank");
+	//pWebBrowser->NavigateUrl(m_shouye.c_str());
 
 	
 }
@@ -91,66 +97,75 @@ void CFrameWnd::Notify( TNotifyUI& msg )
 
 		if( msg.pSender->GetName() == _T("btnbbs") ) 
 		{
-			if( pWebBrowser != NULL ) 
+			if( m_pWke != NULL ) 
 			{
-				pWebBrowser->NavigateUrl(m_luntan.c_str());
+				//m_pWke->SetURL(StringToWstring(m_luntan)); 
+//				pWebBrowser->NavigateUrl(m_luntan.c_str());
 			}
 		}
 		else if( msg.pSender->GetName() == _T("btnsp") ) 
 		{
-			if( pWebBrowser != NULL ) 
+			if( m_pWke != NULL ) 
 			{
-				pWebBrowser->NavigateUrl(m_shipin.c_str());
+				//m_pWke->SetURL(StringToWstring(m_shipin)); 
+//				pWebBrowser->NavigateUrl(m_shipin.c_str());
 			}
 		}
 		else if( msg.pSender->GetName() == _T("btnwb") ) 
 		{
 
-			if( pWebBrowser != NULL ) 
+			if( m_pWke != NULL ) 
 			{
-				pWebBrowser->NavigateUrl(m_shuoshuo.c_str());
+				//m_pWke->SetURL(StringToWstring(m_shuoshuo)); 
+//				pWebBrowser->NavigateUrl(m_shuoshuo.c_str());
 			}
 		}
 		else if( msg.pSender->GetName() == _T("btnzx") ) 
 		{
-			if( pWebBrowser != NULL ) 
+			if( m_pWke != NULL ) 
 			{
-				pWebBrowser->NavigateUrl(m_zixun.c_str());
+				//m_pWke->SetURL(StringToWstring(m_zixun)); 
+//				pWebBrowser->NavigateUrl(m_zixun.c_str());
 			}
 		}
 		else if( msg.pSender->GetName() == _T("btnyxk") ) 
 		{
-			if( pWebBrowser != NULL ) 
+			if( m_pWke != NULL ) 
 			{
-				pWebBrowser->NavigateUrl(m_yxk.c_str());
+				//m_pWke->SetURL(StringToWstring(m_yxk)); 
+//				pWebBrowser->NavigateUrl(m_yxk.c_str());
 			}
 		}
 		else if( msg.pSender->GetName() == _T("btnyxq") ) 
 		{
-			if( pWebBrowser != NULL ) 
+			if( m_pWke != NULL ) 
 			{
-				pWebBrowser->NavigateUrl(m_yxq.c_str());
+				//m_pWke->SetURL(StringToWstring(m_yxq)); 
+//				pWebBrowser->NavigateUrl(m_yxq.c_str());
 			}
 		}
 		else if( msg.pSender->GetName() == _T("btnstart") ) 
 		{
-			if( pWebBrowser != NULL ) 
+			if( m_pWke != NULL ) 
 			{
-				pWebBrowser->NavigateUrl(m_start.c_str());
+				//m_pWke->SetURL(StringToWstring(m_start)); 
+//				pWebBrowser->NavigateUrl(m_start.c_str());
 			}
 		}
 		else if( msg.pSender->GetName() == _T("btnindex") ) 
 		{
-			if( pWebBrowser != NULL ) 
+			if( m_pWke != NULL ) 
 			{
-				pWebBrowser->NavigateUrl(_T(m_shouye.c_str()));
+				//m_pWke->SetURL(StringToWstring(m_shouye)); 
+				//pWebBrowser->NavigateUrl(m_shouye.c_str());
 			}
 		}
 		else if( msg.pSender->GetName() == _T("btnrefresh") ) 
 		{
-			if( pWebBrowser != NULL ) 
+			if( m_pWke != NULL ) 
 			{
-				pWebBrowser->Refresh();
+				//m_pWke->Invalidate();
+				//m_pWke->Refresh();
 			}
 		}
 	}
@@ -173,6 +188,10 @@ CControlUI* CFrameWnd::CreateControl( LPCTSTR pstrClassName )
 		//pBtn->Create(_T("MFC"), WS_VISIBLE | WS_CHILD | BS_PUSHBUTTON, CRect(0, 0, 0, 0), CWnd::FromHandle(m_PaintManager.GetPaintWindow()), 0);
 		//pUI->Attach(*pBtn);            
 		return pUI;
+	}
+	if (_tcsicmp(pstrClassName, _T("wkeWebkit")) == 0) 
+	{
+		return  new CWkeWebkitUI;
 	}
 
 	return NULL;
