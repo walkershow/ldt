@@ -1,24 +1,24 @@
 ﻿<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
-<Window size="887,604" caption="0,0,0,32" mininfo="887,604" maxinfo="887,604">
-    <VerticalLayout width="885" height="604" bkcolor="#FF44A3E0">
-        <HorizontalLayout width="885" height="36" bkcolor="#FF44A3E0" bordercolor="#FF44A3E0">
-            <Button name="btnindex" float="true" pos="1,0,0,0" width="105" height="36" textcolor="#FF000000" disabledtextcolor="#FFA7A6AA" align="center" normalimage="\image\LOGO.png" hotimage="image\LOGO_hot.png" />
-            <Button name="btnzx" float="true" pos="134,0,0,0" width="54" height="36" textcolor="#FF000000" disabledtextcolor="#FFA7A6AA" align="center" normalimage="image\top\normal\zx.png" hotimage="image\top\hot\zx.png" pushedimage="image\top\push\zx.png" focusedimage="image\top\push\zx.png" />
-            <Button name="btnsp" float="true" pos="188,0,0,0" width="54" height="36" textcolor="#FF000000" disabledtextcolor="#FFA7A6AA" align="center" normalimage="image\top\normal\sp.png" hotimage="image\top\hot\sp.png" pushedimage="image\top\push\sp.png" focusedimage="image\top\push\sp.png" />
-            <Button name="btnwb" float="true" pos="242,0,0,0" width="54" height="36" textcolor="#FF000000" disabledtextcolor="#FFA7A6AA" align="center" normalimage="image\top\normal\ss.png" hotimage="image\top\hot\ss.png" pushedimage="image\top\push\ss.png" focusedimage="image\top\push\ss.png" />
-            <Button name="btnyxk" float="true" pos="296,0,0,0" width="69" height="36" textcolor="#FF000000" disabledtextcolor="#FFA7A6AA" align="center" normalimage="image\top\normal\yxk.png" hotimage="image\top\hot\yxk.png" pushedimage="image\top\push\yxk.png" focusedimage="image\top\push\yxk.png" />
-            <Button name="btnyxq" float="true" pos="365,0,0,0" width="69" height="36" textcolor="#FF000000" disabledtextcolor="#FFA7A6AA" align="center" normalimage="image\top\normal\yxq.png" hotimage="image\top\hot\yxq.png" pushedimage="image\top\push\yxq.png" focusedimage="image\top\push\yxq.png" />
-            <Button name="btndspw" float="true" pos="434,0,0,0" width="89" height="36" textcolor="#FF000000" disabledtextcolor="#FFA7A6AA" align="center" normalimage="image\top\normal\dspw.png" hotimage="image\top\hot\dspw.png" pushedimage="image\top\push\dspw.png" focusedimage="image\top\nopushrmal\dspw.png" />
-            <Button name="btnjysc" float="true" pos="523,0,0,0" width="89" height="36" textcolor="#FF000000" disabledtextcolor="#FFA7A6AA" align="center" normalimage="image\top\normal\jysc.png" hotimage="image\top\hot\jysc.png" pushedimage="image\top\push\jysc.png" focusedimage="image\top\push\jysc.png" />
-            <Button float="true" pos="825,6,0,0" width="12" height="10" bkimage="image\top\设置.png" textcolor="#FF000000" disabledtextcolor="#FFA7A6AA" align="center" />
-            <Button name="minbtn" float="true" pos="845,6,0,0" width="10" height="10" bkimage="image\top\缩小.png" minwidth="10" textcolor="#FF000000" disabledtextcolor="#FFA7A6AA" align="center" />
-            <Button name="closebtn" float="true" pos="865,6,0,0" width="10" height="10" bkimage="image\top\关闭.png" textcolor="#FF000000" disabledtextcolor="#FFA7A6AA" align="center" />
+<Window size="901,626" caption="0,0,0,32" mininfo="901,626" maxinfo="901,626" roundcorner="4,4">
+    <VerticalLayout width="901" height="626" bkimage="images\bj.png"  bkcolor="#FF44A3E0">
+        <HorizontalLayout width="885" height="43" >
+            <Button name="btnindex" float="true" pos="1,0,0,0" width="105" height="36" align="bottom" normalimage="\images\LOGO.png" hotimage="images\LOGO_hot.png" />
+            <Button name="btnzx" float="true" pos="134,17,0,0" width="68" height="35" textcolor="#FF000000" disabledtextcolor="#FFA7A6AA" align="center" normalimage="images\normal\zx.png" hotimage="images\hot\zx.png" pushedimage="images\push\zx.png" focusedimage="images\push\zx.png" />
+            <Button name="btnsp" float="true" pos="202,0,0,0" width="68" height="35" textcolor="#FF000000" disabledtextcolor="#FFA7A6AA" align="center" normalimage="images\normal\sp.png" hotimage="images\hot\sp.png" pushedimage="images\push\sp.png" focusedimage="images\push\sp.png" />
+            <Button name="btnwb" float="true" pos="270,0,0,0" width="68" height="35" textcolor="#FF000000" disabledtextcolor="#FFA7A6AA" align="center" normalimage="images\normal\ss.png" hotimage="images\hot\ss.png" pushedimage="images\push\ss.png" focusedimage="images\push\ss.png" />
+            <Button name="btnyxk" float="true" pos="338,0,0,0" width="82" height="35" textcolor="#FF000000" disabledtextcolor="#FFA7A6AA" align="center" normalimage="images\normal\yxk.png" hotimage="images\hot\yxk.png" pushedimage="images\push\yxk.png" focusedimage="images\push\yxk.png" />
+            <Button name="btnyxq" float="true" pos="420,0,0,0" width="82" height="35" textcolor="#FF000000" disabledtextcolor="#FFA7A6AA" align="center" normalimage="images\normal\yxq.png" hotimage="images\hot\yxq.png" pushedimage="images\push\yxq.png" focusedimage="images\push\yxq.png" />
+            <Button name="btndspw" float="true" pos="502,0,0,0" width="97" height="35" textcolor="#FF000000" disabledtextcolor="#FFA7A6AA" align="center" normalimage="images\normal\dspw.png" hotimage="images\hot\dspw.png" pushedimage="images\push\dspw.png" focusedimage="images\push\dspw.png" />
+            <Button name="btnjysc" float="true" pos="599,0,0,0" width="97" height="35" textcolor="#FF000000" disabledtextcolor="#FFA7A6AA" align="center" normalimage="images\normal\jysc.png" hotimage="images\hot\jysc.png" pushedimage="images\push\jysc.png" focusedimage="images\push\jysc.png" />
+            <Button float="true" pos="833,6,0,0" width="12" height="10" bkimage="images\设置.png" textcolor="#FF000000" disabledtextcolor="#FFA7A6AA" align="center" />
+            <Button name="minbtn" float="true" pos="853,6,0,0" width="10" height="10" bkimage="images\缩小.png" minwidth="10" textcolor="#FF000000" disabledtextcolor="#FFA7A6AA" align="center" />
+            <Button name="closebtn" float="true" pos="873,6,0,0" width="10" height="10" bkimage="images\关闭.png" textcolor="#FF000000" disabledtextcolor="#FFA7A6AA" align="center" />
         </HorizontalLayout>
         <HorizontalLayout>
             <HorizontalLayout bordercolor="#FF44A3E0">
-                <WebBrowser name="ie" float="true" pos="1,0,0,0" width="885" height="538" autonavi="true" delaycreate="false" />
-                <Button name="btnstart" float="true" pos="804,538,0,0" width="82" height="30" bkimage="image\top\start.png" textcolor="#FF000000" disabledtextcolor="#FFA7A6AA" align="center" />
-		<Button name="btnrefresh" float="true" text="刷新" pos="704,538,0,0" width="82" height="30"  />
+                <WebBrowser name="ie" float="true" pos="8,0,0,0" width="885" height="538" autonavi="true" delaycreate="false" />
+                <Button name="btnstart" float="true" pos="748,538,0,0" width="152" height="45" bkimage="images\ksyx.png" />
+		<Button name="btnrefresh" float="true" text="刷新" pos="690,538,0,0" width="82" height="30"  />
             </HorizontalLayout>
         </HorizontalLayout>
     </VerticalLayout>

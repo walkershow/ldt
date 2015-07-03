@@ -15,7 +15,10 @@ HRESULT STDMETHODCALLTYPE CFrameWnd::GetHostInfo( DOCHOSTUIINFO __RPC_FAR *pInfo
 {
 	if (pInfo != NULL)
 	{
-		pInfo->dwFlags |= DOCHOSTUIFLAG_NO3DBORDER|DOCHOSTUIFLAG_THEME |DOCHOSTUIFLAG_NO3DOUTERBORDER ;
+		//pInfo->dwFlags |= DOCHOSTUIFLAG_NO3DBORDER|DOCHOSTUIFLAG_THEME |DOCHOSTUIFLAG_NO3DOUTERBORDER ;
+		pInfo->dwFlags |= DOCHOSTUIFLAG_NO3DBORDER | DOCHOSTUIFLAG_THEME |   
+			DOCHOSTUIFLAG_NO3DOUTERBORDER | DOCHOSTUIFLAG_DIALOG |  
+			DOCHOSTUIFLAG_DISABLE_HELP_MENU | DOCHOSTUIFLAG_SCROLL_NO;; 
 	}
 	return S_OK;
 }
@@ -66,8 +69,8 @@ void CFrameWnd::InitWindow()
 	pWebBrowser = static_cast<CWebBrowserUI*>(m_PaintManager.FindControl(_T("ie")));
 	pWebBrowser->SetWebBrowserEventHandler(this);
 
-	pWebBrowser->NavigateUrl("about:blank");
-	pWebBrowser->NavigateUrl(m_shouye.c_str());
+	pWebBrowser->NavigateUrl(L"about:blank");
+	pWebBrowser->NavigateUrl(StringToWstring(m_shouye).c_str());
 
 	
 }
@@ -93,14 +96,16 @@ void CFrameWnd::Notify( TNotifyUI& msg )
 		{
 			if( pWebBrowser != NULL ) 
 			{
-				pWebBrowser->NavigateUrl(m_luntan.c_str());
+				pWebBrowser->NavigateUrl(StringToWstring(m_luntan).c_str());//m_luntan.c_str());
+
 			}
 		}
 		else if( msg.pSender->GetName() == _T("btnsp") ) 
 		{
 			if( pWebBrowser != NULL ) 
 			{
-				pWebBrowser->NavigateUrl(m_shipin.c_str());
+				pWebBrowser->NavigateUrl(StringToWstring(m_shipin).c_str());
+				//pWebBrowser->NavigateUrl(m_shipin.c_str());
 			}
 		}
 		else if( msg.pSender->GetName() == _T("btnwb") ) 
@@ -108,42 +113,48 @@ void CFrameWnd::Notify( TNotifyUI& msg )
 
 			if( pWebBrowser != NULL ) 
 			{
-				pWebBrowser->NavigateUrl(m_shuoshuo.c_str());
+				pWebBrowser->NavigateUrl(StringToWstring(m_shuoshuo).c_str());
+				//pWebBrowser->NavigateUrl(m_shuoshuo.c_str());
 			}
 		}
 		else if( msg.pSender->GetName() == _T("btnzx") ) 
 		{
 			if( pWebBrowser != NULL ) 
 			{
-				pWebBrowser->NavigateUrl(m_zixun.c_str());
+				pWebBrowser->NavigateUrl(StringToWstring(m_zixun).c_str());
+				//pWebBrowser->NavigateUrl(m_zixun.c_str());
 			}
 		}
 		else if( msg.pSender->GetName() == _T("btnyxk") ) 
 		{
 			if( pWebBrowser != NULL ) 
 			{
-				pWebBrowser->NavigateUrl(m_yxk.c_str());
+				pWebBrowser->NavigateUrl(StringToWstring(m_yxk).c_str());
+				//pWebBrowser->NavigateUrl(m_yxk.c_str());
 			}
 		}
 		else if( msg.pSender->GetName() == _T("btnyxq") ) 
 		{
 			if( pWebBrowser != NULL ) 
 			{
-				pWebBrowser->NavigateUrl(m_yxq.c_str());
+				pWebBrowser->NavigateUrl(StringToWstring(m_yxq).c_str());
+				//pWebBrowser->NavigateUrl(m_yxq.c_str());
 			}
 		}
 		else if( msg.pSender->GetName() == _T("btnstart") ) 
 		{
 			if( pWebBrowser != NULL ) 
 			{
-				pWebBrowser->NavigateUrl(m_start.c_str());
+				pWebBrowser->NavigateUrl(StringToWstring(m_start).c_str());
+				//pWebBrowser->NavigateUrl(m_start.c_str());
 			}
 		}
 		else if( msg.pSender->GetName() == _T("btnindex") ) 
 		{
 			if( pWebBrowser != NULL ) 
 			{
-				pWebBrowser->NavigateUrl(_T(m_shouye.c_str()));
+				pWebBrowser->NavigateUrl(StringToWstring(m_shouye).c_str());
+				//pWebBrowser->NavigateUrl(_T(m_shouye.c_str()));
 			}
 		}
 		else if( msg.pSender->GetName() == _T("btnrefresh") ) 
