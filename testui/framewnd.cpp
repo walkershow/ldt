@@ -4,25 +4,6 @@
 #include  <io.h>
 #include <fcntl.h>
 
-void CFrameWnd::WriteWebBrowserRegKey(LPCTSTR lpKey, DWORD dwValue)
-{
-	HKEY hk;
-	wstring str = L"Software\\Microsoft\\Internet Explorer\\Main\\FeatureControl\\";
-	str += lpKey;
-	if (RegCreateKey(HKEY_CURRENT_USER, str.c_str(), &hk) != 0)
-	{
-		MessageBox(NULL, L"打开注册表失败!", _T("Error"), 0);
-		ExitProcess(-1);
-	}
-	if (RegSetValueEx(hk, L"testui.exe", NULL, REG_DWORD, (const byte*)&dwValue, 4) != 0)
-	{
-		RegCloseKey(hk);
-		MessageBox(NULL, L"写注册表失败!", _T("Error"), 0);
-		ExitProcess(-1);
-	}
-	RegCloseKey(hk);
-}
-
 CFrameWnd::CFrameWnd( LPCTSTR pszXMLPath )
 : CXMLWnd(pszXMLPath)
 {
@@ -37,26 +18,14 @@ HRESULT STDMETHODCALLTYPE CFrameWnd::GetHostInfo( DOCHOSTUIINFO __RPC_FAR *pInfo
 		//pInfo->dwFlags |= DOCHOSTUIFLAG_NO3DBORDER|DOCHOSTUIFLAG_THEME |DOCHOSTUIFLAG_NO3DOUTERBORDER ;
 		pInfo->dwFlags |= DOCHOSTUIFLAG_NO3DBORDER | DOCHOSTUIFLAG_THEME |   
 			DOCHOSTUIFLAG_NO3DOUTERBORDER | DOCHOSTUIFLAG_DIALOG |  
-			DOCHOSTUIFLAG_DISABLE_HELP_MENU ;//;|//DOCHOSTUIFLAG_SCROLL_NO;; 
+			DOCHOSTUIFLAG_DISABLE_HELP_MENU | DOCHOSTUIFLAG_SCROLL_NO;; 
 	}
 	return S_OK;
 }
 
-void CFrameWnd::feature_browser()
-{
-	WriteWebBrowserRegKey(L"FEATURE_BROWSER_EMULATION", 9999);
-	WriteWebBrowserRegKey(L"FEATURE_BLOCK_LMZ_IMG", 1);
-	WriteWebBrowserRegKey(L"FEATURE_BLOCK_LMZ_OBJECT", 1);
-	WriteWebBrowserRegKey(L"FEATURE_BLOCK_LMZ_SCRIPT", 1);
-	WriteWebBrowserRegKey(L"FEATURE_Cross_Domain_Redirect_Mitigation", 1);
-	WriteWebBrowserRegKey(L"FEATURE_ENABLE_SCRIPT_PASTE_URLACTION_IF_PROMPT", 1);
-	WriteWebBrowserRegKey(L"FEATURE_LOCALMACHINE_LOCKDOWN", 1);
-	WriteWebBrowserRegKey(L"FEATURE_GPU_RENDERING", 1);
-}
 void CFrameWnd::InitWindow()
 {
 	//    SetIcon(IDR_MAINFRAME); // 设置任务栏图标
-	feature_browser();
 	CenterWindow();
 	IniFile ini;
 	char path[MAX_PATH+1]={0};
