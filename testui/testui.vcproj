@@ -41,6 +41,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
+				AdditionalIncludeDirectories="D:\thirdpart\DuiLib_Redrain-master\DuiLib"
 				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
@@ -61,6 +62,7 @@
 			<Tool
 				Name="VCLinkerTool"
 				LinkIncremental="2"
+				AdditionalLibraryDirectories="D:\thirdpart\DuiLib_Redrain-master\DLL2008"
 				IgnoreAllDefaultLibraries="false"
 				IgnoreDefaultLibraryNames=""
 				GenerateDebugInformation="true"
@@ -215,6 +217,10 @@
 			Filter="rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav"
 			UniqueIdentifier="{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}"
 			>
+			<File
+				RelativePath="..\debug\data.zip"
+				>
+			</File>
 			<File
 				RelativePath="..\Debug\image\LOGO.ico"
 				>

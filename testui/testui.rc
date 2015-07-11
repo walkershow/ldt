@@ -71,7 +71,14 @@ END
 
 // Icon with lowest ID value placed first to ensure application icon
 // remains consistent on all systems.
-IDI_ICON1               ICON                    "..\Debug\\image\\LOGO.ico"
+IDI_ICON1               ICON                    "..\\Debug\\image\\LOGO.ico"
+IDR_ZIPRES1				ZIPRES					"..\\Debug\\data.zip"
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// ZIPRES
+//
+
 #endif    // 中文(中华人民共和国) resources
 /////////////////////////////////////////////////////////////////////////////
 

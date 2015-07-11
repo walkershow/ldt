@@ -3,7 +3,7 @@
 #include <string>
 #include <comdef.h>
 #include <locale.h> 
-
+#include "resource.h"
 using namespace std;
 
 // 以XML生成界面的窗口基类
@@ -26,7 +26,15 @@ public:
 
 	virtual CDuiString GetSkinFolder()
 	{
-		return _T("");
+		return _T("images");
+	}
+	virtual UILIB_RESOURCETYPE GetResourceType() const
+	{
+		return UILIB_ZIPRESOURCE;
+	}
+	virtual LPCTSTR GetResourceID() const
+	{
+		return MAKEINTRESOURCE(IDR_ZIPRES1);
 	}
 
 protected:
@@ -83,6 +91,8 @@ public:
 	virtual void Notify(TNotifyUI& msg);
 	virtual CControlUI* CreateControl(LPCTSTR pstrClassName);
 	HRESULT STDMETHODCALLTYPE GetHostInfo(DOCHOSTUIINFO __RPC_FAR *pInfo);
+	void WriteWebBrowserRegKey(LPCTSTR lpKey, DWORD dwValue);
+	void feature_browser();
 private:
 	CWebBrowserUI* pWebBrowser;
 	CButtonUI* m_pLastClickBtn;
