@@ -18,7 +18,7 @@ HRESULT STDMETHODCALLTYPE CFrameWnd::GetHostInfo( DOCHOSTUIINFO __RPC_FAR *pInfo
 		//pInfo->dwFlags |= DOCHOSTUIFLAG_NO3DBORDER|DOCHOSTUIFLAG_THEME |DOCHOSTUIFLAG_NO3DOUTERBORDER ;
 		pInfo->dwFlags |= DOCHOSTUIFLAG_NO3DBORDER | DOCHOSTUIFLAG_THEME |   
 			DOCHOSTUIFLAG_NO3DOUTERBORDER | DOCHOSTUIFLAG_DIALOG |  
-			DOCHOSTUIFLAG_DISABLE_HELP_MENU | DOCHOSTUIFLAG_SCROLL_NO;; 
+			DOCHOSTUIFLAG_DISABLE_HELP_MENU;// | DOCHOSTUIFLAG_SCROLL_NO;; 
 	}
 	return S_OK;
 }
@@ -69,7 +69,7 @@ void CFrameWnd::InitWindow()
 	pWebBrowser = static_cast<CWebBrowserUI*>(m_PaintManager.FindControl(_T("ie")));
 	pWebBrowser->SetWebBrowserEventHandler(this);
 
-	pWebBrowser->NavigateUrl(L"about:blank");
+	//pWebBrowser->NavigateUrl(L"about:blank");
 	pWebBrowser->NavigateUrl(StringToWstring(m_shouye).c_str());
 
 	
