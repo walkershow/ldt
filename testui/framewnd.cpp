@@ -1,6 +1,5 @@
 //#include "resource.h"
 #include "FrameWnd.h"
-#include "cini.h"
 #include  <io.h>
 #include <fcntl.h>
 
@@ -27,144 +26,105 @@ void CFrameWnd::InitWindow()
 {
 	//    SetIcon(IDR_MAINFRAME); // 设置任务栏图标
 	CenterWindow();
-	IniFile ini;
-	char path[MAX_PATH+1]={0};
 
-
-	GetCurExeDir(path);
-	strcat_s(path, sizeof(path),"testui.ini" );
-	string webpath = "";
-	//MessageBoxA(NULL, path, "hi", 0);
-	if( (_access( path, 0 )) != -1 )
-	{
-		//MessageBoxA(NULL, path, "File testui.ini exists ", 0);
-		ini.SetFile(path);
-		int errline =0;
-		ini.load(errline);
-
-		//MessageBoxA(NULL, ini.ReadString("URLINFO","SHUOSHUO").c_str(), "File testui.ini exists ", 0);
-		m_shuoshuo = webpath + ini.ReadString("URLINFO","SHUOSHUO");
-		if (m_shuoshuo == webpath) m_shuoshuo ="about:blank";
-		//MessageBoxA(NULL, m_shuoshuo.c_str(), "File testui.ini exists ", 0);
-		m_luntan = webpath +ini.ReadString("URLINFO","LUNTAN");
-		if (m_luntan == webpath) m_luntan ="about:blank";
-		m_zixun = webpath +ini.ReadString("URLINFO","ZIXUN");
-		if (m_zixun == webpath) m_zixun ="about:blank";
-		m_shipin =webpath + ini.ReadString("URLINFO","SHIPIN");
-		if (m_shipin == webpath) m_shipin ="about:blank";
-		m_shouye = webpath +ini.ReadString("URLINFO","SHOUYE");
-		if (m_shouye == webpath) m_shouye ="about:blank";
-		m_yxk = webpath + ini.ReadString("URLINFO","YOUXIKU");
-		m_yxq = webpath +ini.ReadString("URLINFO","YOUXIQUAN");
-		if (m_yxq == webpath) m_yxq ="about:blank";
-		m_dspw = webpath +ini.ReadString("URLINFO","DSPW");
-		if (m_dspw == webpath) m_dspw ="about:blank";
-		m_jysc = webpath +ini.ReadString("URLINFO","JYSC");
-		if (m_jysc == webpath) m_jysc ="about:blank";
-		m_start = webpath +ini.ReadString("URLINFO","START");
-		if (m_start == webpath) m_start ="about:blank";
-	}
 	// 初始化CActiveXUI控件
-	//CActiveXUI* pActiveXUI = static_cast<CActiveXUI*>(m_PaintManager.FindControl(_T("ActiveXDemo1")));
-	pWebBrowser = static_cast<CWebBrowserUI*>(m_PaintManager.FindControl(_T("ie")));
-	pWebBrowser->SetWebBrowserEventHandler(this);
+	CWebBrowserUI* pINDEX = static_cast<CWebBrowserUI*>(m_PaintManager.FindControl(_T("index")));
+	CWebBrowserUI* pZX = static_cast<CWebBrowserUI*>(m_PaintManager.FindControl(_T("zx")));
+	CWebBrowserUI* pSP = static_cast<CWebBrowserUI*>(m_PaintManager.FindControl(_T("sp")));
+	CWebBrowserUI* pWB = static_cast<CWebBrowserUI*>(m_PaintManager.FindControl(_T("wb")));
+	CWebBrowserUI* pYXK = static_cast<CWebBrowserUI*>(m_PaintManager.FindControl(_T("yxk")));
+	CWebBrowserUI* pSTART = static_cast<CWebBrowserUI*>(m_PaintManager.FindControl(_T("start")));
 
-	//pWebBrowser->NavigateUrl(L"about:blank");
-	pWebBrowser->NavigateUrl(StringToWstring(m_shouye).c_str());
+	pINDEX->SetWebBrowserEventHandler(this);
+	pINDEX->Navigate2(_T("about:blank"));
+	pINDEX->Navigate2(pINDEX->GetHomePage());
 
-	
+// 	pZX->SetWebBrowserEventHandler(this);
+// 	pZX->Navigate2(_T("about:blank"));
+// 	pZX->Navigate2(pZX->GetHomePage());
+// 
+// 	pSP->SetWebBrowserEventHandler(this);
+// 	pSP->Navigate2(_T("about:blank"));
+// 	pSP->Navigate2(pSP->GetHomePage());
+// 
+// 	pWB->SetWebBrowserEventHandler(this);
+// 	pWB->Navigate2(_T("about:blank"));
+// 	pWB->Navigate2(pWB->GetHomePage());
+// 
+// 	pYXK->SetWebBrowserEventHandler(this);
+// 	pYXK->Navigate2(_T("about:blank"));
+// 	pYXK->Navigate2(pYXK->GetHomePage());
+// 
+// 	pSTART->SetWebBrowserEventHandler(this);
+// 	pSTART->Navigate2(_T("about:blank"));
+// 	pSTART->Navigate2(pSTART->GetHomePage());
+
 }
+
+
 
 void CFrameWnd::Notify( TNotifyUI& msg )
 {
-
-	if( msg.sType == _T("click") ) 
+	if( msg.pSender->GetName() == _T("minbtn"))
 	{
-		if( msg.pSender->GetName() != _T("btnstart") ) 
-		{
-			CButtonUI *btn = ( CButtonUI* )msg.pSender;
-			if(m_pLastClickBtn != NULL)
-			{
-				m_pLastClickBtn->SetHotImage(m_lastClickBtn_HotImage);
-			}
-			m_lastClickBtn_HotImage = btn->GetHotImage();
-			m_pLastClickBtn = btn;
-			btn->SetHotImage( btn->GetPushedImage() );
-		}
+		SendMessage(WM_SYSCOMMAND, SC_MINIMIZE, 0);
+		return;
 
-		if( msg.pSender->GetName() == _T("btnbbs") ) 
-		{
-			if( pWebBrowser != NULL ) 
-			{
-				pWebBrowser->NavigateUrl(StringToWstring(m_luntan).c_str());//m_luntan.c_str());
-
-			}
-		}
-		else if( msg.pSender->GetName() == _T("btnsp") ) 
-		{
-			if( pWebBrowser != NULL ) 
-			{
-				pWebBrowser->NavigateUrl(StringToWstring(m_shipin).c_str());
-				//pWebBrowser->NavigateUrl(m_shipin.c_str());
-			}
-		}
-		else if( msg.pSender->GetName() == _T("btnwb") ) 
-		{
-
-			if( pWebBrowser != NULL ) 
-			{
-				pWebBrowser->NavigateUrl(StringToWstring(m_shuoshuo).c_str());
-				//pWebBrowser->NavigateUrl(m_shuoshuo.c_str());
-			}
-		}
-		else if( msg.pSender->GetName() == _T("btnzx") ) 
-		{
-			if( pWebBrowser != NULL ) 
-			{
-				pWebBrowser->NavigateUrl(StringToWstring(m_zixun).c_str());
-				//pWebBrowser->NavigateUrl(m_zixun.c_str());
-			}
-		}
-		else if( msg.pSender->GetName() == _T("btnyxk") ) 
-		{
-			if( pWebBrowser != NULL ) 
-			{
-				pWebBrowser->NavigateUrl(StringToWstring(m_yxk).c_str());
-				//pWebBrowser->NavigateUrl(m_yxk.c_str());
-			}
-		}
-		else if( msg.pSender->GetName() == _T("btnyxq") ) 
-		{
-			if( pWebBrowser != NULL ) 
-			{
-				pWebBrowser->NavigateUrl(StringToWstring(m_yxq).c_str());
-				//pWebBrowser->NavigateUrl(m_yxq.c_str());
-			}
-		}
-		else if( msg.pSender->GetName() == _T("btnstart") ) 
-		{
-			if( pWebBrowser != NULL ) 
-			{
-				pWebBrowser->NavigateUrl(StringToWstring(m_start).c_str());
-				//pWebBrowser->NavigateUrl(m_start.c_str());
-			}
-		}
-		else if( msg.pSender->GetName() == _T("btnindex") ) 
-		{
-			if( pWebBrowser != NULL ) 
-			{
-				pWebBrowser->NavigateUrl(StringToWstring(m_shouye).c_str());
-				//pWebBrowser->NavigateUrl(_T(m_shouye.c_str()));
-			}
-		}
-		else if( msg.pSender->GetName() == _T("btnrefresh") ) 
-		{
-			if( pWebBrowser != NULL ) 
-			{
-				pWebBrowser->Refresh();
-			}
-		}
 	}
+	if( msg.pSender->GetName() == _T("closebtn") )
+	{
+		PostQuitMessage(0);
+		return;
+	}
+
+	if( msg.sType == _T("dbclick") ) 
+	{
+		CTabLayoutUI* pTabLayout = static_cast<CTabLayoutUI*>(m_PaintManager.FindControl(_T("body_main_tablayout")));
+		CControlUI* pItem = m_PaintManager.FindControl(msg.pSender->GetUserData());
+		pTabLayout->SelectItem(pItem);
+
+		if(pItem!=NULL)
+		{
+			pWebBrowser = static_cast<CWebBrowserUI*>(pItem);
+			pWebBrowser->SetWebBrowserEventHandler(this);
+			pWebBrowser->Navigate2(_T("about:blank"));
+			pWebBrowser->Navigate2(pWebBrowser->GetHomePage());
+		}
+
+	}
+	else if( msg.sType == _T("click") ) 
+	{
+		CTabLayoutUI* pTabLayout = static_cast<CTabLayoutUI*>(m_PaintManager.FindControl(_T("body_main_tablayout")));
+		CControlUI* pItem = m_PaintManager.FindControl(msg.pSender->GetUserData());
+		pTabLayout->SelectItem(pItem);
+		
+		if(pItem!=NULL)
+		{
+			pWebBrowser = static_cast<CWebBrowserUI*>(pItem);
+			int n = pItem->GetTag();
+			if(n ==0)
+			{
+				pWebBrowser->SetWebBrowserEventHandler(this);
+				pWebBrowser->Navigate2(_T("about:blank"));
+				pWebBrowser->Navigate2(pWebBrowser->GetHomePage());
+				pItem->SetTag(1);
+			}
+		}
+		if( msg.pSender->GetName() == _T("btnrefresh") ) 
+		{
+			pWebBrowser->Refresh();
+		}
+		if( msg.pSender->GetName() == _T("btnback") ) 
+		{
+			pWebBrowser->GoBack();
+		}
+		if( msg.pSender->GetName() == _T("btnforward") ) 
+		{
+			pWebBrowser->GoForward();
+		}
+
+	}
+
 	__super::Notify(msg);
 }
 
@@ -187,6 +147,16 @@ CControlUI* CFrameWnd::CreateControl( LPCTSTR pstrClassName )
 	}
 
 	return NULL;
+}
+
+LRESULT CFrameWnd::HandleMessage( UINT uMsg,WPARAM wParam,LPARAM lParam )
+{
+	if(WM_NCLBUTTONDBLCLK != uMsg)
+	{
+		return WindowImplBase::HandleMessage(uMsg,wParam,lParam);
+	}
+
+	return 0;
 }
 
 

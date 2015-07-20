@@ -1,8 +1,40 @@
 ﻿<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
 <Window size="901,626" caption="0,0,0,32" mininfo="901,626" maxinfo="901,626" roundcorner="4,4">
     <Font name="宋体" size="13" bold="true" />
-    <VerticalLayout width="901" height="626" bkimage="images\bj.png" bkcolor="#ffffffff" bordercolor="#EE768D9B" bordersize="1" borderround="4,4" corner="4,4" >
-        <HorizontalLayout width="901" height="43" >
+    <VerticalLayout width="901" height="626" inset="1,1,1,1" bkimage="images\bj.png" bkcolor="#ffffffff" bordercolor="#EE768D9B" bordersize="1" borderround="4,4" corner="4,4" >
+      <TabLayout name="toolbar" height="42" >
+      <HorizontalLayout name="toolbar_main" width="901" height="43" visible="true"  >
+            <Option name="btnindex"  group="toolbar_main" userdata="index" selected="true" float="true" pos="1,7,0,0" width="136" height="43" align="bottom" normalimage="images\LOGO.png" hotimage="images\LOGO2.png"  pushedimage="images\LOGO2.png"  selectedimage="images\LOGO2.png"/>
+            <Option name="btnzx"   group="toolbar_main" userdata="zx"  float="true" pos="165,8,0,0" width="68" height="35" textcolor="#FF000000" disabledtextcolor="#FFA7A6AA" align="center" normalimage="images\normal\zx.png" hotimage="images\hot\zx.png" pushedimage="images\push\zx.png" focusedimage="images\push\zx.png"   selectedimage="images\push\zx.png"/>
+            <Option name="btnsp"  group="toolbar_main" userdata="sp"  float="true" pos="233,8,0,0" width="68" height="35" textcolor="#FF000000" disabledtextcolor="#FFA7A6AA" align="center" normalimage="images\normal\sp.png" hotimage="images\hot\sp.png" pushedimage="images\push\sp.png" focusedimage="images\push\sp.png" selectedimage="images\push\sp.png"/>
+            <Option name="btnwb"  group="toolbar_main"  userdata="wb" float="true" pos="301,8,0,0" width="68" height="35" textcolor="#FF000000" disabledtextcolor="#FFA7A6AA" align="center" normalimage="images\normal\ss.png" hotimage="images\hot\ss.png" pushedimage="images\push\ss.png" focusedimage="images\push\ss.png"  selectedimage="images\push\ss.png"/>
+            <Option name="btnyxk"  group="toolbar_main" userdata="yxk" float="true" pos="369,8,0,0" width="82" height="35" textcolor="#FF000000" disabledtextcolor="#FFA7A6AA" align="center" normalimage="images\normal\yxk.png" hotimage="images\hot\yxk.png" pushedimage="images\push\yxk.png" focusedimage="images\push\yxk.png"  selectedimage="images\push\yxk.png"/>
+            <Option name="btnyxq"  group="toolbar_main" float="true" pos="451,8,0,0" width="82" height="35" textcolor="#FF000000" disabledtextcolor="#FFA7A6AA" align="center" normalimage="images\normal\yxq.png" hotimage="images\hot\yxq.png" pushedimage="images\push\yxq.png" focusedimage="images\push\yxq.png"  selectedimage="images\push\yxq.png"/>
+            <Option name="btndspw"  group="toolbar_main" float="true" pos="533,8,0,0" width="97" height="35" textcolor="#FF000000" disabledtextcolor="#FFA7A6AA" align="center" normalimage="images\normal\dspw.png" hotimage="images\hot\dspw.png" pushedimage="images\push\dspw.png" focusedimage="images\push\dspw.png"  selectedimage="images\push\dspw.png"/>
+            <Option name="btnjysc"  visible="false" group="toolbar_main" float="true" pos="630,8,0,0" width="97" height="35" textcolor="#FF000000" disabledtextcolor="#FFA7A6AA" align="center" normalimage="images\normal\jysc.png" hotimage="images\hot\jysc.png" pushedimage="images\push\jysc.png" focusedimage="images\push\jysc.png"  selectedimage="images\push\jysc.png"/>
+            <Option float="true" pos="800,5,0,0" width="31" height="31"  normalimage="images\normal\设置.png" hotimage="images\hot\设置.png" />
+            <Option name="minbtn" float="true" pos="831,5,0,0" width="31" height="31" normalimage="images\normal\sx.png" hotimage="images\hot\sx.png" selectedimage="images\normal\sx.png"/>
+            <Option name="closebtn" float="true" pos="862,5,0,0" width="31" height="31" normalimage="images\normal\gb.png" hotimage="images\hot\gb.png" selectedimage="images\normal\gb.png"/>
+      </HorizontalLayout>
+
+    </TabLayout>
+
+ <HorizontalLayout name="body_main" visible="true"   >
+     <TabLayout name="body_main_tablayout"  float="true"  pos="7,0,0,0" width="885" height="538">
+            <WebBrowser name="index"  homepage="www.devmachine5.com" autonavi="true" delaycreate="false" />
+            <WebBrowser name="zx"   homepage="http://www.devmachine.com/html/index.html" autonavi="true" delaycreate="false" />
+            <WebBrowser name="sp"   homepage="www.devmachine3.com"  autonavi="true" delaycreate="false" />
+            <WebBrowser name="wb"   homepage="www.devmachine1.com"  autonavi="true" delaycreate="false" />
+            <WebBrowser name="yxk"   homepage="www.devmachine4.com"  autonavi="true" delaycreate="false" />
+            <WebBrowser name="start"   homepage="www.devmachine6.com/site/cassandra/id/12"  autonavi="true" delaycreate="false" />
+    </TabLayout>
+    <Button name="btnstart" userdata="start" float="true" pos="748,538,0,0" width="152" height="45" bkimage="images\ksyx.png" />
+    <Button name="btnrefresh" float="true" text="刷新" pos="690,538,0,0" width="82" height="30"  />
+    <Button name="btnback" float="true" text="后退" pos="590,538,0,0" width="82" height="30"  />
+    <Button name="btnforward" float="true" text="前进" pos="640,538,0,0" width="82" height="30"  />
+    </HorizontalLayout>
+
+<!--         <HorizontalLayout width="901" height="43" >
             <Button name="btnindex" float="true" pos="1,7,0,0" width="136" height="43" align="bottom" normalimage="\images\LOGO.png" hotimage="images\LOGO2.png" 
                  pushedimage="images\LOGO2.png"  />
             <Button name="btnzx" float="true" pos="165,8,0,0" width="68" height="35" textcolor="#FF000000" disabledtextcolor="#FFA7A6AA" align="center" normalimage="images\normal\zx.png" hotimage="images\hot\zx.png" pushedimage="images\push\zx.png" focusedimage="images\push\zx.png" />
@@ -21,7 +53,7 @@
                 <WebBrowser name="ie" float="true" pos="8,0,0,0" homepage="about:blank" width="885" height="538" autonavi="true" delaycreate="false" />
                 <Button name="btnstart" float="true" pos="748,538,0,0" width="152" height="45" bkimage="images\ksyx.png" />
 		<Button name="btnrefresh" float="true" text="刷新" pos="690,538,0,0" width="82" height="30"  />
-            </HorizontalLayout>
-        </HorizontalLayout>
+            </HorizontalLayout> -->
+        <!-- </HorizontalLayout> -->
     </VerticalLayout>
 </Window>
