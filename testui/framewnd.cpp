@@ -2,12 +2,17 @@
 #include "FrameWnd.h"
 #include  <io.h>
 #include <fcntl.h>
+#include <Wininet.h>
 
 CFrameWnd::CFrameWnd( LPCTSTR pszXMLPath )
 : CXMLWnd(pszXMLPath)
 {
 	pWebBrowser = NULL;
 	m_pLastClickBtn = NULL;
+	char* buf="6A Browser 1.0";
+	DWORD dwlen = strlen(buf);
+	HRESULT r = ::UrlMkSetSessionOption(URLMON_OPTION_USERAGENT,(void*)buf,dwlen,0);
+
 }
 
 HRESULT STDMETHODCALLTYPE CFrameWnd::GetHostInfo( DOCHOSTUIINFO __RPC_FAR *pInfo)
@@ -38,27 +43,8 @@ void CFrameWnd::InitWindow()
 	pINDEX->SetWebBrowserEventHandler(this);
 	pINDEX->Navigate2(_T("about:blank"));
 	pINDEX->Navigate2(pINDEX->GetHomePage());
-
-// 	pZX->SetWebBrowserEventHandler(this);
-// 	pZX->Navigate2(_T("about:blank"));
-// 	pZX->Navigate2(pZX->GetHomePage());
-// 
-// 	pSP->SetWebBrowserEventHandler(this);
-// 	pSP->Navigate2(_T("about:blank"));
-// 	pSP->Navigate2(pSP->GetHomePage());
-// 
-// 	pWB->SetWebBrowserEventHandler(this);
-// 	pWB->Navigate2(_T("about:blank"));
-// 	pWB->Navigate2(pWB->GetHomePage());
-// 
-// 	pYXK->SetWebBrowserEventHandler(this);
-// 	pYXK->Navigate2(_T("about:blank"));
-// 	pYXK->Navigate2(pYXK->GetHomePage());
-// 
-// 	pSTART->SetWebBrowserEventHandler(this);
-// 	pSTART->Navigate2(_T("about:blank"));
-// 	pSTART->Navigate2(pSTART->GetHomePage());
-
+	pWebBrowser= pINDEX;
+	
 }
 
 
@@ -151,13 +137,84 @@ CControlUI* CFrameWnd::CreateControl( LPCTSTR pstrClassName )
 
 LRESULT CFrameWnd::HandleMessage( UINT uMsg,WPARAM wParam,LPARAM lParam )
 {
+/*MSG_NAV 浏览消息
+	if(MSG_NAV == uMsg)
+	{
+		NvToParam* pNvTo = (NvToParam*)(wParam);
+		TCHAR* szUrl = (TCHAR*)(lParam);
+		CVariant url;
+		url.vt=VT_BSTR;
+		url.bstrVal=T2BSTR(szUrl);
+		//CString szUrl =  (TCHAR*)(_bstr_t)pNvTo->URL;
+		OutputDebugString(_T("========nav start=========\r\n"));
+		OutputDebugString(szUrl);
+		OutputDebugString( (TCHAR*)(_bstr_t)pNvTo->Headers);
+		OutputDebugString(_T("========nav end========\r\n"));
+		pWebBrowser->GetWebBrowser2()->Navigate2(&url,&pNvTo->Flags, &pNvTo->TargetFrameName,&pNvTo->PostedData,&pNvTo->Headers);
+		//MessageBoxW( NULL,szUrl,NULL,NULL );
+		delete pNvTo;
+		return 1;
+	}
+	*/
 	if(WM_NCLBUTTONDBLCLK != uMsg)
 	{
 		return WindowImplBase::HandleMessage(uMsg,wParam,lParam);
 	}
 
+
 	return 0;
 }
+
+/*修改http 头user-agent 然后发消息重新浏览
+void CFrameWnd::BeforeNavigate2( IDispatch *pDisp,VARIANT *&url,VARIANT *&Flags,VARIANT *&TargetFrameName,VARIANT *&PostData,VARIANT *&Headers,VARIANT_BOOL *&Cancel )
+{
+	return ;
+	//Headers->
+	CString strTest,strOut;
+
+	TCHAR header[MAX_PATH];
+	_tcscpy( header, (TCHAR*)(_bstr_t)Headers );
+	CString str="header:";
+		str+=header ;
+	OutputDebugString(str+"\r\n");
+
+	TCHAR *szUrl = new TCHAR[MAX_PATH];
+	_tcscpy( szUrl, (TCHAR*)(_bstr_t)url );
+	CString urlSS="URL:";
+	urlSS+=szUrl;
+
+	OutputDebugString(urlSS+"\r\n");
+
+	//TRACE(header);
+	CString hh = header;
+	int r = hh.Find(_T("User-Agent:6ABrowser 1.0"));
+	if( r >=0)
+	{
+		OutputDebugString(_T("===================\r\n"));
+		OutputDebugString(str);
+		OutputDebugString(urlSS);
+		OutputDebugString(_T("===================\r\n"));
+
+
+		return;
+	}
+	*Cancel = TRUE;// 没有，取消这次导航
+
+	strTest = header;
+	if (!strTest.IsEmpty())
+		strTest+=_T("\r\n");
+	strTest+=_T("User-Agent:6ABrowser 1.0");
+
+	NvToParam* pNvTo = new NvToParam;
+	pNvTo->URL = (bstr_t)url;
+	pNvTo->Flags = *Flags;
+	pNvTo->TargetFrameName = *TargetFrameName;
+	pNvTo->PostedData = *PostData;
+	pNvTo->Headers.vt= VT_BSTR;
+	pNvTo->Headers.bstrVal =strTest.AllocSysString();
+	::PostMessage(m_hWnd, MSG_NAV,(WPARAM)pNvTo,(LPARAM)szUrl);
+}
+*/
 
 
 

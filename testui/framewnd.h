@@ -74,28 +74,32 @@ protected:
 	HWND m_hWnd;
 };
 
+// class NvToParam
+// {
+// public:
+// 		BSTR URL;
+// 		VARIANT Flags;
+// 		VARIANT TargetFrameName;
+// 		VARIANT PostedData;
+// 		VARIANT Headers;
+// 	
+// };
+
+//#define  MSG_NAV WM_USER+100
 class CFrameWnd: public CXMLWnd, public CWebBrowserEventHandler
 {
 public:
 	explicit CFrameWnd(LPCTSTR pszXMLPath);
-
+// DUI_DECLARE_MESSAGE_MAP()
+// virtual void OnNavTo(TNotifyUI& msg);
 	virtual void InitWindow();
 	virtual void Notify(TNotifyUI& msg);
 	virtual CControlUI* CreateControl(LPCTSTR pstrClassName);
 	HRESULT STDMETHODCALLTYPE GetHostInfo(DOCHOSTUIINFO __RPC_FAR *pInfo);
+//void BeforeNavigate2( IDispatch *pDisp,VARIANT *&url,VARIANT *&Flags,VARIANT *&TargetFrameName,VARIANT *&PostData,VARIANT *&Headers,VARIANT_BOOL *&Cancel );
 	LRESULT HandleMessage(UINT uMsg,WPARAM wParam,LPARAM lParam);
 private:
 	CWebBrowserUI* pWebBrowser;
 	CControlUI* m_pLastClickBtn;
 	CDuiString m_lastClickBtn_HotImage;
-	string m_shuoshuo;
-	string m_shipin;
-	string m_luntan;
-	string m_zixun;
-	string m_shouye;
-	string m_yxk;
-	string m_yxq;
-	string m_dspw;
-	string m_jysc;
-	string m_start;
 };

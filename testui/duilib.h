@@ -1,8 +1,9 @@
 #pragma once
 #include <UIlib.h>
+#include <atlstr.h>
 using namespace DuiLib;
 
-//#pragma comment(lib, "DuiLib.lib")
+#pragma comment(lib, "Urlmon.lib")
 #ifdef _DEBUG
 #   ifdef _UNICODE
 #       pragma comment(lib, "DuiLib_ud.lib")
