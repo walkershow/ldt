@@ -3,7 +3,7 @@
 #include <string>
 #include <comdef.h>
 #include <locale.h> 
-
+#include <vector>
 using namespace std;
 
 // 以XML生成界面的窗口基类
@@ -96,10 +96,15 @@ public:
 	virtual void Notify(TNotifyUI& msg);
 	virtual CControlUI* CreateControl(LPCTSTR pstrClassName);
 	HRESULT STDMETHODCALLTYPE GetHostInfo(DOCHOSTUIINFO __RPC_FAR *pInfo);
-//void BeforeNavigate2( IDispatch *pDisp,VARIANT *&url,VARIANT *&Flags,VARIANT *&TargetFrameName,VARIANT *&PostData,VARIANT *&Headers,VARIANT_BOOL *&Cancel );
+    void BeforeNavigate2( IDispatch *pDisp,VARIANT *&url,VARIANT *&Flags,VARIANT *&TargetFrameName,VARIANT *&PostData,VARIANT *&Headers,VARIANT_BOOL *&Cancel );
 	LRESULT HandleMessage(UINT uMsg,WPARAM wParam,LPARAM lParam);
+	void SetWebPageFocusEx(CWebBrowserUI * pWebPage);
 private:
 	CWebBrowserUI* pWebBrowser;
 	CControlUI* m_pLastClickBtn;
 	CDuiString m_lastClickBtn_HotImage;
+	vector<wstring> m_vec_btntext;
+	vector<wstring> m_vec_wbtext;
+	vector<wstring> m_vec_url;
+	HWND m_hwnd;
 };

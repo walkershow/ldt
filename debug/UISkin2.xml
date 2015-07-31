@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+﻿<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
 <Window size="901,626" caption="0,0,0,32" mininfo="901,626" maxinfo="901,626" roundcorner="4,4">
     <Font name="宋体" size="13" bold="true" />
     <VerticalLayout width="901" height="626" inset="1,1,1,1" bkimage="images\bj.png" bkcolor="#ffffffff" bordercolor="#EE768D9B" bordersize="1" borderround="4,4" corner="4,4" >
@@ -11,7 +11,7 @@
             <Option name="btnyxk"  group="toolbar_main" userdata="yxk" float="true" pos="369,8,0,0" width="82" height="35" textcolor="#FF000000" disabledtextcolor="#FFA7A6AA" align="center" normalimage="images\normal\yxk.png" hotimage="images\hot\yxk.png" pushedimage="images\push\yxk.png" focusedimage="images\push\yxk.png"  selectedimage="images\push\yxk.png"/>
             <Option name="btnyxq"  group="toolbar_main" float="true" pos="451,8,0,0" width="82" height="35" textcolor="#FF000000" disabledtextcolor="#FFA7A6AA" align="center" normalimage="images\normal\yxq.png" hotimage="images\hot\yxq.png" pushedimage="images\push\yxq.png" focusedimage="images\push\yxq.png"  selectedimage="images\push\yxq.png"/>
             <Option name="btndspw"  group="toolbar_main" float="true" pos="533,8,0,0" width="97" height="35" textcolor="#FF000000" disabledtextcolor="#FFA7A6AA" align="center" normalimage="images\normal\dspw.png" hotimage="images\hot\dspw.png" pushedimage="images\push\dspw.png" focusedimage="images\push\dspw.png"  selectedimage="images\push\dspw.png"/>
-            <Option name="btnjysc"  visible="false" group="toolbar_main" float="true" pos="630,8,0,0" width="97" height="35" textcolor="#FF000000" disabledtextcolor="#FFA7A6AA" align="center" normalimage="images\normal\jysc.png" hotimage="images\hot\jysc.png" pushedimage="images\push\jysc.png" focusedimage="images\push\jysc.png"  selectedimage="images\push\jysc.png"/>
+            <Option name="btnjysc"  group="toolbar_main" float="true" pos="630,8,0,0" width="97" height="35" textcolor="#FF000000" disabledtextcolor="#FFA7A6AA" align="center" normalimage="images\normal\jysc.png" hotimage="images\hot\jysc.png" pushedimage="images\push\jysc.png" focusedimage="images\push\jysc.png"  selectedimage="images\push\jysc.png"/>
             <Option float="true" pos="800,5,0,0" width="31" height="31"  normalimage="images\normal\设置.png" hotimage="images\hot\设置.png" />
             <Option name="minbtn" float="true" pos="831,5,0,0" width="31" height="31" normalimage="images\normal\sx.png" hotimage="images\hot\sx.png" selectedimage="images\normal\sx.png"/>
             <Option name="closebtn" float="true" pos="862,5,0,0" width="31" height="31" normalimage="images\normal\gb.png" hotimage="images\hot\gb.png" selectedimage="images\normal\gb.png"/>
@@ -21,12 +21,12 @@
 
  <HorizontalLayout name="body_main" visible="true"   >
      <TabLayout name="body_main_tablayout"  float="true"  pos="7,0,0,0" width="885" height="538">
-            <WebBrowser name="index"  homepage="www.devmachine5.com" autonavi="true" delaycreate="false" />
+            <WebBrowser name="index"  homepage="www.devmachine5.com" autonavi="false" delaycreate="false" />
             <WebBrowser name="zx"   homepage="http://www.devmachine.com/html/index.html" autonavi="false" delaycreate="false" />
             <WebBrowser name="sp"   homepage="www.devmachine3.com"  autonavi="false" delaycreate="false" />
             <WebBrowser name="wb"   homepage="www.devmachine1.com"  autonavi="false" delaycreate="false" />
             <WebBrowser name="yxk"   homepage="www.devmachine4.com"  autonavi="false" delaycreate="false" />
-            <WebBrowser name="start"   homepage="www.devmachine6.com/site/cassandra/id/12"  autonavi="false" delaycreate="false" />
+            <WebBrowser name="start"   homepage="www.devmachine6.com/site/cassandra/id/11"  autonavi="false" delaycreate="false" />
     </TabLayout>
     <Button name="btnstart" userdata="start" float="true" pos="748,538,0,0" width="152" height="45" bkimage="images\ksyx.png" />
     <Button name="btnrefresh" float="true" text="刷新" pos="690,538,0,0" width="82" height="30"  />
