@@ -4,8 +4,12 @@
 #include <comdef.h>
 #include <locale.h> 
 #include <vector>
+#include <map>
 using namespace std;
 
+extern CString g_strUserID ;
+extern CString g_strUserAcct ;
+#define WM_CONTROLPRINT WM_USER+1001
 // 以XML生成界面的窗口基类
 class CXMLWnd : public WindowImplBase
 {
@@ -98,7 +102,9 @@ public:
 	HRESULT STDMETHODCALLTYPE GetHostInfo(DOCHOSTUIINFO __RPC_FAR *pInfo);
     void BeforeNavigate2( IDispatch *pDisp,VARIANT *&url,VARIANT *&Flags,VARIANT *&TargetFrameName,VARIANT *&PostData,VARIANT *&Headers,VARIANT_BOOL *&Cancel );
 	LRESULT HandleMessage(UINT uMsg,WPARAM wParam,LPARAM lParam);
-	void SetWebPageFocusEx(CWebBrowserUI * pWebPage);
+	void SetWbFocus(CWebBrowserUI* pWebBrowser);
+	void CloseTab(const CString& tabdata);
+	void JumpToIndex(const CString& name);
 private:
 	CWebBrowserUI* pWebBrowser;
 	CControlUI* m_pLastClickBtn;
@@ -106,5 +112,12 @@ private:
 	vector<wstring> m_vec_btntext;
 	vector<wstring> m_vec_wbtext;
 	vector<wstring> m_vec_url;
+	CString m_cur_selected;
 	HWND m_hwnd;
+	CWebBrowserUI* pINDEX;
+	CWebBrowserUI* pZX;
+	CWebBrowserUI* pSP;
+	CWebBrowserUI* pWB;
+	CWebBrowserUI* pYXK;
+	CWebBrowserUI* pSTART;
 };
