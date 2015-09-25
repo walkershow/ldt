@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Window size="120,82">
+ <Font name="宋体" size="13" bold="false"/>
+ <Font name="宋体" size="12"/>
+<VerticalLayout bkimage="file='images\normal\menu_bk.png' corner='40,8,8,8'" hole="false">
+<Default name="Menu" value="bordersize=&quot;1&quot; borderround=&quot;2,2&quot; bordercolor=&quot;0x303132&quot; inset=&quot;2,2,2,2&quot; itemtextpadding=&quot;30,0,0,0&quot; bkimage=&quot;file='images\normal\menu_bk.png' corner='26,2,2,2' source='6,6,44,24'&quot; itemselectedbkcolor=&quot;0xFF338ACA&quot;" />
+<!-- ExplandIcon属性定义了下级菜单的小图标的样子 -->
+<Default name="ExplandIcon" value="menu_expand.png" />
+
+<Menu>
+    <MenuElement text="设置" icon="" />
+    <MenuElement text="关于"  />
+     
+</Menu>
+</VerticalLayout>
+</Window>

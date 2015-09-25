@@ -1,45 +1,72 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes" ?>
-<Window size="901,626" caption="0,0,0,32" mininfo="901,626" maxinfo="901,626" roundcorner="4,4">
-    <Font name="宋体" size="13" bold="true" />
-    <VerticalLayout width="901" height="626" bkimage="images\bj.png" bkcolor="#ffffffff" bordercolor="#EE768D9B" bordersize="1" borderround="4,4" corner="4,4" >
+<Window size="1041,616" caption="0,0,0,32" mininfo="1041,616" maxinfo="1041,616" roundcorner="4,4" showshadow="true" shadowimage="images\shadow.png" shadowcorner="23,13,23,33">
+    <!-- <Font name="微软雅黑" size="13" bold="true" /> -->
+    <Font name="微软雅黑" size="12" bold="false" default="true" />  
+    <VerticalLayout width="1041" height="616" bkimage="images\bj.png" bkcolor="#ffffffff" bordercolor="#EE768D9B" bordersize="1" borderround="4,4" corner="4,4" >
       <!-- <TabLayout name="toolbar" height="42" > -->
-      <HorizontalLayout name="toolbar_main" height="8"  float="false"  />
-
-      <HorizontalLayout name="toolbar_main" height="35" float="false"  >
-            <Option name="btnindex"  group="toolbar_main" userdata="index" selected="true" float="false" pos="1,7,0,0" width="136" height="43" align="bottom" normalimage="images\LOGO.png" hotimage="images\LOGO2.png"  pushedimage="images\LOGO2.png"  selectedimage="images\LOGO2.png"/>
-
-        <HorizontalLayout name="IContainer"  float="false"   maxwidth="68">
+      <HorizontalLayout name="toolbar_main" height="26"  float="false"  >
+         <!-- <VerticalLayout  name="" text="" float="false" /> -->
+          <!-- <VerticalLayout  name="" text="" float="false" width="128"> -->
+            <Button name="btnmenu" float="true" pos="944,1,0,0" width="32" height="24"  normalimage="images\normal\cd.png" hotimage="images\push\cd.png" pushedimage="images\push\cd.png"/>
+            <Button name="minbtn" float="true" pos="976,1,0,0" width="32" height="24" normalimage="images\normal\sx.png" hotimage="images\push\sx.png" selectedimage="images\normal\sx.png"/>
+            <Button name="closebtn" float="true" pos="1008,1,0,0" width="32" height="24" normalimage="images\normal\gb.png" hotimage="images\push\gb.png" selectedimage="images\normal\gb.png"/>
+<!--             <Button name="closebtn" float="true" pos="1006,2,0,0" width="32" height="24" normalimage="file='images\normal\close.png' source='0,0,45,29'" hotimage="file='images\normal\close.png' source='45,0,90,29'" selectedimage="images\normal\close.png"/> -->
+            <!-- <Button name="" text="" width="32" height="24"  normalimage="images\normal\fh.png" hotimage="images\normal\fh.png" /> -->
+            <!-- <Button name="" text="" padding="32,0,0,0" width="32" height="24"  normalimage="images\normal\设置.png" hotimage="images\push\设置.png" /> -->
+            <!-- <Button name="minbtn"  padding="64,0,0,0" width="32" height="24" normalimage="images\normal\sx.png" hotimage="images\push\sx.png" selectedimage="images\normal\sx.png"/> -->
+            <!-- <Button name="closebtn" padding="96,0,0,0" width="32" height="24" normalimage="images\normal\gb.png" hotimage="images\push\gb.png" /> -->
+          <!-- </VerticalLayout> -->
+      </HorizontalLayout>
+      <HorizontalLayout name="toolbar_main" height="49" float="false"  >
+         <HorizontalLayout name="IContainer"  float="false"   width="152">
+            <Button name="btntx"  userdata="tx"  float="true" pos="14,0,0,0" width="44" height="44"  align="bottom"  normalimage="file='images\normal\tx.png' source='0,0,44,44'" hotimage="file='images\normal\tx.png' source='44,0,88,44'"/>
+<!--                  <Option name="btntx"  userdata="tx"  float="true" pos="14,0,0,0" width="44" height="44"  align="bottom" normalimage="images\normal\tx.png" hotimage="images\push\tx.png"/> -->
+        <Label name="btnusername" text="天空无限号" visible= "true" float="true"  textcolor="#6AFFFFFF"  pos="-87,15,-10,30"  />
+            
+           </HorizontalLayout>
+        <HorizontalLayout name="IContainer"  float="false"   maxwidth="92">
             <!-- <HorizontalLayout  name="Item0"   > -->
                 <!--  pos="165,8,0,0" -->
-                <Option name="btnzx"   float="false"  group="toolbar_main" userdata="zx"  width="68" height="35" align="center" normalimage="images\normal\zx.png" hotimage="images\hot\zx.png" pushedimage="images\push\zx.png" focusedimage="images\push\zx.png"   selectedimage="images\push\zx.png" />
+                <Option name="btnindex"   float="false"  padding="0,5,0,0" group="toolbar_main" userdata="index"  width="92" height="45" align="center" selected="true" normalimage="images\normal\sy.png"  hotimage="images\push\sy.png" pushedimage="images\push\sy.png" focusedimage="images\push\sy.png"   selectedimage="images\push\sy.png" />
            <!--  <Control height="1"/> -->
-            <Button name="btnzx_close"  userdata="zx" visible= "true" float="true"  pos="-18,2,-2,18"  hotimage="images\hot\gb.png" selectedimage="images\normal\gb.png" />
+            <Button name="btnzx_close"  userdata="zx" visible= "true" float="true"  pos="-19,5,-8,17"  hotimage="images\hot\qljmhc.png" selectedimage="images\normal\gb.png" />
     <!--               <Button  float="true" pos="-24,12,-12,24" normalimage="file='tab_close.png' source='0,0,12,12'" hotimage="file='tab_close.png' source='12,0,24,12'" pushedimage="file='tab_close.png' source='24,0,36,12'"/> -->
          </HorizontalLayout> 
-        <HorizontalLayout name="IContainer"  float="false"   maxwidth="68">
+        <HorizontalLayout name="IContainer"  float="false"   maxwidth="92">
+            <!-- <HorizontalLayout  name="Item0"   > -->
+                <!--  pos="165,8,0,0" -->
+                <Option name="btnzx"   float="false"  padding="0,5,0,0" group="toolbar_main" userdata="zx"  width="92" height="45" align="center" normalimage="images\normal\zx.png" hotimage="images\push\zx.png" pushedimage="images\push\zx.png" focusedimage="images\push\zx.png"   selectedimage="images\push\zx.png" />
+           <!--  <Control height="1"/> -->
+            <Button name="btnzx_close"  userdata="zx" visible= "true" float="true"  pos="-19,5,-8,17"  hotimage="images\hot\qljmhc.png" selectedimage="images\normal\gb.png" />
+    <!--               <Button  float="true" pos="-24,12,-12,24" normalimage="file='tab_close.png' source='0,0,12,12'" hotimage="file='tab_close.png' source='12,0,24,12'" pushedimage="file='tab_close.png' source='24,0,36,12'"/> -->
+         </HorizontalLayout> 
+        <HorizontalLayout name="IContainer"  float="false"   maxwidth="92">
 
-            <Option name="btnsp"  group="toolbar_main" userdata="sp"  float="false" pos="233,8,0,0" width="68" height="35" textcolor="#FF000000" disabledtextcolor="#FFA7A6AA" align="center" normalimage="images\normal\sp.png" hotimage="images\hot\sp.png" pushedimage="images\push\sp.png" focusedimage="images\push\sp.png" selectedimage="images\push\sp.png"/>
-            <Button name="btnsp_close" userdata="sp"  visible= "true" float="true"  pos="-22,8,-8,22"  hotimage="images\hot\gb.png" selectedimage="images\normal\gb.png" />
+            <Option name="btnsp"  group="toolbar_main" userdata="sp"  padding="0,5,0,0" float="false" pos="233,8,0,0" width="92" height="45" textcolor="#FF000000" disabledtextcolor="#FFA7A6AA" align="center" normalimage="images\normal\sp.png" hotimage="images\push\sp.png" pushedimage="images\push\sp.png" focusedimage="images\push\sp.png" selectedimage="images\push\sp.png"/>
+            <Button name="btnsp_close" userdata="sp"  visible= "true" float="true"  pos="-19,5,-8,17"  hotimage="images\hot\qljmhc.png" selectedimage="images\normal\gb.png" />
 
          </HorizontalLayout> 
 
-        <HorizontalLayout name="IContainer"  float="false"   maxwidth="68">
+        <HorizontalLayout name="IContainer"  float="false"   maxwidth="92">
 
-            <Option name="btnwb"  group="toolbar_main"  userdata="wb" float="false" pos="301,8,0,0" width="68" height="35" textcolor="#FF000000" disabledtextcolor="#FFA7A6AA" align="center" normalimage="images\normal\ss.png" hotimage="images\hot\ss.png" pushedimage="images\push\ss.png" focusedimage="images\push\ss.png"  selectedimage="images\push\ss.png"/>
-            <Button name="btnwb_close"   userdata="wb" visible= "true" float="true"  pos="-22,8,-8,22"  hotimage="images\hot\gb.png" selectedimage="images\normal\gb.png" />
-
-         </HorizontalLayout> 
-
-        <HorizontalLayout name="IContainer"  float="false"   maxwidth="82">
-
-            <Option name="btnyxk"  group="toolbar_main" userdata="yxk" float="false" pos="369,8,0,0" width="82" height="35" textcolor="#FF000000" disabledtextcolor="#FFA7A6AA" align="center" normalimage="images\normal\yxk.png" hotimage="images\hot\yxk.png" pushedimage="images\push\yxk.png" focusedimage="images\push\yxk.png"  selectedimage="images\push\yxk.png"/>
-            <Button name="btnyxk_close"  userdata="yxk" visible= "true" float="true"  pos="-22,8,-8,22"  hotimage="images\hot\gb.png" selectedimage="images\normal\gb.png" />
+            <Option name="btnwb"  group="toolbar_main"  userdata="wb" padding="0,5,0,0" float="false" pos="301,8,0,0" width="92" height="45" textcolor="#FF000000" disabledtextcolor="#FFA7A6AA" align="center" normalimage="images\normal\ss.png" hotimage="images\push\ss.png" pushedimage="images\push\ss.png" focusedimage="images\push\ss.png"  selectedimage="images\push\ss.png"/>
+            <Button name="btnwb_close"   userdata="wb" visible= "true" float="true"  pos="-19,5,-8,17"  hotimage="images\hot\qljmhc.png" selectedimage="images\normal\gb.png" />
 
          </HorizontalLayout> 
 
-        <HorizontalLayout name="IContainer"  float="false"   maxwidth="82">
+        <HorizontalLayout name="IContainer"  float="false"   maxwidth="92">
 
-            <Option name="btnyxq"  group="toolbar_main" float="false" pos="451,8,0,0" width="82" height="35" textcolor="#FF000000" disabledtextcolor="#FFA7A6AA" align="center" normalimage="images\normal\yxq.png" hotimage="images\hot\yxq.png" pushedimage="images\push\yxq.png" focusedimage="images\push\yxq.png"  selectedimage="images\push\yxq.png"/>
+            <Option name="btnyxk"  group="toolbar_main" userdata="yxk" padding="0,5,0,0" float="false" pos="369,8,0,0" width="92" height="45" textcolor="#FF000000" disabledtextcolor="#FFA7A6AA" align="center" normalimage="images\normal\yxk.png" hotimage="images\push\yxk.png" pushedimage="images\push\yxk.png" focusedimage="images\push\yxk.png"  selectedimage="images\push\yxk.png"/>
+            <Button name="btnyxk_close"  userdata="yxk" visible= "true" float="true"  pos="-19,5,-8,17"  hotimage="images\hot\qljmhc.png" selectedimage="images\normal\gb.png" />
+
+         </HorizontalLayout> 
+          <HorizontalLayout name="IContainer"  float="false" padding="322,0,0,0"  maxwidth="92">
+         <Button name="btnback" width="92" height="47"  padding="0,4,0,0"  normalimage="images\normal\fh.png" hotimage="images\normal\fhed.png" pushedimage="images\normal\fhed.png"/>
+         </HorizontalLayout> 
+
+<!--         <HorizontalLayout name="IContainer"  float="false"   maxwidth="82">
+
+            <Option name="btnyxq"  group="toolbar_main" float="false" pos="451,8,0,0" width="82" height="35" textcolor="#FF000000" disabledtextcolor="#FFA7A6AA" align="center" normalimage="images\normal\yxq.png" hotimage="images\push\yxq.png" pushedimage="images\push\yxq.png" focusedimage="images\push\yxq.png"  selectedimage="images\push\yxq.png"/>
             <Button name="btnyxq_close"  userdata="yxq" visible= "true" float="true"  pos="-22,8,-8,22"  hotimage="images\hot\gb.png" selectedimage="images\normal\gb.png" />
 
          </HorizontalLayout> 
@@ -56,34 +83,68 @@
             <Option name="btnjysc"  visible="false" group="toolbar_main" float="false" pos="630,8,0,0" width="97" height="35" textcolor="#FF000000" disabledtextcolor="#FFA7A6AA" align="center" normalimage="images\normal\jysc.png" hotimage="images\hot\jysc.png" pushedimage="images\push\jysc.png" focusedimage="images\push\jysc.png"  selectedimage="images\push\jysc.png"/>
             <Button name="btnjysc_close"  visible= "true" float="true"  pos="-22,8,-8,22"  hotimage="images\hot\gb.png" selectedimage="images\normal\gb.png" />
 
-         </HorizontalLayout> 
-      <!-- </HorizontalLayout> -->
+         </HorizontalLayout>  -->
 
 
-     <!-- <HorizontalLayout name="toolbar_main2" height="3" width="194" float="false"  /> -->
-            <Option float="true" pos="800,2,0,0" width="31" height="31"  normalimage="images\normal\设置.png" hotimage="images\hot\设置.png" />
-            <Option name="minbtn" float="true" pos="831,2,0,0" width="31" height="31" normalimage="images\normal\sx.png" hotimage="images\hot\sx.png" selectedimage="images\normal\sx.png"/>
-            <Option name="closebtn" float="true" pos="862,2,0,0" width="31" height="31" normalimage="images\normal\gb.png" hotimage="images\hot\gb.png" selectedimage="images\normal\gb.png"/>
+
       </HorizontalLayout>
 
     <!-- </TabLayout> -->
 
  <HorizontalLayout name="body_main" visible="true"   >
-     <TabLayout name="body_main_tablayout"  float="true"  pos="7,0,0,0" width="885" height="538">
-            <WebBrowser name="index"  userdata="http://lan.chinau.member/ssot/login?" homepage="http://lan.chinau.shuoshuo/" autonavi="true" delaycreate="false" />
-            <WebBrowser name="zx"   homepage="http://lan.chinau.news/html/index.html" autonavi="true" delaycreate="false" />
+
+   <VerticalLayout  width="148">
+   <HorizontalLayout name="" text=""  float="false" bkcolor="#006B93B2" height="20">
+    <Label name="" bkimage="images\normal\yxwz.png" ></Label>
+   </HorizontalLayout>
+    <!-- <TabLayout name="body_main_list"  float="true"  pos="5,0,0,0" width="885" height="538"> -->
+   <HorizontalLayout name="list1" text=""  float="false" bkcolor="#006B93B2" >
+   <List virtualwnd="list_game"  name="game_list_tab" itemselectedbkcolor="#5A000000" itemhotbkcolor="#5A000000" header="hidden" inset="0,2,0,0">
+<!--    <List virtualwnd="list_game"  name="game_list_tab" itemselectedbkcolor="#5A000000" itemhotbkcolor="#5A000000" header="hidden" inset="0,2,0,0"> -->
+          <!-- <ListContainerElement height="47"> -->
+<!--           <HorizontalLayout name="addnewgame" float="false" bkcolor="#006B93B2" inset="5,1,0,0" >
+            <Button name="btn_addnewgame" text="增加游戏" textcolor="#6AFFFFFF" tooltip="增加游戏"  textpadding="44,0,0,0" float="false" bordersize="0" width="114"  normalimage="file='images\normal\bj09_03.png' dest='0,0,44,44' "/>
+            <!-- <Label name="" text="增加游戏" textcolor="#6AFFFFFF" ></Label> -->
+
+          <!-- </HorizontalLayout> --> 
+        <!-- </ListContainerElement> -->
+   </List>
+
+   </HorizontalLayout>
+    <!-- </TabLayout> -->
+
+ <!-- <HorizontalLayout name="" text=""  float="false" bkcolor="#006B93B2" height="12"> -->
+<!--     <Option name="btn_rgtab1" group="rgtabgroup" userdata="10" textcolor="#6AFFFFFF" normalimage="images\normal\dct0.png" selectedimage="images\push\dct1.png"  visible= "false" width="14" padding="40,0,0,0" ></Option>
+    <Option name="btn_rgtab2" group="rgtabgroup" userdata="20" textcolor="#6AFFFFFF" normalimage="images\normal\dct0.png" selectedimage="images\push\dct1.png"  visible= "false" width="14"  ></Option>
+    <Option name="btn_rgtab3" group="rgtabgroup" userdata="30" textcolor="#6AFFFFFF" normalimage="images\normal\dct0.png" selectedimage="images\push\dct1.png"  visible= "false" width="14"  ></Option>
+    <Option name="btn_rgtab4" group="rgtabgroup" userdata="40" textcolor="#6AFFFFFF" normalimage="images\normal\dct0.png" selectedimage="images\push\dct1.png"  visible= "false" width="14"  ></Option>
+    <Option name="btn_rgtab5" group="rgtabgroup" userdata="50" textcolor="#6AFFFFFF" normalimage="images\normal\dct0.png" selectedimage="images\push\dct1.png"  visible= "false" width="14"  ></Option> -->
+   <!-- </HorizontalLayout> -->
+<!-- <HorizontalLayout name="" text=""  float="false" bkcolor="#006B93B2" height="5"/>  -->
+   <HorizontalLayout name="" text=""  float="false" bkcolor="#006B93B2" height="49">
+    <Button name="btn_allgame" textcolor="#6AFFFFFF" normalimage="images\normal\yxgl.png" hotimage="images\push\yxgl.png"   width="152"  ></Button>
+   </HorizontalLayout>
+ <HorizontalLayout name="" text=""  float="false" bkcolor="#006B93B2" height="2"/>
+ </VerticalLayout>
+
+
+   <VerticalLayout  width="885">
+     <TabLayout name="body_main_tablayout"  float="true"  pos="5,0,0,0" width="885" height="538">
+            <WebBrowser name="index"  userdata="http://lan.chinau.member/ssot/login?" homepage="http://lan.chinau.change/" autonavi="true" delaycreate="false" />
+            <WebBrowser name="zx"   homepage="http://lan.chinau.news" autonavi="true" delaycreate="false" bkimage="images\nybj.png"/>
             <WebBrowser name="sp"   homepage="http://lan.chinau.video/"  autonavi="true" delaycreate="false" />
             <WebBrowser name="wb"   homepage="http://lan.chinau.shuoshuo/"  autonavi="true" delaycreate="false" />
             <WebBrowser name="yxk"   homepage="http://lan.chinau.game/"  autonavi="true" delaycreate="false" />
-            <WebBrowser name="start"   homepage="http://lan.chinau.game.newslist/bbs/index"  autonavi="true" delaycreate="false" />
+            <WebBrowser name="start"   homepage="http://lan.chinau.game.newslist/site/index?game_id="  autonavi="false" delaycreate="false" />
     </TabLayout>
-    <Button name="btnstart" userdata="start" float="true" pos="748,538,0,0" width="152" height="45" bkimage="images\ksyx.png" />
+  </VerticalLayout>
+  <!--   <Button name="btnstart" userdata="start" float="true" pos="748,538,0,0" width="152" height="45" bkimage="images\ksyx.png" />
     <Button name="btnrefresh" float="true" text="刷新" pos="690,538,0,0" width="82" height="30"  />
     <Button name="btnback" float="true" text="后退" pos="590,538,0,0" width="82" height="30"  />
-    <Button name="btnforward" float="true" text="前进" pos="640,538,0,0" width="82" height="30"  />
+    <Button name="btnforward" float="true" text="前进" pos="640,538,0,0" width="82" height="30"  /> -->
     </HorizontalLayout>
 
-<!--         <HorizontalLayout width="901" height="43" >
+<!--         <HorizontalLayout width="1054" height="43" >
             <Button name="btnindex" float="true" pos="1,7,0,0" width="136" height="43" align="bottom" normalimage="\images\LOGO.png" hotimage="images\LOGO2.png" 
                  pushedimage="images\LOGO2.png"  />
             <Button name="btnzx" float="true" pos="165,8,0,0" width="68" height="35" textcolor="#FF000000" disabledtextcolor="#FFA7A6AA" align="center" normalimage="images\normal\zx.png" hotimage="images\hot\zx.png" pushedimage="images\push\zx.png" focusedimage="images\push\zx.png" />

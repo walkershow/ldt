@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Window  size="887,299" caption="0,0,0,299" mininfo="878,299" sizebox="6,6,6,6" bktrans="true"  showshadow="false" shadowimage="images\shadow.png" shadowcorner="23,13,23,33" >
+  <Font name="微软雅黑" size="12" default="true"/>
+  
+  <!-- <VerticalLayout bkcolor="#CC000000" bordersize="4" bordercolor="#CCffffff"> -->
+  <VerticalLayout bkimage="images\popwnd\tctmd.png">
+    <HorizontalLayout name="appbar" height="44"  float="false" >
+        <Container padding="21,8,0,0" width="98" height="36" bkimage="images\popwnd\tcbtlogo.png" />
+        <Button name="btngl_wwg"   padding="30,8,0,0" normalimage="images\popwnd\tcwwg.png" hotimage="images\popwnd\tcwwg.png"    width="61" height="36"   />
+         <Button name="btngl_addgame"   padding="322,8,0,0" normalimage="images\popwnd\tctjyx.png" hotimage="images\popwnd\tctjyx.png"    width="61" height="36"   />
+         <Button name="btngl_delgame"  padding="8,8,0,0" normalimage="images\popwnd\tcscyx.png" hotimage="images\popwnd\tcscyx.png"      width="61" height="36"   />
+          <Container bkimage="images\popwnd\tcyxkjj.png" padding="21,8,0,0"  width="73" height="36" text="游戏快捷键"/>
+          <Option name="chk_order_auto" padding="9,8,0,0" group="ordergame" height="36" width="11" normalimage="images\popwnd\tcbxan.png"  selectedimage="images\popwnd\txyxan.png"   pushedimage="images\popwnd\txyxan.png" />
+          <Container bkimage="images\popwnd\tczd.png"  padding="3,8,0,0" width="25" height="36" text="自动"/>
+          <Option name="chk_order_manual" group="ordergame" padding="11,8,0,0" height="36" width="11" normalimage="images\popwnd\tcbxan.png"  selectedimage="images\popwnd\txyxan.png"  pushedimage="images\popwnd\txyxan.png" />
+
+          <Container bkimage="images\popwnd\tcsd.png" padding="2,8,0,0"  width="25" height="36" text="手动"/>
+    </HorizontalLayout>
+ <HorizontalLayout  height="1" inset="8,0,8,0" >
+        <Container   bkimage="images\popwnd\tcddxt.png" />
+  </HorizontalLayout>
+
+ <!-- <HorizontalLayout > -->
+   <TileLayout  name="gameitem" inset="0,0,60,0"   itemsize="96,78"   height="200" >
+
+<!--     <VerticalLayout name="complex_button" width="56" enabled="false" visual="false" >
+        <HorizontalLayout name="gamelist"  float="false" height="57" bkimage="file='images\normal\tcyxtb.png' dest='10,10,46,46'">
+
+                <Button name="btngame"   float="false"  group="toolbar_main" userdata="index"  width="56" height="57"  hotimage="images\popwnd\tcxzxg.png" />
+         
+            <Button name="btndel"  userdata="zx" visible= "true" float="true"  pos="-18,2,-2,18"  normalimage="images\popwnd\tcscxg.png" />
+            <Button name="btncheck"  userdata="zx" visible= "true" float="true" height="16" pos="-17,37,-1,0"  normalimage="images\popwnd\tcsdxxjt.png" selectedimage="images\popwnd\tcsdxxxg.png" />
+
+         </HorizontalLayout> 
+        <HorizontalLayout name="IContainer"  float="false"  height="14" >
+
+             <Label name="" text="FIFA ONline"  visible= "true" float="false"  textcolor="#FFFFFFFF" ></Label>
+        
+         </HorizontalLayout> 
+    </VerticalLayout> -->
+
+   </TileLayout >
+<!--     <HorizontalLayout  height="1" inset="8,0,8,0" >
+        <Container   bkimage="images\popwnd\tcddxt.png" />
+  </HorizontalLayout> -->
+  <!-- <HorizontalLayout  height="14"  /> -->
+  <HorizontalLayout  height="36" name="gameitem2" >
+   <Option name="btn_tab1" userdata="0" group="gltabgroup" textcolor="#6AFFFFFF" normalimage="images\normal\dct0.png" selectedimage="images\push\dct1.png"   width="14"  height="12"  visible= "false" padding="390,12,0,0" ></Option>
+    <Option name="btn_tab2" userdata="16" group="gltabgroup" padding="0,12,0,0" textcolor="#6AFFFFFF" normalimage="images\normal\dct0.png" selectedimage="images\push\dct1.png"    visible= "false" width="14" height="12"  ></Option>
+    <Option name="btn_tab3" userdata="32" group="gltabgroup" padding="0,12,0,0" textcolor="#6AFFFFFF" normalimage="images\normal\dct0.png" selectedimage="images\push\dct1.png"    visible= "false" width="14" height="12"  ></Option>
+    <Option name="btn_tab4" userdata="48" group="gltabgroup" padding="0,12,0,0" textcolor="#6AFFFFFF" normalimage="images\normal\dct0.png" selectedimage="images\push\dct1.png"    visible= "false" width="14" height="12"  ></Option>
+    <Option name="btn_tab5" userdata="64" group="gltabgroup" padding="0,12,0,0" textcolor="#6AFFFFFF" normalimage="images\normal\dct0.png" selectedimage="images\push\dct1.png"    visible= "false" width="14" height="12"  ></Option>
+<Control padding="0,0,0,0" width="260" visible="true" />
+<Button name="btn_go" padding="30,0,0,0" width="36" visible="false" normalimage="images\push\tcksyx.png"/>
+<Button name="btn_confirm" padding="10,7,0,0"  width="61" height="22" normalimage="images\popwnd\tcsdqr.png"/>
+  </HorizontalLayout>
+
+
+
+  </VerticalLayout>
+</Window>

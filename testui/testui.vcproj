@@ -41,7 +41,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="D:\thirdpart\DuiLib_Redrain-master\DuiLib"
+				AdditionalIncludeDirectories="D:\thirdpart\DuiLib_Redrain-master\DuiLib;D:\git\3rdpart\sqlite\include;d:\code\curl;jsoncpp;cJSON;"
 				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
@@ -62,7 +62,7 @@
 			<Tool
 				Name="VCLinkerTool"
 				LinkIncremental="2"
-				AdditionalLibraryDirectories="D:\thirdpart\DuiLib_Redrain-master\DLL2008"
+				AdditionalLibraryDirectories="D:\thirdpart\DuiLib_Redrain-master\DLL2008;D:\git\3rdpart\sqlite\lib;d:\code\curl\lib"
 				IgnoreAllDefaultLibraries="false"
 				IgnoreDefaultLibraryNames=""
 				GenerateDebugInformation="true"
@@ -178,11 +178,43 @@
 			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}"
 			>
 			<File
+				RelativePath=".\DataSync.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Date.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\framewnd.cpp"
 				>
 			</File>
 			<File
+				RelativePath=".\GameManage.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\helper.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\ListContainerElementUIex.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\main.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\PopWnd.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\sqlite.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\UserWnd.cpp"
 				>
 			</File>
 		</Filter>
@@ -192,6 +224,14 @@
 			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}"
 			>
 			<File
+				RelativePath=".\DataSync.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Date.h"
+				>
+			</File>
+			<File
 				RelativePath=".\duilib.h"
 				>
 			</File>
@@ -200,7 +240,35 @@
 				>
 			</File>
 			<File
+				RelativePath=".\GameManage.h"
+				>
+			</File>
+			<File
+				RelativePath=".\helper.h"
+				>
+			</File>
+			<File
+				RelativePath=".\ListContainerElementUIex.h"
+				>
+			</File>
+			<File
+				RelativePath=".\md5.h"
+				>
+			</File>
+			<File
+				RelativePath=".\PopWnd.h"
+				>
+			</File>
+			<File
 				RelativePath=".\resource.h"
+				>
+			</File>
+			<File
+				RelativePath=".\sqlite.h"
+				>
+			</File>
+			<File
+				RelativePath=".\UserWnd.h"
 				>
 			</File>
 		</Filter>
@@ -215,6 +283,74 @@
 			</File>
 			<File
 				RelativePath=".\testui.rc"
+				>
+			</File>
+		</Filter>
+		<Filter
+			Name="json"
+			>
+			<File
+				RelativePath=".\jsoncpp\autolink.h"
+				>
+			</File>
+			<File
+				RelativePath=".\jsoncpp\config.h"
+				>
+			</File>
+			<File
+				RelativePath=".\jsoncpp\features.h"
+				>
+			</File>
+			<File
+				RelativePath=".\jsoncpp\forwards.h"
+				>
+			</File>
+			<File
+				RelativePath=".\jsoncpp\json.h"
+				>
+			</File>
+			<File
+				RelativePath=".\jsoncpp\json_batchallocator.h"
+				>
+			</File>
+			<File
+				RelativePath=".\jsoncpp\json_reader.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\jsoncpp\json_value.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\jsoncpp\json_valueiterator.inl"
+				>
+			</File>
+			<File
+				RelativePath=".\jsoncpp\json_writer.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\jsoncpp\reader.h"
+				>
+			</File>
+			<File
+				RelativePath=".\jsoncpp\value.h"
+				>
+			</File>
+			<File
+				RelativePath=".\jsoncpp\writer.h"
+				>
+			</File>
+		</Filter>
+		<Filter
+			Name="cjson"
+			>
+			<File
+				RelativePath=".\cJSON\cJSON.c"
+				>
+			</File>
+			<File
+				RelativePath=".\cJSON\cJSON.h"
 				>
 			</File>
 		</Filter>

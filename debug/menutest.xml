@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Window width="98"  bktrans="true"  >
+<Font name="微软雅黑" size="12" bold="false" default="true" />
+
+<!-- Menu标签的属性要通过Default来定义，为了让下级菜单也能拥有同样的外观 -->
+<Default name="Menu"  value="bordersize=&quot;0&quot; itemtextcolor=&quot;#6AFFFFFF&quot; borderround=&quot;2,2&quot; bordercolor=&quot;0x303132&quot; inset=&quot;2,2,2,2&quot; itemtextpadding=&quot;23,0,0,0&quot; bkimage=&quot;file='images\normal\cdbj.png'  &quot; itemselectedbkcolor=&quot;0x5AFFFFFF&quot;" />
+<!-- ExplandIcon属性定义了下级菜单的小图标的样子 -->
+
+<Menu >
+    <MenuElement text="反馈建议"  width="98"  />
+    <MenuElement text="检查更新"  width="98" />
+    <MenuElement text="帮助" width="98"  />
+    <MenuElement text="关于" width="98"  />
+    <MenuElement text="注销" width="98"  />
+     
+</Menu>
+</Window>

@@ -1,0 +1,222 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<Window size="512,512" caption="0,0,0,32" mininfo="512,512" maxinfo="512,512"  bktrans="true"  roundcorner="4,4" showshadow="true" shadowimage="images\shadow.png" shadowcorner="23,13,23,33">
+    <!-- <Font name="微软雅黑" size="13" bold="true" /> -->
+    <Font name="微软雅黑" size="12" bold="false" default="true" />  
+    <Default name="RichEdit" value="multiline=&quot;false&quot; rich=&quot;false&quot; wantreturn=&quot;false&quot;  wantctrlreturn=&quot;false&quot; readonly=&quot;false&quot; maxchar=&quot;10&quot; visible=&quot;true&quot; focusedimage=&quot;images\userwnd\gryh-grzlyhbj.png&quot; textcolor=&quot;#6AFFFFFF&quot;"/>
+  <Default name="Combo" value="textpadding=&quot;2,1,2,1&quot; normalimage=&quot;file='sys_combo_btn.png' source='0,0,16,16' dest='160,2,176,18'&quot; hotimage=&quot;file='sys_combo_btn.png' source='16,0,32,16' dest='160,2,176,18'&quot; disabledimage=&quot;file='sys_combo_btn.png' source='32,0,48,16' dest='160,2,176,18'&quot;"/>
+  <Default name="ComboBox" value="textpadding=&quot;4,2,4,2&quot; height=&quot;22&quot; bordersize=&quot;1&quot; bordercolor=&quot;#FF6a6a6a&quot; arrowimage=&quot;file='images\userwnd\arrow.png' source='0,0,85,18' &quot; bkcolor=&quot;#5A000000&quot; itembkcolor=&quot;#aF000000&quot; itemtextcolor=&quot;#6AFFFFFF&quot; itemalign=&quot;center&quot;"/>
+    <Default name="DateTime" value="width=&quot;120&quot; height=&quot;23&quot; bordercolor=&quot;#FFCECECE&quot; bordersize=&quot;0&quot; textpadding=&quot;4,2,4,2&quot; arrowimage=&quot;file='sys_datetimesel_btn.png' source='0,0,90,18'&quot; clearimage=&quot;file='sys_datetimeclr_btn.png' source='0,0,70,21'&quot;"/>
+    <VerticalLayout width="512" height="512" bkimage="images\userwnd\gryh-grzlbj.png" >
+      <HorizontalLayout name="toolbar_main" height="26"  float="false"  >
+
+       <Button name="closebtn" padding="480,0,0,0" width="32" height="24" normalimage="images\normal\gb.png" hotimage="images\push\gb.png" selectedimage="images\normal\gb.png"/>
+      </HorizontalLayout>
+      <HorizontalLayout name="toolbar_main" height="49" float="false"  >
+         <HorizontalLayout name="IContainer"  float="false"   width="152">
+            <Button name="btntx"  userdata="tx"  float="true" pos="14,0,0,0" width="44" height="44"  align="bottom"  normalimage="file='images\normal\tx.png' source='0,0,44,44'" hotimage="file='images\normal\tx.png' source='44,0,88,44'"/>
+            <Label name="btnusername" text="天空无限号" visible= "true" float="true"  textcolor="#6AFFFFFF"  pos="-87,15,-10,30"  />
+        </HorizontalLayout>
+      </HorizontalLayout>
+      <HorizontalLayout>
+      <VerticalLayout width="105">
+        <!-- <HorizontalLayout name="IContainer"  float="false"   maxwidth="92"> -->
+            <Option name="btnuinfo"   userdata="tabuserinfo" float="false"  padding="0,10,0,0" group="toolbar_main"  width="105" height="41" align="center" selected="true" normalimage="images\userwnd\gryh-grzlgrzl.png" hotimage="images\userwnd\gryh-grzlbtxz_41.png"  selectedimage="images\userwnd\gryh-grzlbtxz_41.png"  />
+            <Option name="btnuhead"   userdata="tabhead" tabfloat="false"  padding="0,5,0,0" group="toolbar_main"  width="105" height="41" align="center"  normalimage="images\userwnd\gryh-grzlsztx.png"  hotimage="images\userwnd\gryh-grzlbtxz_42.png" selectedimage="images\userwnd\gryh-grzlbtxz_42.png" />
+            <Option name="btnpass"   float="false"  padding="0,5,0,0" group="toolbar_main"  width="105" height="41" align="center"  normalimage="images\userwnd\gryh-grzlxgmm.png"  hotimage="images\userwnd\gryh-grzlbtxz_43.png" selectedimage="images\userwnd\gryh-grzlbtxz_43.png" />
+            <Option name="btnsec"   float="false"  padding="0,5,0,0" group="toolbar_main"  width="105" height="41" align="center"  normalimage="images\userwnd\gryh-grzlaqzx.png"  hotimage="images\userwnd\gryh-grzlbtxz_44.png" selectedimage="images\userwnd\gryh-grzlbtxz_44.png" />
+         <!-- </HorizontalLayout>  -->
+      </VerticalLayout>
+     <!-- <VerticalLayout  width="413"> -->
+     <TabLayout name="body_main_tablayout"  >
+      <VerticalLayout name="tabuserinfo" inset="19,35,0,0">
+        <HorizontalLayout name="item_bar" height="28" float="false"  >
+          <!-- <Label bkimage="images\userwnd\gryh-grzlzh.png" width="66" height="28"/> -->
+          <Label bkimage="images\userwnd\1.png" width="66" height="28"/>
+          <Label name="lblzh" valign="bottom" align="left" textcolor="#6AFFFFFF" width="198" height="28"/>
+        </HorizontalLayout>
+        <Control height="8"/>
+        <HorizontalLayout name="item_bar" height="28" float="false"  >
+          <!-- <Label bkimage="images\userwnd\gryh-grzlnc.png"  width="66" height="28" /> -->
+          <Label bkimage="images\userwnd\3.png"  width="66" height="28" />
+          <Label name="lblnc" text="天地"  valign="bottom"  textcolor="#6AFFFFFF" autocalcwidth="true" width="88" height="28"/>
+          <RichEdit name="edtnc" padding="0,8,0,0" bordersize="1" bordercolor="#FF6a6a6a" valign="bottom" textpadding="0,0,0,0" bkcolor="#5a000000" visible="false" width="172" height="20"/>
+        </HorizontalLayout>
+        <Control height="8"/>
+
+        <HorizontalLayout name="item_bar" height="28" float="false"  >
+          <Label bkimage="images\userwnd\gryh-grzlxb.png" width="66" height="28"/>
+          <!-- <Label text="hello" textcolor="#6AFFFFFF" width="66" height="28"/> -->
+           <VerticalLayout>
+            <Label name="lblsex" text="男"  textcolor="#6AFFFFFF" width="50" height="28"/>
+          <ComboBox name="cbsex" visible="false" droptype="droplist"  width="50" height="22" itemselectedtextcolor="#6AFFFFFF" textpadding="4,1,1,1"  >
+            <ListLabelElement text="男" selected="true" height="23"/>
+            <ListLabelElement text="女" height="23" />
+          </ComboBox>
+           </VerticalLayout>
+        </HorizontalLayout>
+        <Control height="8"/>
+        
+        <HorizontalLayout name="item_bar" height="28" float="false"  >
+          <Label bkimage="images\userwnd\gryh-grzlbjxx.png" width="66" height="28"/>
+      <!-- <DateTime name="DateTime1" bkimage="images\userwnd\gryh-grzlyhbj.png"/> -->
+       <VerticalLayout>
+            <Label  name="lblbt" text="A"  textcolor="#6AFFFFFF" width="50" height="28"/>
+          <ComboBox name="cbbt" visible="false" itemtextcolor="#6AFFFFFF" droptype="droplist" width="50" height="22"  textpadding="4,1,1,1"   itemselectedtextcolor="#6AFFFFFF" >
+            <ListLabelElement text="A" selected="true" height="23"/>
+            <ListLabelElement text="B" height="23" />
+            <ListLabelElement text="AB" height="23" />
+            <ListLabelElement text="O" height="23" />
+          </ComboBox>
+        </VerticalLayout>
+
+        </HorizontalLayout>
+         <HorizontalLayout name="item_bar" height="38" float="false"  />
+         <HorizontalLayout name="item_bar" height="28" float="false"  >
+          <Label bkimage="images\userwnd\gryh-grzlcs.png" width="66" height="28"/>
+           <Label  name="lbldate"   textcolor="#6AFFFFFF" width="100" height="28"/>
+
+          <!-- //<Label text="hello" textcolor="#6AFFFFFF" width="66" height="28"/> -->
+       <VerticalLayout maxwidth="80">
+          <Label name="lblyear" text="2015"   visible="false" textcolor="#6AFFFFFF" width="50" height="28"/>
+          <ComboBox name="cbyear"  virtualwnd="cb_year" visible="false"  itemselectedtextcolor="#6AFFFFFF" width="80" padding="0,5,0,0" > 
+          </ComboBox>
+        </VerticalLayout>
+
+       <VerticalLayout maxwidth="50" >
+        <Label name="lblmon" text="1" visible="false" textcolor="#6AFFFFFF" width="70" height="28"/>
+         <ComboBox name="cbmon"  virtualwnd="cb_mon" visible="false" itemselectedtextcolor="#6AFFFFFF" textcolor="#6AFFFFFF" width="50" padding="0,5,0,0" > 
+            <ListLabelElement text="一月"  userdata="1" />
+            <ListLabelElement text="二月"  userdata="2" />
+            <ListLabelElement text="三月"  userdata="3" />
+            <ListLabelElement text="四月"  userdata="4" />
+            <ListLabelElement text="五月"  userdata="5" />
+            <ListLabelElement text="六月"  userdata="6" />
+            <ListLabelElement text="七月"  userdata="7" />
+            <ListLabelElement text="八月"  userdata="8" />
+            <ListLabelElement text="九月"  userdata="9" />
+            <ListLabelElement text="十月" userdata="10" />
+            <ListLabelElement text="十一月" userdata="11" />
+            <ListLabelElement text="十二月" userdata="12" />
+
+
+          </ComboBox>
+        </VerticalLayout>
+       <VerticalLayout maxwidth="50">
+        <Label name="lblday" text="1"  visible="false" textcolor="#6AFFFFFF" width="50" height="28"/>
+          <ComboBox name="cbday"  visible="false" itemselectedtextcolor="#6AFFFFFF" textcolor="#6AFFFFFF" width="50" padding="0,5,0,0" > 
+            <ListLabelElement text="1" selected="true"/>
+          </ComboBox>
+        </VerticalLayout>
+        </HorizontalLayout>
+        <Control height="8"/>
+
+        <HorizontalLayout name="item_bar" height="28" float="false"  >
+          <Label bkimage="images\userwnd\gryh-grzlnl.png" width="66" height="28"/>
+          <Label name="lblnl" text="hello" textcolor="#6AFFFFFF" width="66" height="28"/>
+        </HorizontalLayout>
+        <Control height="8"/>
+
+                <HorizontalLayout name="item_bar" height="28" float="false"  >
+          <Label bkimage="images\userwnd\gryh-grzlsx.png" width="66" height="28"/>
+          <Label  name="lblsx" text="hello" textcolor="#6AFFFFFF" width="66" height="28"/>
+        </HorizontalLayout>
+        <Control height="8"/>
+
+                <HorizontalLayout name="item_bar" height="28" float="false"  >
+          <Label bkimage="images\userwnd\gryh-grzlxz.png" width="66" height="28"/>
+          <Label  name="lblxz" text="hello" textcolor="#6AFFFFFF" width="66" height="28"/>
+        </HorizontalLayout>
+        <Control height="8"/>
+
+        <HorizontalLayout name="item_bar" height="28" float="false"  >
+          <Label bkimage="images\userwnd\gryh-grzlszd.png" width="66" height="28"/>
+           <Label  name="lblszd"   textcolor="#6AFFFFFF" width="200" height="28"/>
+
+          <VerticalLayout maxwidth="70">
+          <Label name="lblnat" text="中国" visible="false" textcolor="#6AFFFFFF" width="70" height="22"/>
+          <ComboBox name="cbnat"  visible="false" focusbordercolor="#6affffff" itemselectedtextcolor="#6AFFFFFF" width="70" padding="0,5,0,0" > 
+            <ListLabelElement text="中国" selected="true"/>
+          </ComboBox>
+        </VerticalLayout>
+       <VerticalLayout maxwidth="70" >
+        <Label name="lblprov" text="广东省" visible="false" textcolor="#6AFFFFFF" width="70" height="22"/>
+         <ComboBox name="cbprov"  visible="false" itemselectedtextcolor="#6AFFFFFF" textcolor="#6AFFFFFF" width="70" padding="0,5,0,0" > 
+            <ListLabelElement text="广东省" selected="true"/>
+          </ComboBox>
+        </VerticalLayout>
+       <VerticalLayout maxwidth="70">
+        <Label name="lblcity" text="汕头" visible="false" textcolor="#6AFFFFFF" width="70" height="22"/>
+          <ComboBox name="cbcity"   visible="false" itemselectedtextcolor="#6AFFFFFF" textcolor="#6AFFFFFF" width="70" padding="0,5,0,0" > 
+            <ListLabelElement text="汕头" selected="true"/>
+          </ComboBox>
+        </VerticalLayout>
+        </HorizontalLayout>
+        <HorizontalLayout>
+        <Button name="btnconfirm"  userdata="confirm"  visible="false" padding="227,18,0,0" width="61" height="22"   normalimage="images\userwnd\gryh-grzlbc.png"/>
+        <Button name="btncancel"  userdata="cancel"  visible="false" padding="10,18,0,0" width="61" height="22"   normalimage="images\userwnd\gryh-grzlqx.png"/>
+        <Button name="btnedit"  userdata="edit"  padding="298,18,0,0" width="61" height="22"   normalimage="images\userwnd\gryh-grzlbjzl.png"/>
+        </HorizontalLayout>
+      </VerticalLayout>
+
+      <VerticalLayout name="tabhead" inset="35,35,0,0">
+        <HorizontalLayout name="item_bar" height="28" float="false"  >
+        <Label name="btndefhead"  text="默认头像" width="61" height="28"  />
+          <!-- <Label bkimage="images\userwnd\gryh-grzlzh.png" width="66" height="28"/> -->
+        </HorizontalLayout>
+        <HorizontalLayout name="item_bar" height="28" float="false"  >
+
+         <Label text="推荐头像" width="66" height="28"/>
+          <Label text="预览" padding="200" width="66" height="28"/>
+
+        </HorizontalLayout>
+
+        <HorizontalLayout height="210">
+         
+
+           <TileLayout  name="headitem" inset="0,8,0,0"  focusbordercolor="#cccccccc" itemsize="55,55"  childpadding="15,0,0,0"  width="240" height="240" >
+             <Button name="btnhead1"   float="false"  group="toolbar_main" userdata="index" bordercolor="#6affffff" focusbordercolor="#cccccccc" bordersize="1" width="51" height="51"  normalimage="images\head\img7.jpg" />
+             <Button name="btnhead2"   float="false"  group="toolbar_main" userdata="index"  bordercolor="#6affffff" focusbordercolor="#cccccccc" bordersize="1"  width="51" height="51"  normalimage="images\head\img8.jpg" />
+            <Button name="btnhead3"   float="false"  group="toolbar_main" userdata="index"  bordercolor="#6affffff" focusbordercolor="#cccccccc" bordersize="1"  width="51" height="51"  normalimage="images\head\img9.jpg" />
+            <Button name="btnhead4"   float="false"  group="toolbar_main" userdata="index"  bordercolor="#6affffff" focusbordercolor="#cccccccc" bordersize="1"  width="51" height="51"  normalimage="images\head\img10.jpg" />
+             <Button name="btnhead5"   float="false"  group="toolbar_main" userdata="index"  bordercolor="#6affffff" focusbordercolor="#cccccccc" bordersize="1"  width="51" height="51"  normalimage="images\head\img11.jpg" />
+            <Button name="btnhead6"   float="false"  group="toolbar_main" userdata="index"  bordercolor="#6affffff" focusbordercolor="#cccccccc" bordersize="1"  width="51" height="51"  normalimage="images\head\img12.jpg" />
+            <Button name="btnhead7"   float="false"  group="toolbar_main" userdata="index"  bordercolor="#6affffff" focusbordercolor="#cccccccc" bordersize="1"  width="51" height="51"  normalimage="images\head\img7.jpg" />
+             <Button name="btnhead8"   float="false"  group="toolbar_main" userdata="index"  bordercolor="#6affffff" focusbordercolor="#cccccccc" bordersize="1"  width="51" height="51"  normalimage="images\head\img8.jpg" />
+            <Button name="btnhead9"   float="false"  group="toolbar_main" userdata="index"  bordercolor="#6affffff" focusbordercolor="#cccccccc" bordersize="1"  width="51" height="51"  normalimage="images\head\img9.jpg" />
+            <Button name="btnhead10"   float="false"  group="toolbar_main" userdata="index"  bordercolor="#6affffff" focusbordercolor="#cccccccc" bordersize="1"  width="51" height="51"  normalimage="images\head\img10.jpg" />
+             <Button name="btnhead11"   float="false"  group="toolbar_main" userdata="index"   bordercolor="#6affffff" focusbordercolor="#cccccccc" bordersize="1"  width="51" height="51"  normalimage="images\head\img11.jpg" />
+            <Button name="btnhead12"   float="false"  group="toolbar_main" userdata="index"  bordercolor="#6affffff" focusbordercolor="#cccccccc" bordersize="1"  width="51" height="51"  normalimage="images\head\img12.jpg" />
+
+        </TileLayout >
+
+       <VerticalLayout  width="24" />
+       <VerticalLayout  inset="0,10,0,0" >
+
+          <Button name="btnshowhead"  userdata="head"  bordersize="1" focusbordercolor="#cccccccc" bordercolor="#6affffff" width="36" height="36"  normalimage="images\head\img7.jpg" />
+          <Control height="30"/>
+          <Label text="选择头像" width="66" height="28"/>
+          <Button name="btnhdhead"  userdata="head"  bordersize="1" focusbordercolor="#cccccccc" bordercolor="#6affffff"  width="70" height="70"  normalimage="images\head\img7.jpg" />
+
+       </VerticalLayout>
+
+     </HorizontalLayout>
+      <HorizontalLayout height="28">
+          <Label text="使用过的" width="66" height="28"/>
+     </HorizontalLayout>
+     <HorizontalLayout childpadding="5" focusbordercolor="#cccccccc" >
+          <Button name="btnusedhead1"  userdata="head"    bordersize="1" focusbordercolor="#cccccccc" bordercolor="#6affffff" width="36" height="36"  normalimage="images\head\img7.jpg" />
+          <Button name="btnusedhead2"  userdata="head"   bordersize="1" focusbordercolor="#cccccccc"  bordercolor="#6affffff" width="36" height="36"  normalimage="images\head\img7.jpg" />
+          <Button name="btnusedhead3"  userdata="head"   bordersize="1"  focusbordercolor="#cccccccc" bordercolor="#6affffff" width="36" height="36"  normalimage="images\head\img7.jpg" />
+          <Button name="btnusedhead4"  userdata="head"   bordersize="1" focusbordercolor="#cccccccc"  bordercolor="#6affffff" width="36" height="36"  normalimage="images\head\img7.jpg" />
+     </HorizontalLayout>
+     <HorizontalLayout>
+        <Button name="btnconfirmhead"  userdata="confirm"   padding="212,18,0,0" width="61" height="22"   normalimage="images\userwnd\gryh-grzlbc.png"/>
+        <Button name="btncancelhead"  userdata="cancel"  padding="10,18,0,0" width="61" height="22"   normalimage="images\userwnd\gryh-grzlqx.png"/>
+    </HorizontalLayout>
+    </VerticalLayout>
+      </TabLayout>
+
+     <!-- </VerticalLayout> -->
+    </HorizontalLayout>
+    </VerticalLayout>
+</Window>
