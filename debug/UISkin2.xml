@@ -19,9 +19,13 @@
       </HorizontalLayout>
       <HorizontalLayout name="toolbar_main" height="49" float="false"  >
          <HorizontalLayout name="IContainer"  float="false"   width="152">
-            <Button name="btntx"  userdata="tx"  float="true" pos="14,0,0,0" width="44" height="44"  align="bottom"  normalimage="file='images\normal\tx.png' source='0,0,44,44'" hotimage="file='images\normal\tx.png' source='44,0,88,44'"/>
-<!--                  <Option name="btntx"  userdata="tx"  float="true" pos="14,0,0,0" width="44" height="44"  align="bottom" normalimage="images\normal\tx.png" hotimage="images\push\tx.png"/> -->
-        <Label name="btnusername" text="天空无限号" visible= "true" float="true"  textcolor="#6AFFFFFF"  pos="-87,15,-10,30"  />
+
+          <HorizontalLayout padding="10,0,0,0" width="44" height="44">
+          <Control name="bk"  width="44" height="44"  bkimage="images\userwnd\gryh-grzltxyl.png"/>
+          <Button name="btntx"  userdata="head"   width="42" height="42" bkimage="images\head\r\1.png" hotimage="images\head\txbk.png" float="true" pos="1,1,41,41" />
+
+          </HorizontalLayout>
+        <Label name="lblnickname" text="天空无限号" visible= "true" float="true"  textcolor="#6AFFFFFF"  pos="-87,15,-10,30"  />
             
            </HorizontalLayout>
         <HorizontalLayout name="IContainer"  float="false"   maxwidth="92">

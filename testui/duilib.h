@@ -115,3 +115,4 @@ extern CString g_strUserAcct ;
 #define WM_GAME_DETAIL			   WM_USER+103
 #define WM_GAME_RELOAD			   WM_USER+104
 #define WM_GAME_RESETHEAD		   WM_USER+105
+#define WM_GAME_RESETNICKNAME	   WM_USER+106

@@ -6,7 +6,6 @@
 #include "PopWnd.h"
 #include "GameManage.h"
 #include "json.h"
-#include "cJSON.h"
 #include "DataSync.h"
 #include "md5.h"
 #include "UserWnd.h"
@@ -36,6 +35,7 @@ CList_Game::CList_Game()
 	m_pLastKsBtn = NULL;
 	m_pWebBrowser = NULL;
 	m_popHwnd = NULL;
+	m_bSomeOneSelected = false;
 	m_nCurCount = 0;
 
 	//AddGameNode(_T("baba"), 1001);
@@ -109,9 +109,22 @@ void CList_Game::OnClick(TNotifyUI& msg)
 	else if(msg.pSender->GetName() == _T("btnviewgame"))
 	{
 		CHorizontalLayoutUI* pNodeContainer = static_cast<CHorizontalLayoutUI*>(msg.pSender->GetParent());
-		CListContainerElementUI* pNode = static_cast<CListContainerElementUI*>(pNodeContainer->GetParent());
-		pNode->Select();
+		CListContainerElementUIex* pNode = static_cast<CListContainerElementUIex*>(pNodeContainer->GetParent());
+		m_bSomeOneSelected  = pNode->Select();
+		CControlUI* pKs = pNode->FindSubControl(_T("btn_ks"));
+		if(pKs!=NULL)
+		{
 
+			pKs->SetVisible();
+
+			if(m_pLastKsBtn != NULL)
+			{
+					m_pLastKsBtn->SetVisible(false);
+
+			}
+			m_pLastKsBtn = pKs;
+
+		}
 
 		CTabLayoutUI* pTabLayout = static_cast<CTabLayoutUI*>(m_pPaintManager->FindControl(_T("body_main_tablayout")));
 		//CControlUI* pItem = m_pPaintManager->FindControl(_T("start"));
@@ -145,11 +158,11 @@ void CList_Game::OnClick(TNotifyUI& msg)
 			ShellExecute(NULL, _T("open"), url, NULL,NULL, SW_SHOW);
 			return ;
 		}
-		bool bRet = CGameManage::GetInstance().ExistGamePath(gameid);
+		CString  filePath = CGameManage::GetInstance().ExistGamePath(gameid);
 
-		if(!bRet)
+		if(filePath == "")
 		{
-			CString filePath = ShowOpenFileDialog(0);
+			filePath = ShowOpenFileDialog(0);
 			if(filePath != "")
 			{
 				bool bRet = CGameManage::GetInstance().SetGamePath(filePath, gameid);
@@ -158,11 +171,20 @@ void CList_Game::OnClick(TNotifyUI& msg)
 					s_need_reload = true;
 				}
 			}
-			else
+		}
+		else
+		{
+			if(!::PathFileExists(filePath))
 			{
-				CGameManage::GetInstance().UpdateGamePlayTimes(gameid);
-				//excute game
+				filePath = ShowOpenFileDialog(0);
+				if(filePath != "")
+				{
+					bool bRet = CGameManage::GetInstance().SetGamePath(filePath, gameid);
+				}
 			}
+			CGameManage::GetInstance().UpdateGamePlayTimes(gameid);
+			ShellExecute(0 ,_T("open"), filePath, _T(""), _T(""),SW_SHOWNORMAL);
+			//excute game
 		}
 	}
 
@@ -181,14 +203,17 @@ void CList_Game::OnItemClick( TNotifyUI &msg )
 		{
 			return ;
 		}
-		pKs->SetVisible();
+		if(!m_bSomeOneSelected)
+			pKs->SetVisible();
 
 		if(m_pLastKsBtn != NULL)
 		{
-			m_pLastKsBtn->SetVisible(false);
+			if(!m_bSomeOneSelected)
+				m_pLastKsBtn->SetVisible(false);
 
 		}
-		m_pLastKsBtn = pKs;
+		if(!m_bSomeOneSelected)
+			m_pLastKsBtn = pKs;
 
 	}
 }
@@ -211,7 +236,7 @@ void CList_Game::SetAddGameBtnPtr(CHorizontalLayoutUI* pBtn)
 	m_addnewgame = pBtn;
 }
 
-void CList_Game::AddGameNode(const CString& name, const CString& imgurl, int gameid, int type)
+void CList_Game::AddGameNode(const CString& name, const CString& imgurl, int gameid, int type, int bInsLast/*=false*/)
 {
 	CListContainerElementUIex *new_node = new CListContainerElementUIex;
 	new_node->ApplyAttributeList(_T("height=\"47\" name=\"listitem\" "));
@@ -261,7 +286,10 @@ void CList_Game::AddGameNode(const CString& name, const CString& imgurl, int gam
 	new_h_lay->Add(new_bk);
 	new_h_lay->Add(new_btn_2);
 	new_node->Add(new_h_lay);
-	m_pList->AddAt(new_node, 0);
+	if(!bInsLast)
+		m_pList->AddAt(new_node, 0);
+	else 
+		m_pList->Add(new_node);
 	if(m_nCurCount>=9)
 	{
 		m_pList->RemoveAt(m_nCurCount+1);
@@ -364,6 +392,7 @@ CFrameWnd::CFrameWnd( LPCTSTR pszXMLPath ): CXMLWnd(pszXMLPath),m_pPopWnd(NULL)
 
 CFrameWnd::~CFrameWnd()
 {
+	::UnregisterHotKey(m_hWnd,199);
 	RemoveVirtualWnd(_T("list_game"));
 
 }
@@ -378,12 +407,24 @@ HRESULT STDMETHODCALLTYPE CFrameWnd::GetHostInfo( DOCHOSTUIINFO __RPC_FAR *pInfo
 	}
 	return S_OK;
 }
-
+void CFrameWnd::ResetNickName()
+{
+	int userid = _ttoi((LPCTSTR)g_strUserID);
+	SQLiteDataReader sdr = CGameManage::GetInstance().GetUser(userid);
+	while(sdr.Read())
+	{
+		m_pLblNickName = static_cast<CLabelUI*>(m_PaintManager.FindControl(_T("lblnickname")));
+		CString strNickName = sdr.GetStringValue(10);
+		m_pLblNickName->SetText(strNickName);
+	}
+}
 void CFrameWnd::InitWindow()
 {
 	//    SetIcon(IDR_MAINFRAME); // 设置任务栏图标
 	CenterWindow();
+	::RegisterHotKey(m_hWnd, 199, MOD_ALT, 'Z');
 
+	ResetNickName();
 	// 初始化CActiveXUI控件
 	 pINDEX = static_cast<CWebBrowserUI*>(m_PaintManager.FindControl(_T("index")));
 	 pZX = static_cast<CWebBrowserUI*>(m_PaintManager.FindControl(_T("zx")));
@@ -447,8 +488,7 @@ void CFrameWnd::InitWindow()
 	m_Listgame.SetFrameHwnd(GetHWND());
 	m_Listgame.SetListPtr(down_list);
 	m_Listgame.SetWebBrowserPtr(pSTART);
-	CHorizontalLayoutUI* m_addnewgame = m_Listgame.AddGameBtn();
-	m_Listgame.SetAddGameBtnPtr(m_addnewgame);
+	
 	int cMode = CGameManage::GetInstance().GetControlMode();
 	if(cMode == 1 || cMode == 3)//auto
 	{
@@ -462,7 +502,7 @@ void CFrameWnd::InitWindow()
 			int topmost= sdr.GetIntValue(3);
 			int playtimes= sdr.GetIntValue(4);
 			int type = sdr.GetIntValue(5);
-			m_Listgame.AddGameNode(name, iconpath, gameid, type);
+			m_Listgame.AddGameNode(name, iconpath, gameid, type, true);
 			nCount++;
 			if(nCount >= 9)
 			{
@@ -482,12 +522,14 @@ void CFrameWnd::InitWindow()
 			int topmost= sdr.GetIntValue(3);
 			int playtimes= sdr.GetIntValue(4);
 			int type = sdr.GetIntValue(5);
-			m_Listgame.AddGameNode(name, iconpath, gameid, type);
+			m_Listgame.AddGameNode(name, iconpath, gameid, type,true);
 			nCount++;
 			if(nCount >= 9) break;
 		}
 
 	}
+	CHorizontalLayoutUI* m_addnewgame = m_Listgame.AddGameBtn();
+	m_Listgame.SetAddGameBtnPtr(m_addnewgame);
 	//SendMessage(WM_JUMP_YXK);
 
 	//m_Listgame.AddGameNode(_T("天涯明月刀"), _T("\\images\\gamesign\\yxgzbz_13.png"), 25);
@@ -607,6 +649,16 @@ void CFrameWnd::Notify( TNotifyUI& msg )
 	__super::Notify(msg);
 }
 
+void CFrameWnd::OnHotKey(WPARAM wp,LPARAM lp)
+{
+	if(wp==199)
+	{
+		if(IsWindowVisible(GetHWND()))
+			ShowWindow(SW_HIDE);
+		else
+			ShowWindow(SW_SHOWNORMAL);
+	}
+}
 CControlUI* CFrameWnd::CreateControl( LPCTSTR pstrClassName )
 {
 
@@ -702,11 +754,19 @@ LRESULT CFrameWnd::HandleMessage( UINT uMsg,WPARAM wParam,LPARAM lParam )
 
 		}
 	}
+	else if(WM_HOTKEY == uMsg)
+	{
+		OnHotKey(wParam, lParam);
+
+	}
 	else if(WM_GAME_RESETHEAD == uMsg)
 	{
 		CString str = (LPCTSTR)lParam;
-		m_pBtntx->SetNormalImage(str);
-
+		m_pBtntx->SetBkImage(str);
+	}
+	else if(WM_GAME_RESETNICKNAME == uMsg)
+	{
+		ResetNickName();
 	}
 	else if(WM_JUMP_YXK== uMsg)
 	{
@@ -725,7 +785,7 @@ LRESULT CFrameWnd::HandleMessage( UINT uMsg,WPARAM wParam,LPARAM lParam )
 			int playtimes= sdr.GetIntValue(4);
 			int type = sdr.GetIntValue(5);
 
-			m_Listgame.AddGameNode(name, iconpath, gameid, type);
+			m_Listgame.AddGameNode(name, iconpath, gameid, type,true);
 			nCount++;
 			if(nCount >= 9)
 			{
@@ -751,7 +811,7 @@ LRESULT CFrameWnd::HandleMessage( UINT uMsg,WPARAM wParam,LPARAM lParam )
 			int topmost= sdr.GetIntValue(3);
 			int playtimes= sdr.GetIntValue(4);
 			int type = sdr.GetIntValue(5);
-			m_Listgame.AddGameNode(name, iconpath, gameid, type);
+			m_Listgame.AddGameNode(name, iconpath, gameid, type,true);
 			nCount++;
 			if(nCount >= 9)
 			{
@@ -872,8 +932,6 @@ void CFrameWnd::JumpToIndex(const CString& name)
 	CControlUI* pItem2 = m_PaintManager.FindControl(_T("index"));
 	pTabLayout->SelectItem(pItem2);
 	s_cur_webbrowser_ptr = static_cast<CWebBrowserUI*>(pItem2);	
-
-
 }
 
 void CFrameWnd::JumpToYXK()
@@ -891,8 +949,6 @@ void CFrameWnd::JumpToYXK()
 
 
 }
-
-
 
 LRESULT CFrameWnd::OnChar( UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled )
 {

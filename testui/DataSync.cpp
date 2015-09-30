@@ -22,11 +22,12 @@ bool CDataSync::GetData(const CString& sUrl, char* szBuffer, DWORD dwBuffer)
 {
 	//CString data;
 	bool bRet = false;
-	HINTERNET hConnect = InternetOpen(NULL, INTERNET_OPEN_TYPE_DIRECT, NULL, NULL, 0); 
+
+	HINTERNET hConnect = InternetOpen(NULL, INTERNET_OPEN_TYPE_DIRECT, NULL, NULL, INTERNET_FLAG_ASYNC); 
 	
 	if (hConnect)
 	{
-		DWORD dwTimeOut = 0;
+		DWORD dwTimeOut = 3000;
 		InternetSetOption(hConnect, INTERNET_OPTION_CONNECT_TIMEOUT, &dwTimeOut, sizeof(dwTimeOut));
 
 		HINTERNET hSession = InternetOpenUrl(hConnect, sUrl, NULL, 0, INTERNET_FLAG_TRANSFER_BINARY | INTERNET_FLAG_PRAGMA_NOCACHE, 0);
@@ -137,7 +138,7 @@ CString CDataSync::DownloadFile(const CString& surl)
 		 {
 			 return "";
 		 }
-	return szFile;
+	return sImageName;
 
 }
 

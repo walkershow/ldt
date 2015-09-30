@@ -196,6 +196,12 @@ LRESULT CPopWnd::HandleCustomMessage(UINT uMsg, WPARAM wParam, LPARAM lParam, BO
 						int topmost= sdr.GetIntValue(3);
 						int playtimes= sdr.GetIntValue(4);
 						int type = sdr.GetIntValue(5);
+						int status = sdr.GetIntValue(6);
+						int rstatus = sdr.GetIntValue(7);
+						if(status<0 || rstatus !=-1)
+						{
+							continue;
+						}
 						TileNode* tn = AddTileNode(name, iconpath,gameid, topmost, type);
 						/*for test
 						if(m_nGameCount == 0) 
@@ -301,6 +307,8 @@ void CPopWnd::Notify( TNotifyUI &msg )
 				::SendMessage(hParent, WM_REFRESH_GAMELIST_MANUAL, 0, 0 );
 
 			}
+			int gameid = msg.pSender->GetTag();
+			CGameManage::GetInstance().DelGame(gameid);
 			//m_vecGameDelBtns.erase(pP);
 
 		}
@@ -335,9 +343,9 @@ void CPopWnd::Notify( TNotifyUI &msg )
 
 				return ;
 			}
-			bool bRet = CGameManage::GetInstance().ExistGamePath(gameid);
+			CString  filePath = CGameManage::GetInstance().ExistGamePath(gameid);
 
-			if(!bRet)
+			if(filePath == "")
 			{
 				CString filePath = ShowOpenFileDialog(0);
 				if(filePath != "")
@@ -348,11 +356,19 @@ void CPopWnd::Notify( TNotifyUI &msg )
 						::SendMessage(GetHWND(), WM_GAME_RELOAD, 0 ,0);
 					}
 				}
-				else
+			}
+			else
+			{
+				if(!::PathFileExists(filePath))
 				{
-					CGameManage::GetInstance().UpdateGamePlayTimes(gameid);
-					//excute game
+					filePath = ShowOpenFileDialog(0);
+					if(filePath != "")
+					{
+						bool bRet = CGameManage::GetInstance().SetGamePath(filePath, gameid);
+					}
 				}
+				CGameManage::GetInstance().UpdateGamePlayTimes(gameid);
+				ShellExecute(0 ,_T("open"), filePath, _T(""), _T(""),SW_SHOWNORMAL);
 			}
 		}
 	}
@@ -538,8 +554,8 @@ TileNode* CPopWnd::AddTileNode(const CString& gameName,const CString& iconPath, 
 	new_v_lay->Add(new_btn_3);
 	new_v_lay->Add(new_btn_2);
 
-	bool bRet = CGameManage::GetInstance().ExistGamePath(gameid);
-	if(!bRet && type !=2)
+	CString strRet = CGameManage::GetInstance().ExistGamePath(gameid);
+	if(strRet=="" && type !=2)
 	{
 
 		CControlUI *new_btn_4 = new CControlUI;

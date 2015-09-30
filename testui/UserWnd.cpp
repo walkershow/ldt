@@ -170,8 +170,14 @@ void CUserWnd::OnClick( TNotifyUI &msg )
 		{
 			m_vecPCBox[i]->SetVisible(true);
 		}
+		for(int i=0; i<m_vecPLblBK.size(); i++)
+		{
+			RECT r={0,12,0,0};
+			m_vecPLblBK[i]->SetPadding(r);
+		}
 		m_PRedit->SetVisible(true);
 		InitCtrlVal();
+
 
 	}
 	else if(sName == _T("btnconfirm") )
@@ -217,13 +223,21 @@ void CUserWnd::OnClick( TNotifyUI &msg )
 		for(int i=0;i<m_vecPLbl.size(); i++)
 		{
 			m_vecPLbl[i]->SetVisible(true);
+			RECT r={0,16,0,0};
+			m_vecPLblBK[i]->SetPadding(r);
 		}
 		for(int i=0;i<m_vecPCBox.size(); i++)
 		{
 			m_vecPCBox[i]->SetVisible(false);
 		}
+		for(int i=0; i<m_vecPLblBK.size(); i++)
+		{
+			RECT r={0,16,0,0};
+			m_vecPLblBK[i]->SetPadding(r);
+		}
 		m_PRedit->SetVisible(false);
 		InitCtrlVal();
+		::SendMessage(m_parentHwnd, WM_GAME_RESETNICKNAME, 0, 0);
 	}
 	else if(sName == _T("btncancel") )
 	{
@@ -239,6 +253,11 @@ void CUserWnd::OnClick( TNotifyUI &msg )
 		for(int i=0;i<m_vecPCBox.size(); i++)
 		{
 			m_vecPCBox[i]->SetVisible(false);
+		}
+		for(int i=0; i<m_vecPLblBK.size(); i++)
+		{
+			RECT r={0,16,0,0};
+			m_vecPLblBK[i]->SetPadding(r);
 		}
 		m_PRedit->SetVisible(false);
 		InitCtrlVal();
@@ -262,18 +281,26 @@ void CUserWnd::OnClick( TNotifyUI &msg )
 		if(pbtn != NULL)
 		{
 			m_pHDBtn->SetNormalImage(pbtn->GetNormalImage());
-			m_pShowBtn->SetNormalImage(pbtn->GetNormalImage());
+			CString strHead = pbtn->GetNormalImage();
+			strHead.Replace(_T("t\\"), _T("r\\"));
+			strHead.Replace(_T(".jpg"), _T(".png"));
+			m_pShowBtn->SetNormalImage(strHead);
 		}
 
 	}
 	else if(sName.Find(_T("btnconfirmhead"))>=0)
 	{
-		CString str = m_pShowBtn->GetNormalImage();
+		CString strHead = m_pShowBtn->GetNormalImage();
+		strHead.Replace(_T("t\\"), _T("r\\"));
+		strHead.Replace(_T(".jpg"), _T(".png"));
+		m_pBtnTx->SetNormalImage(strHead);
+		CString str = m_vecPLbl[0]->GetText();
+		m_pLblName->SetText(str);
 // 		CString sAppPath = CPaintManagerUI::GetInstancePath().GetData();
 // 		TCHAR szFile[MAX_PATH] = {0};
 // 		lstrcpy(szFile, sAppPath);
 // 		::PathAppend(szFile, _T("\\images\head\tx.jpg"));
-		::SendMessage(m_parentHwnd, WM_GAME_RESETHEAD, str.GetLength(), (LPARAM)(LPCTSTR)str);
+		::SendMessage(m_parentHwnd, WM_GAME_RESETHEAD, strHead.GetLength(), (LPARAM)(LPCTSTR)strHead);
 /*		MoveFileEx((LPCSTR)(LPCTSTR)str,szFile_T(,MOVEFILE_REPLACE_EXISTING);*/
 
 	}
@@ -286,6 +313,8 @@ void CUserWnd::OnClick( TNotifyUI &msg )
 
 void CUserWnd::InitWindow()
 {
+	m_pBtnTx =  static_cast<CButtonUI*>(m_PaintManager.FindControl(_T("btntx")));
+	m_pLblName = static_cast<CLabelUI*>(m_PaintManager.FindControl(_T("lblusername")));
 	m_pHDBtn = static_cast<CButtonUI*>(m_PaintManager.FindControl(_T("btnhdhead")));
 	m_pShowBtn = static_cast<CButtonUI*>(m_PaintManager.FindControl(_T("btnshowhead")));
 	m_pSave = static_cast<CButtonUI*>(m_PaintManager.FindControl(_T("btnconfirm")));
@@ -301,6 +330,17 @@ void CUserWnd::InitWindow()
 	m_vecPLbl.push_back(pLbl);
 	pLbl = static_cast<CLabelUI*>(m_PaintManager.FindControl(_T("lblbt")));
 	m_vecPLbl.push_back(pLbl);
+
+	pLbl = static_cast<CLabelUI*>(m_PaintManager.FindControl(_T("lbl1")));
+	m_vecPLblBK.push_back(pLbl);
+	pLbl = static_cast<CLabelUI*>(m_PaintManager.FindControl(_T("lbl2")));
+	m_vecPLblBK.push_back(pLbl);
+	pLbl = static_cast<CLabelUI*>(m_PaintManager.FindControl(_T("lbl3")));
+	m_vecPLblBK.push_back(pLbl);
+	pLbl = static_cast<CLabelUI*>(m_PaintManager.FindControl(_T("lbl4")));
+	m_vecPLblBK.push_back(pLbl);
+	pLbl = static_cast<CLabelUI*>(m_PaintManager.FindControl(_T("lbl5")));
+	m_vecPLblBK.push_back(pLbl);
 // 	pLbl = static_cast<CLabelUI*>(m_PaintManager.FindControl(_T("lblyear")));
 // 	m_vecPLbl.push_back(pLbl);
 // 	pLbl = static_cast<CLabelUI*>(m_PaintManager.FindControl(_T("lblmon")));
@@ -339,6 +379,8 @@ void CUserWnd::InitWindow()
 		
 
 }
+
+
 //select userid,useracct,bt,sex,birthyear,birthmon,birthday,country,prov,city,nickname from user where userid=%d
 
 void CUserWnd::InitCtrlVal()
@@ -349,7 +391,9 @@ void CUserWnd::InitCtrlVal()
 	{
 		CLabelUI *pLbl = static_cast<CLabelUI*>(m_PaintManager.FindControl(_T("lblzh")));
 		pLbl->SetText(g_strUserAcct);
-		CString str,strdate,strszd;
+		CString str,strdate,strszd,strNickName;
+		strNickName = sdr.GetStringValue(10);
+		m_pLblName->SetText(strNickName);
 		str = sdr.GetStringValue(3);
 		m_vecPLbl[1]->SetText(str);
 		str = sdr.GetStringValue(2);

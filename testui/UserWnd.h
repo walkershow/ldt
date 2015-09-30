@@ -31,6 +31,7 @@ public:
 		void OnSelect( TNotifyUI &msg );
 private:
 	vector<CLabelUI*> m_vecPLbl;
+	vector<CLabelUI*> m_vecPLblBK;
 	vector<CComboBoxUI*> m_vecPCBox;
 	CRichEditUI* m_PRedit;
 	CDate m_date;
@@ -41,6 +42,8 @@ private:
 	CLabelUI *m_pSzd;
 	CButtonUI *m_pShowBtn;
 	CButtonUI *m_pHDBtn;
+	CButtonUI* m_pBtnTx;
+	CLabelUI* m_pLblName;
 	HWND m_parentHwnd;
 
 

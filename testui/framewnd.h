@@ -22,7 +22,7 @@ public:
 	void SetListPtr(CListUI* pList);
 	void SetAddGameBtnPtr(CHorizontalLayoutUI* pBtn);
 	CHorizontalLayoutUI* AddGameBtn();
-	void AddGameNode(const CString& name, const CString& imgurl, int gameid, int type);
+	void AddGameNode(const CString& name, const CString& imgurl, int gameid, int type, int bInsLast=false);
 	int	 GetCount();
 	void Reset();
 	void SetWebBrowserPtr(CWebBrowserUI*& pWebBrowser);
@@ -41,6 +41,7 @@ private:
 	CWebBrowserUI* m_pWebBrowser;
 	HWND m_frameHwnd;
 	HWND m_popHwnd;
+	bool m_bSomeOneSelected;
 
 };
 
@@ -66,7 +67,8 @@ public:
 	void JumpToIndex(const CString& name);
 	void SetBtnTabVisible();
 	void JumpToYXK();
-
+	void OnHotKey(WPARAM wp,LPARAM lp);
+	void ResetNickName();
 private:
 	CWebBrowserUI* m_pWebBrowser;
 	CControlUI* m_pLastClickBtn;
@@ -88,4 +90,5 @@ private:
 	CControlUI* m_pLastKsBtn;
 	CHorizontalLayoutUI* m_addnewgame;
 	CButtonUI* m_pBtntx;
+	CLabelUI* m_pLblNickName;
 };

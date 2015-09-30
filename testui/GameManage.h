@@ -48,21 +48,21 @@ public:
 	}
 	SQLiteDataReader GetAllGameByWWGMode()
 	{
-		return m_db.ExcuteQuery(_T("select  a.gameid,name,iconpath,topmost,playtimes,type from game_manage a left OUTER JOIN  game_path b on a.gameid=b.gameid order by path,lastplaytime"));
+		return m_db.ExcuteQuery(_T("select  a.gameid,name,iconpath,topmost,playtimes,type,status,rstatus from game_manage a left OUTER JOIN  game_path b on a.gameid=b.gameid  order by path,lastplaytime desc"));
 
 	}
 	SQLiteDataReader GetAllGameByAutoMode()
 	{
-		return m_db.ExcuteQuery(_T("select gameid,name,iconpath,topmost,playtimes,type from game_manage where status>=0 and rstatus=-1 order by lastplaytime asc ;"));
+		return m_db.ExcuteQuery(_T("select gameid,name,iconpath,topmost,playtimes,type from game_manage where status>=0 and rstatus=-1 order by lastplaytime desc ;"));
 	}
 
 	SQLiteDataReader GetAllGameByManualMode()
 	{
-		return m_db.ExcuteQuery(_T("select gameid,name,iconpath,topmost,playtimes,type from game_manage where topmost=1 and status>=0 and rstatus=-1 order by topmost,lastplaytime asc;"));
+		return m_db.ExcuteQuery(_T("select gameid,name,iconpath,topmost,playtimes,type from game_manage where topmost=1 and status>=0 and rstatus=-1 order by topmost,lastplaytime desc;"));
 	}
 	SQLiteDataReader GetAllGame()
 	{
-		return m_db.ExcuteQuery(_T("select gameid,name,iconpath,topmost,playtimes,type from game_manage where status>=0 and rstatus=-1 order by lastplaytime asc;"));
+		return m_db.ExcuteQuery(_T("select gameid,name,iconpath,topmost,playtimes,type from game_manage where status>=0 and rstatus=-1 order by lastplaytime desc;"));
 	}
 	//local update status 0: 1:ÐÞ¸Ä -1£ºÉ¾³ý
 	bool UpdateGameTopmost(int gameid, int topmost=1)
@@ -71,11 +71,11 @@ public:
 		str.Format(_T("update game_manage set topmost=%d,status=1 where gameid=%d"), topmost, gameid);
 		return m_db.ExcuteNonQuery(str);
 	}
-	//local update
+	//local update status 1= ÐÞ¸Ä¹ý
 	bool UpdateGamePlayTimes(int gameid)
 	{
 		CString str;
-		str.Format(_T("update game_manage set playtimes=playtimes+1,status=1 where gameid=%d"), gameid);
+		str.Format(_T("update game_manage set lastplaytimes=CURRENT_TIMESTAMP,status=1 where gameid=%d"), gameid);
 		return m_db.ExcuteNonQuery(str);
 	}
 	//updated from server
@@ -96,8 +96,7 @@ public:
 		return sdr.Read();
 
 	}
-#include <stdio.h>
-#include <stdlib.h>
+
 	bool UpdateGameByGameID(int gameid, LPCTSTR name, LPCTSTR iconpath, int topmost, int type, int playtimes, long updatesign, LPCTSTR url ,int rstatus=-1)
 	{
 		if(ExistGame(gameid))
@@ -137,13 +136,16 @@ public:
 		str.Format(_T("update game_manage set status=-1 where gameid=%d"), gameid);
 		return m_db.ExcuteNonQuery(str);
 	}
-	bool ExistGamePath(int gameid)
+	CString ExistGamePath(int gameid)
 	{
 		CString sql;
-		sql.Format(_T("select 1 from game_path where gameid=%d;"), gameid);
+		sql.Format(_T("select path from game_path where gameid=%d;"), gameid);
 		SQLiteDataReader sdr = m_db.ExcuteQuery(sql);
-		bool bRet = sdr.Read();
-		return bRet;
+		while(sdr.Read())
+		{
+			return sdr.GetStringValue(0);
+		}
+		return "";
 	}
 	bool SetGamePath(const CString& path, int gameid)
 	{
