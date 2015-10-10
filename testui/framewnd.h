@@ -5,6 +5,7 @@
 #include <locale.h> 
 #include <vector>
 #include <map>
+#include "DataSync.h"
 
 using namespace std;
 
@@ -42,7 +43,7 @@ private:
 	HWND m_frameHwnd;
 	HWND m_popHwnd;
 	bool m_bSomeOneSelected;
-
+	CDataSync *m_pDSync;
 };
 
 
@@ -69,6 +70,7 @@ public:
 	void JumpToYXK();
 	void OnHotKey(WPARAM wp,LPARAM lp);
 	void ResetNickName();
+	void RefreshGameWnd();
 private:
 	CWebBrowserUI* m_pWebBrowser;
 	CControlUI* m_pLastClickBtn;
@@ -91,4 +93,6 @@ private:
 	CHorizontalLayoutUI* m_addnewgame;
 	CButtonUI* m_pBtntx;
 	CLabelUI* m_pLblNickName;
+	CDataSync *m_pDSync;
+
 };

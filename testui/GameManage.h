@@ -134,6 +134,8 @@ public:
 	{
 		CString str;
 		str.Format(_T("update game_manage set status=-1 where gameid=%d"), gameid);
+		m_db.ExcuteNonQuery(str);
+		str.Format(_T("delete from prog_to_game where gameid=%d"), gameid);
 		return m_db.ExcuteNonQuery(str);
 	}
 	CString ExistGamePath(int gameid)

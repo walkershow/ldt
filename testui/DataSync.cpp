@@ -1,17 +1,27 @@
 #include "DataSync.h"
 #include "GameManage.h"
 #include "json.h"
-#include <WinInet.h>
 #include "helper.h"
 #include <map>
 #include <string>
 using namespace std;
 #pragma comment(lib, "WinInet.lib")
 
-CDataSync::CDataSync(LPCTSTR server, int port, LPCTSTR userid):m_server(server),m_port(port),m_userid(userid),m_databuf(0),m_nbuflen(1024*60)
+//HANDLE m_hConnectedEvent, m_hRequestOpenedEvent, m_hRequestCompleteEvent;
+// HANDLE m_hConnectedEvent = CreateEvent(NULL, FALSE, FALSE, NULL);
+// HANDLE m_hRequestOpenedEvent = CreateEvent(NULL, FALSE, FALSE, NULL);
+// HANDLE m_hRequestCompleteEvent = CreateEvent(NULL, FALSE, FALSE, NULL);
+// 
+// static bool m_bAllDone = false;
+// static bool m_bError = false;
+
+CDataSync::CDataSync(LPCTSTR server, int port, LPCTSTR userid, HWND notifyHwnd):m_server(server),m_port(port),m_userid(userid),m_databuf(0),m_nbuflen(1024*60),m_HwndNotify(notifyHwnd)
 {
 	m_databuf = new char[m_nbuflen];
 	memset(m_databuf,0,m_nbuflen);
+
+	//m_bAllDone = false;
+
 }
 
 CDataSync::~CDataSync(void)
@@ -20,47 +30,11 @@ CDataSync::~CDataSync(void)
 
 bool CDataSync::GetData(const CString& sUrl, char* szBuffer, DWORD dwBuffer)
 {
-	//CString data;
-	bool bRet = false;
-
-	HINTERNET hConnect = InternetOpen(NULL, INTERNET_OPEN_TYPE_DIRECT, NULL, NULL, INTERNET_FLAG_ASYNC); 
-	
-	if (hConnect)
-	{
-		DWORD dwTimeOut = 3000;
-		InternetSetOption(hConnect, INTERNET_OPTION_CONNECT_TIMEOUT, &dwTimeOut, sizeof(dwTimeOut));
-
-		HINTERNET hSession = InternetOpenUrl(hConnect, sUrl, NULL, 0, INTERNET_FLAG_TRANSFER_BINARY | INTERNET_FLAG_PRAGMA_NOCACHE, 0);
-		if (hSession)
-		{
-			// 建立数据缓冲区
-			DWORD dwRead = 0;
-// 			DWORD dwBuffer = 1024 * 1024;
-// 			char *szBuffer = new char[dwBuffer];
-// 			memset(szBuffer, 0, dwBuffer);
-
-			if(InternetReadFile(hSession, szBuffer, dwBuffer, &dwRead) && (dwRead > 0))
-			{
-				int nLen = dwRead;
-				static char pBuffer[1024*60] = {0} ;
-				memset(pBuffer, 0, nLen + 1);
-				memcpy(pBuffer, szBuffer, nLen);
-// 				if(pBuffer != NULL)
-// 				{
-// 					data = pBuffer;
-// 				}
-				bRet = true;
-			}
-
-			// 销毁数据缓冲区
-			//	delete []szBuffer;
-			//	szBuffer = NULL;
-
-			InternetCloseHandle(hSession);
-		}
-		InternetCloseHandle(hConnect);
-	}
-	return bRet; 
+ 
+	HTTP_REQUEST_HEADER   h (HTTP_REQUEST_HEADER::VERB_TYPE_GET) ;
+	h.m_url = sUrl;
+	this->AddRequest(h);
+	return true;
 	//return data;
 }
 
@@ -222,63 +196,19 @@ int CDataSync::GetControlMode()
 
 	return 1;
 }
-
+//增加游戏
 int CDataSync::GetProg_to_Game_ByProgmd5(CString progmd5)
 {
 	int gameid = 0;
 	gameid = CGameManage::GetInstance().SelectProgToGame(progmd5);
 	if( gameid == 0 )
 	{
-		
 		CString sUrl;
 		memset(m_databuf, 0, m_nbuflen);
 
 		sUrl.Format(_T("http://%s:%d/progtogame?progmd5=%s&userid=%s"),m_server, m_port, progmd5, m_userid);
 		bool bRet = GetData(sUrl, m_databuf, m_nbuflen);
-		if(!bRet)
-		{
-			return -1 ;
-		}
-		Json::Reader reader;
-		Json::Value root;
-		if (!reader.parse(m_databuf, root, false))
-		{
-			return -2;
-		}
-		string name,iconurl;
-		int topmost,playtimes,status,type;
-		string upsign;
-		int size = root.size();
-		for (int i=0; i<size; ++i)
-		{
-			gameid= root[i]["gameid"].asInt();
-// 			if(CGameManage::GetInstance().ExistGame(gameid))
-// 			{
-// 				return -3;
-// 			}
-			name= root[i]["name"].asString();
-			CString strName = UTF8ToUnicode((char*)name.c_str());
-			iconurl= root[i]["iconurl"].asString();
-			CString strIconurl = UTF8ToUnicode((char*)iconurl.c_str());
-			CString fPath = DownloadFile(strIconurl);
-			if(fPath == "") 
-			{
-				return -4; //下载失败
-			}
-			upsign = root[i]["updatesign"].asString();
-			long ups = atoi(upsign.c_str());
-			topmost = 0; playtimes=0;
-			//topmost= root[i]["topmost"].asInt();
-			//playtimes = root[i]["playtimes"].asInt();
-			//status = root[i]["status"].asInt();
-			type = root[i]["type"].asInt();
-			//游戏资料先入库，MD5后入，保证本地查询MD5时，游戏资料肯定存在（事务完整）
-			bRet = CGameManage::GetInstance().UpdateGameByGameID(gameid, strName, fPath, topmost,  type, playtimes, ups,_T(""));
-			if( !bRet ) return 0;
-			bRet = CGameManage::GetInstance().UpdateProgToGame(gameid, progmd5);
-			if( !bRet) return 0;
-			break;
-		}
+
 	}
 	else
 	{
@@ -288,7 +218,51 @@ int CDataSync::GetProg_to_Game_ByProgmd5(CString progmd5)
 	return gameid;
 }
 
+int CDataSync::HandleProg_to_Game_ByProgmd5()
+{
+	bool bRet = true;
+	Json::Reader reader;
+	Json::Value root;
+	if (!reader.parse(m_databuf, root, false))
+	{
+		return -2;
+	}
+	string name,iconurl;
+	int topmost,playtimes,status,type;
+	string upsign;
+	CString progmd5;
+	int size = root.size();
+	for (int i=0; i<size; ++i)
+	{
+		int gameid= root[i]["gameid"].asInt();
 
+		name= root[i]["name"].asString();
+		CString strName = UTF8ToUnicode((char*)name.c_str());
+		iconurl= root[i]["iconurl"].asString();
+		CString strIconurl = UTF8ToUnicode((char*)iconurl.c_str());
+		CString fPath = DownloadFile(strIconurl);
+		if(fPath == "") 
+		{
+			return -4; //下载失败
+		}
+		upsign = root[i]["updatesign"].asString();
+		progmd5 = root[i]["progmd5"].asCString();
+		long ups = atoi(upsign.c_str());
+		topmost = 0; playtimes=0;
+		//topmost= root[i]["topmost"].asInt();
+		//playtimes = root[i]["playtimes"].asInt();
+		//status = root[i]["status"].asInt();
+		type = root[i]["type"].asInt();
+		//游戏资料先入库，MD5后入，保证本地查询MD5时，游戏资料肯定存在（事务完整）
+		bRet = CGameManage::GetInstance().UpdateGameByGameID(gameid, strName, fPath, topmost,  type, playtimes, ups,_T(""));
+		if( !bRet ) return 0;
+		bRet = CGameManage::GetInstance().UpdateProgToGame(gameid, progmd5);
+		if( !bRet) return 0;
+		break;
+	}
+
+	return 1;
+}
 int CDataSync::GetProg_to_Game()
 {
 	CString sUrl;
@@ -355,18 +329,21 @@ int CDataSync::GetGame_Manage_ByGameID(int gameid)
 	}
 	return 1;
 }
-
 int CDataSync::GetUser_GameInfo()
 {
 	CString sUrl;
 	memset(m_databuf, 0, m_nbuflen);
 	long maxTime = CGameManage::GetInstance().SelectMaxTimeFromGameManage();
 	sUrl.Format(_T("http://%s:%d/usergameinfo?userid=%s&curtime=%d"),m_server, m_port, m_userid, maxTime);
-	bool bRet = GetData(sUrl, m_databuf, m_nbuflen);
-	if(!bRet)
-	{
-		return -1 ;
-	}
+	CLog::getInstance()->AgentLog((LPTSTR)(LPCTSTR)sUrl);
+	//MessageBox(NULL,sUrl, _T("hi"), 0);
+	GetData(sUrl, m_databuf, m_nbuflen);
+	return 0;
+}
+int CDataSync::HandleUser_GameInfo()
+{
+	CString sUrl;
+
 	Json::Reader reader;
 	Json::Value root;
 	if (!reader.parse(m_databuf, root, false))
@@ -396,38 +373,52 @@ int CDataSync::GetUser_GameInfo()
 		upsign = root[i]["updatesign"].asUInt();
 		url = root[i]["url"].asCString();
 		//progmd5 = root[i]["progmd5"].asString();
-		bRet = CGameManage::GetInstance().UpdateGameByGameID(gameid, strName, fPath, topmost,  type, playtimes, upsign,url,rstatus);
-		if(type !=2)
+		bool bRet = CGameManage::GetInstance().UpdateGameByGameID(gameid, strName, fPath, topmost,  type, playtimes, upsign,url,rstatus);
+		if(type != 2)
 		{
-			memset(m_databuf, 0, m_nbuflen);
+			//memset(m_databuf, 0, m_nbuflen);
 			sUrl.Empty();
 			sUrl.Format(_T("http://%s:%d/getprogmd5?gameid=%d"),m_server, m_port,gameid);
-			bool bRet = GetData(sUrl, m_databuf, m_nbuflen);
-			if(!bRet)
-			{
-				return -1 ;
-			}
-			Json::Reader reader;
-			Json::Value root;
-			if (!reader.parse(m_databuf, root, false))
-			{
-				return -2;
-			}
-			string progmd5;
-			int size = root.size();
-			for (int i=0; i<size; ++i)
-			{
-				progmd5 = root[i]["progmd5"].asString();
-				bRet = CGameManage::GetInstance().InsertProgmd5byGameid(gameid, progmd5.c_str());
-
-			}
+			GetData(sUrl, m_databuf, m_nbuflen);
+// 			Json::Reader reader;
+// 			Json::Value root;
+// 			if (!reader.parse(m_databuf, root, false))
+// 			{
+// 				return -2;
+// 			}
+// 			string progmd5;
+// 			int size = root.size();
+// 			for (int i=0; i<size; ++i)
+// 			{
+// 				progmd5 = root[i]["progmd5"].asString();
+// 				bRet = CGameManage::GetInstance().InsertProgmd5byGameid(gameid, progmd5.c_str());
+// 
+// 			}
 
 		}
 		//break;
 	}
 	return gameid;
 }
+int CDataSync::HandleProgmd5()
+{
+	Json::Reader reader;
+	Json::Value root;
+	if (!reader.parse(m_databuf, root, false))
+	{
+		return -2;
+	}
+	string progmd5;
+	int size = root.size();
+	for (int i=0; i<size; ++i)
+	{
+		progmd5 = root[i]["progmd5"].asString();
+		int gameid = root[i]["gameid"].asInt();
+		bool bRet = CGameManage::GetInstance().InsertProgmd5byGameid(gameid, progmd5.c_str());
 
+	}
+	return 0;
+}
 
 int CDataSync::UpdateLocalData()
 {
@@ -469,3 +460,9 @@ int CDataSync::UpdateLocalData()
 		}
 	}
 }
+
+void CDataSync::SetNoitfyHwnd(HWND notifyHwnd)
+{
+	m_HwndNotify = notifyHwnd;
+}
+

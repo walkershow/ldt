@@ -6,7 +6,6 @@
 #include "PopWnd.h"
 #include "GameManage.h"
 #include "json.h"
-#include "DataSync.h"
 #include "md5.h"
 #include "UserWnd.h"
 #include "ListContainerElementUIex.h"
@@ -37,7 +36,7 @@ CList_Game::CList_Game()
 	m_popHwnd = NULL;
 	m_bSomeOneSelected = false;
 	m_nCurCount = 0;
-
+	m_pDSync = new CDataSync(_T("192.168.1.62"), 80, g_strUserID, m_frameHwnd);
 	//AddGameNode(_T("baba"), 1001);
 }
 
@@ -61,26 +60,22 @@ void CList_Game::OnClick(TNotifyUI& msg)
 			int nRet = AddNewGame(filePath);
 			if(nRet > 0 )
 			{
-				s_need_reload = true;
-				int cMode = CGameManage::GetInstance().GetControlMode();
-				if(cMode == 1)//auto
-				{
-					::SendMessage(m_frameHwnd, WM_REFRESH_GAMELIST_AUTO, 0, 0 );
-				}
-				else if(cMode == 2)
-				{
-					::SendMessage(m_frameHwnd, WM_REFRESH_GAMELIST_MANUAL, 0, 0 );
-				}
+				
+// 				int cMode = CGameManage::GetInstance().GetControlMode();
+// 				if(cMode == 1)//auto
+// 				{
+// 					::SendMessage(m_frameHwnd, WM_REFRESH_GAMELIST_AUTO, 0, 0 );
+// 				}
+// 				else if(cMode == 2)
+// 				{
+// 					::SendMessage(m_frameHwnd, WM_REFRESH_GAMELIST_MANUAL, 0, 0 );
+// 				}
 			}
 			else if(nRet == -3)
 			{
 				::MessageBox(NULL,_T("已添加过此游戏"),_T("错误"),MB_OK);
 			}
-			else
-			{
-				::MessageBox(NULL,_T("不支持此游戏"),_T("错误"),MB_OK);
-
-			}
+	
 // 			MD5 md5;
 // 			string digest = md5.digestFile((LPTSTR)(LPCTSTR) filePath );
 // 			CDataSync ds(_T("192.168.1.62"), 80, g_strUserID);
@@ -114,15 +109,18 @@ void CList_Game::OnClick(TNotifyUI& msg)
 		CControlUI* pKs = pNode->FindSubControl(_T("btn_ks"));
 		if(pKs!=NULL)
 		{
-
-			pKs->SetVisible();
-
-			if(m_pLastKsBtn != NULL)
+			if(pKs != m_pLastKsBtn)
 			{
-					m_pLastKsBtn->SetVisible(false);
+			
+				pKs->SetVisible();
 
+				if(m_pLastKsBtn != NULL)
+				{
+						m_pLastKsBtn->SetVisible(false);
+
+				}
+				m_pLastKsBtn = pKs;
 			}
-			m_pLastKsBtn = pKs;
 
 		}
 
@@ -187,6 +185,7 @@ void CList_Game::OnClick(TNotifyUI& msg)
 			//excute game
 		}
 	}
+
 
 }
 
@@ -344,8 +343,8 @@ int CList_Game::AddNewGame(CString filePath)
 {
 	MD5 md5;
 	string digest = md5.digestFile((LPTSTR)(LPCTSTR) filePath );
-	CDataSync ds(_T("192.168.1.62"), 80, g_strUserID);
-	int gameid=ds.GetProg_to_Game_ByProgmd5((LPSTR)digest.c_str());
+	//CDataSync ds(_T("192.168.1.62"), 80, g_strUserID);
+	int gameid=m_pDSync->GetProg_to_Game_ByProgmd5((LPSTR)digest.c_str());
 	if(gameid>0)
 	{
 		if(CGameManage::GetInstance().SetGamePath(filePath, gameid))
@@ -360,6 +359,7 @@ int CList_Game::AddNewGame(CString filePath)
 void CList_Game::SetFrameHwnd(HWND hWnd)
 {
 	m_frameHwnd = hWnd;
+	m_pDSync->SetNoitfyHwnd(m_frameHwnd);
 }
 
 void CList_Game::SetPopHwnd(HWND hWnd)
@@ -387,6 +387,7 @@ CFrameWnd::CFrameWnd( LPCTSTR pszXMLPath ): CXMLWnd(pszXMLPath),m_pPopWnd(NULL)
 	HRESULT r = ::UrlMkSetSessionOption(URLMON_OPTION_USERAGENT,(void*)buf,dwlen,0);
 	m_Listgame.SetPaintMagager(&m_PaintManager);
 	AddVirtualWnd(_T("list_game"),&m_Listgame);
+	m_pDSync = new CDataSync(_T("192.168.1.62"), 80, g_strUserID);
 
 }
 
@@ -423,7 +424,7 @@ void CFrameWnd::InitWindow()
 	//    SetIcon(IDR_MAINFRAME); // 设置任务栏图标
 	CenterWindow();
 	::RegisterHotKey(m_hWnd, 199, MOD_ALT, 'Z');
-
+	m_pDSync->SetNoitfyHwnd(m_hWnd);
 	ResetNickName();
 	// 初始化CActiveXUI控件
 	 pINDEX = static_cast<CWebBrowserUI*>(m_PaintManager.FindControl(_T("index")));
@@ -535,6 +536,31 @@ void CFrameWnd::InitWindow()
 	//m_Listgame.AddGameNode(_T("天涯明月刀"), _T("\\images\\gamesign\\yxgzbz_13.png"), 25);
 }
 
+//刷新涉及游戏的窗口
+void CFrameWnd::RefreshGameWnd()
+{
+	if( m_pPopWnd != NULL )
+	{
+		if(::IsWindowVisible(m_pPopWnd->GetHWND()))
+		{
+			::SendMessage(m_pPopWnd->GetHWND(), WM_GAME_RELOAD, 0 ,0);
+		}
+		else
+		{
+			s_need_reload = true;
+		}
+	}
+	int cMode = CGameManage::GetInstance().GetControlMode();
+	if(cMode == 1)//auto
+	{
+		::SendMessage(this->GetHWND(), WM_REFRESH_GAMELIST_AUTO, 0, 0 );
+	}
+	else if(cMode == 2)
+	{
+		::SendMessage(this->GetHWND(), WM_REFRESH_GAMELIST_MANUAL, 0, 0 );
+	}
+
+}
 
 
 void CFrameWnd::Notify( TNotifyUI& msg )
@@ -584,8 +610,9 @@ void CFrameWnd::Notify( TNotifyUI& msg )
 		}
 		else if( msg.pSender->GetName() == _T("btn_allgame") ) 
 		{
-			CDataSync ds(_T("192.168.1.62"), 80, g_strUserID);
-			int gameid = ds.GetUser_GameInfo();
+
+			//CDataSync ds(_T("192.168.1.62"), 80, g_strUserID);
+			m_pDSync->GetUser_GameInfo();
 			if( m_pPopWnd == NULL )
 			{
 				m_pPopWnd = new CPopWnd(_T("popup.xml"));
@@ -597,20 +624,12 @@ void CFrameWnd::Notify( TNotifyUI& msg )
 			::ClientToScreen(*this, &pt);
 			::SetWindowPos(*m_pPopWnd, NULL, pt.x, pt.y,0 ,0,SWP_NOSIZE | SWP_NOZORDER );
 			::ShowWindow(*m_pPopWnd, SW_SHOW);
-			if(gameid>0 || s_need_reload)
-			{	
-				s_need_reload = false;
-				::SendMessage(m_pPopWnd->GetHWND(), WM_GAME_RELOAD, 0 ,0);
-				int cMode = CGameManage::GetInstance().GetControlMode();
-				if(cMode == 1)//auto
-				{
-					::SendMessage(this->GetHWND(), WM_REFRESH_GAMELIST_AUTO, 0, 0 );
-				}
-				else if(cMode == 2)
-				{
-					::SendMessage(this->GetHWND(), WM_REFRESH_GAMELIST_MANUAL, 0, 0 );
-				}
-			}
+// 			if(s_need_reload)
+// 			{
+// 				s_need_reload = false;
+// 				RefreshGameWnd();
+// 
+// 			}
 			
 		}
 		else if( msg.pSender->GetName() == _T("closebtn") )
@@ -625,6 +644,12 @@ void CFrameWnd::Notify( TNotifyUI& msg )
 			pUserWnd->SetParent(GetHWND());
 			pUserWnd->CenterWindow();
 			::ShowWindow(*pUserWnd, SW_SHOW);
+		}
+		else if(msg.pSender->GetName() == _T("btnim"))
+		{
+			CString path = msg.pSender->GetUserData();
+			ShellExecute(0 ,_T("open"), path, _T(""), _T(""),SW_SHOWNORMAL);
+
 		}
 	}
 	else if( msg.sType == _T("dbclick") ) 
@@ -834,10 +859,19 @@ LRESULT CFrameWnd::HandleMessage( UINT uMsg,WPARAM wParam,LPARAM lParam )
 		}
 
 	}
+	else if(WM_REFRESH_GAMELIST ==uMsg)
+	{
+		RefreshGameWnd();
+	}
+	else if(WM_GAME_NOTSUPPORT ==uMsg)
+	{
+		::MessageBox(NULL,_T("不支持此游戏"),_T("错误"),MB_OK);
+	}
 	else if(WM_NCLBUTTONDBLCLK != uMsg)
 	{
 		return WindowImplBase::HandleMessage(uMsg,wParam,lParam);
 	}
+
 
 	return 0;
 }

@@ -1,7 +1,7 @@
 #pragma once
 #include <UIlib.h>
 #include <atlstr.h>
-
+#include "log.h"
 using namespace DuiLib;
 
 #pragma comment(lib, "Urlmon.lib")
@@ -116,3 +116,5 @@ extern CString g_strUserAcct ;
 #define WM_GAME_RELOAD			   WM_USER+104
 #define WM_GAME_RESETHEAD		   WM_USER+105
 #define WM_GAME_RESETNICKNAME	   WM_USER+106
+#define WM_REFRESH_GAMELIST		   WM_USER+107
+#define WM_GAME_NOTSUPPORT		   WM_USER+200
