@@ -7,13 +7,7 @@
 using namespace std;
 #pragma comment(lib, "WinInet.lib")
 
-//HANDLE m_hConnectedEvent, m_hRequestOpenedEvent, m_hRequestCompleteEvent;
-// HANDLE m_hConnectedEvent = CreateEvent(NULL, FALSE, FALSE, NULL);
-// HANDLE m_hRequestOpenedEvent = CreateEvent(NULL, FALSE, FALSE, NULL);
-// HANDLE m_hRequestCompleteEvent = CreateEvent(NULL, FALSE, FALSE, NULL);
-// 
-// static bool m_bAllDone = false;
-// static bool m_bError = false;
+
 
 CDataSync::CDataSync(LPCTSTR server, int port, LPCTSTR userid, HWND notifyHwnd):m_server(server),m_port(port),m_userid(userid),m_databuf(0),m_nbuflen(1024*60),m_HwndNotify(notifyHwnd)
 {
@@ -37,7 +31,6 @@ bool CDataSync::GetData(const CString& sUrl, char* szBuffer, DWORD dwBuffer)
 	return true;
 	//return data;
 }
-
 
 
 bool CDataSync::PostData(const CString& sUrl, char* data)
@@ -161,6 +154,7 @@ int CDataSync::SyncUserInfo()
 	}
 	return 1;
 }
+
 int CDataSync::GetControlMode()
 {
 	CString sUrl;
@@ -196,6 +190,7 @@ int CDataSync::GetControlMode()
 
 	return 1;
 }
+
 //增加游戏
 int CDataSync::GetProg_to_Game_ByProgmd5(CString progmd5)
 {
@@ -204,10 +199,8 @@ int CDataSync::GetProg_to_Game_ByProgmd5(CString progmd5)
 	if( gameid == 0 )
 	{
 		CString sUrl;
-		memset(m_databuf, 0, m_nbuflen);
-
 		sUrl.Format(_T("http://%s:%d/progtogame?progmd5=%s&userid=%s"),m_server, m_port, progmd5, m_userid);
-		bool bRet = GetData(sUrl, m_databuf, m_nbuflen);
+		GetData(sUrl, m_databuf, m_nbuflen);
 
 	}
 	else
@@ -217,7 +210,7 @@ int CDataSync::GetProg_to_Game_ByProgmd5(CString progmd5)
 	}
 	return gameid;
 }
-
+//增加游戏服务端会根据用户所传信息添加到用户喜欢游戏列表，然后服务器返回游戏数据，客户端在存到本地数据库
 int CDataSync::HandleProg_to_Game_ByProgmd5()
 {
 	bool bRet = true;
@@ -263,17 +256,16 @@ int CDataSync::HandleProg_to_Game_ByProgmd5()
 
 	return 1;
 }
+
 int CDataSync::GetProg_to_Game()
 {
 	CString sUrl;
-	memset(m_databuf, 0, m_nbuflen);
 
 	sUrl.Format(_T("http://%s:%d/prog_to_game?progmd5=%s"),m_server, m_port, _T("all"));
-	bool bRet = GetData(sUrl, m_databuf, m_nbuflen);
-	if(!bRet)
-	{
-		return -1 ;
-	}
+	GetData(sUrl, m_databuf, m_nbuflen);
+
+	
+	
 	Json::Reader reader;
 	Json::Value root;
 	if (!reader.parse(m_databuf, root, false))
@@ -290,6 +282,7 @@ int CDataSync::GetProg_to_Game()
 	}
 	return 1;
 }
+
 //gameid -1:all data
 int CDataSync::GetGame_Manage_ByGameID(int gameid)
 {
@@ -329,6 +322,7 @@ int CDataSync::GetGame_Manage_ByGameID(int gameid)
 	}
 	return 1;
 }
+
 int CDataSync::GetUser_GameInfo()
 {
 	CString sUrl;
@@ -340,6 +334,7 @@ int CDataSync::GetUser_GameInfo()
 	GetData(sUrl, m_databuf, m_nbuflen);
 	return 0;
 }
+
 int CDataSync::HandleUser_GameInfo()
 {
 	CString sUrl;
@@ -372,29 +367,12 @@ int CDataSync::HandleUser_GameInfo()
 		type = root[i]["type"].asInt();
 		upsign = root[i]["updatesign"].asUInt();
 		url = root[i]["url"].asCString();
-		//progmd5 = root[i]["progmd5"].asString();
 		bool bRet = CGameManage::GetInstance().UpdateGameByGameID(gameid, strName, fPath, topmost,  type, playtimes, upsign,url,rstatus);
 		if(type != 2)
 		{
-			//memset(m_databuf, 0, m_nbuflen);
 			sUrl.Empty();
 			sUrl.Format(_T("http://%s:%d/getprogmd5?gameid=%d"),m_server, m_port,gameid);
 			GetData(sUrl, m_databuf, m_nbuflen);
-// 			Json::Reader reader;
-// 			Json::Value root;
-// 			if (!reader.parse(m_databuf, root, false))
-// 			{
-// 				return -2;
-// 			}
-// 			string progmd5;
-// 			int size = root.size();
-// 			for (int i=0; i<size; ++i)
-// 			{
-// 				progmd5 = root[i]["progmd5"].asString();
-// 				bRet = CGameManage::GetInstance().InsertProgmd5byGameid(gameid, progmd5.c_str());
-// 
-// 			}
-
 		}
 		//break;
 	}

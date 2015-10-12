@@ -4,8 +4,6 @@
 #include <comdef.h>
 #include <locale.h> 
 #include <vector>
-#include <map>
-#include "DataSync.h"
 
 using namespace std;
 
@@ -15,10 +13,14 @@ extern CString g_strUserAcct ;
 // 以XML生成界面的窗口基类
 
 extern CString ShowOpenFileDialog(HWND hParent);
+
+class CDataSync;
+
 class CList_Game : public CNotifyPump
 {
 public:
 	CList_Game();
+	~CList_Game();
 	void SetPaintMagager(CPaintManagerUI* pPaintMgr);
 	void SetListPtr(CListUI* pList);
 	void SetAddGameBtnPtr(CHorizontalLayoutUI* pBtn);
@@ -79,7 +81,7 @@ private:
 	vector<wstring> m_vec_wbtext;
 	vector<wstring> m_vec_url;
 	CString m_cur_selected;
-	HWND m_hwnd;
+	//HWND m_hwnd;
 	CWebBrowserUI* pINDEX;
 	CWebBrowserUI* pZX;
 	CWebBrowserUI* pSP;

@@ -281,6 +281,31 @@ public:
 		return m_db.ExcuteNonQuery(str);
 	}
 
+	bool GetSysConfig(CString& server, int& port, int& runtimes)
+	{
+		CString sql = _T("select server,port,runtimes from sysconfig;");
+		SQLiteDataReader sdr = m_db.ExcuteQuery(sql);
+		bool bRet = sdr.Read();
+		if(bRet)
+		{
+			server = sdr.GetStringValue(0);
+			port = sdr.GetIntValue(1);
+			runtimes = sdr.GetIntValue(2);
+		}
+		return bRet;
+	}
+
+	bool UpdateSysConfig(CString server, bool bFirst)
+	{
+		CString sql;
+		if(bFirst)
+			sql.Format(_T("update sysconfig set runtimes=runtimes+1,inittime=CURRENT_TIMESTAMP,lasttime=CURRENT_TIMESTAMP where server='%s' "), server );
+		else
+			sql.Format(_T("update sysconfig set runtimes=runtimes+1,lasttime=CURRENT_TIMESTAMP where server='%s' "), server );
+
+		return m_db.ExcuteNonQuery(sql);
+	}
+
 private:
 	CGameManage()   //构造函数是私有的  
 	{  

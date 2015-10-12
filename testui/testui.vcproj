@@ -118,7 +118,7 @@
 				Name="VCCLCompilerTool"
 				Optimization="2"
 				EnableIntrinsicFunctions="true"
-				AdditionalIncludeDirectories="D:\thirdpart\DuiLib_Redrain-master\DuiLib;D:\git\3rdpart\sqlite\include;d:\code\curl;jsoncpp;cJSON;"
+				AdditionalIncludeDirectories="D:\thirdpart\DuiLib_Redrain-master\DuiLib;D:\git\3rdpart\sqlite\include;d:\code\curl;jsoncpp;cJSON;http_request"
 				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS"
 				RuntimeLibrary="0"
 				EnableFunctionLevelLinking="true"

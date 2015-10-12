@@ -9,8 +9,7 @@
 #include "md5.h"
 #include "UserWnd.h"
 #include "ListContainerElementUIex.h"
-//#include "md5.h"
-//#include <uimenu.h>
+#include "DataSync.h"
 
 CString g_strUserID ;
 CString g_strUserAcct ;
@@ -36,7 +35,7 @@ CList_Game::CList_Game()
 	m_popHwnd = NULL;
 	m_bSomeOneSelected = false;
 	m_nCurCount = 0;
-	m_pDSync = new CDataSync(_T("192.168.1.62"), 80, g_strUserID, m_frameHwnd);
+	m_pDSync = new CDataSync(g_server, g_port, g_strUserID, m_frameHwnd);
 	//AddGameNode(_T("baba"), 1001);
 }
 
@@ -56,50 +55,12 @@ void CList_Game::OnClick(TNotifyUI& msg)
 		CString filePath = ShowOpenFileDialog(0);
 		if(filePath != "")
 		{
-
 			int nRet = AddNewGame(filePath);
-			if(nRet > 0 )
-			{
-				
-// 				int cMode = CGameManage::GetInstance().GetControlMode();
-// 				if(cMode == 1)//auto
-// 				{
-// 					::SendMessage(m_frameHwnd, WM_REFRESH_GAMELIST_AUTO, 0, 0 );
-// 				}
-// 				else if(cMode == 2)
-// 				{
-// 					::SendMessage(m_frameHwnd, WM_REFRESH_GAMELIST_MANUAL, 0, 0 );
-// 				}
-			}
-			else if(nRet == -3)
+			if(nRet == -3)
 			{
 				::MessageBox(NULL,_T("已添加过此游戏"),_T("错误"),MB_OK);
 			}
-	
-// 			MD5 md5;
-// 			string digest = md5.digestFile((LPTSTR)(LPCTSTR) filePath );
-// 			CDataSync ds(_T("192.168.1.62"), 80, g_strUserID);
-// 			int gameid=ds.GetProg_to_Game_ByProgmd5((LPSTR)digest.c_str());
-// 			if(gameid>0)
-// 			{
-// 				CGameManage::GetInstance()::SetGamePath(gameid, filePath);
-// 			}
 		}
-
-// 			CListUI *down_list = m_pList;
-// 			if(!down_list)
-// 				return;
-// //		if(m_nCurCount)
-// 		if(m_nCurCount>=9)
-// 		{
-// 			down_list->RemoveAt(m_nCurCount);
-// 			//m_addnewgame->SetVisible(false);
-// 
-// 			//down_list->RemoveAll();
-// 			//AddGameBtn();
-// 		}		
-// 		//AddGameNode(_T("baba"), _T("\\images\\gamesign\\yxgzbz_01.png"), 1001);
-// 		m_nCurCount++;
 	}
 	else if(msg.pSender->GetName() == _T("btnviewgame"))
 	{
@@ -125,18 +86,13 @@ void CList_Game::OnClick(TNotifyUI& msg)
 		}
 
 		CTabLayoutUI* pTabLayout = static_cast<CTabLayoutUI*>(m_pPaintManager->FindControl(_T("body_main_tablayout")));
-		//CControlUI* pItem = m_pPaintManager->FindControl(_T("start"));
-// 
-// 
 		if(m_pWebBrowser!=NULL)
 		{
 			pTabLayout->SelectItem(m_pWebBrowser);
 			s_cur_webbrowser_ptr = m_pWebBrowser;
 
-// 			//CWebBrowserUI* pWebBrowser = static_cast<CWebBrowserUI*>(pItem);
-// 			m_pWebBrowser = static_cast<CWebBrowserUI*>(pItem);
+
 			CString url;
-		//CString url = "http://lan.chinau.game.newslist/site/index?game_id=";
 			int gameid= msg.pSender->GetTag();
 			url.Format(_T("%s%d"),m_pWebBrowser->GetHomePage(), gameid);
 			m_pWebBrowser->Navigate2(url);
@@ -240,12 +196,11 @@ void CList_Game::AddGameNode(const CString& name, const CString& imgurl, int gam
 	CListContainerElementUIex *new_node = new CListContainerElementUIex;
 	new_node->ApplyAttributeList(_T("height=\"47\" name=\"listitem\" "));
 
-
 	CHorizontalLayoutUI *new_h_lay = new CHorizontalLayoutUI;
 	new_h_lay->ApplyAttributeList(_T("float=\"false\" "));
 
 	CButtonUI *new_bk = new CButtonUI;
-	new_bk->ApplyAttributeList(_T("textcolor=\"#6AFFFFFF\" showhtml=\"true\" textpadding=\"46,0,0,0\""));
+	new_bk->ApplyAttributeList(_T("textcolor=\"#6AFFFFFF\" showhtml=\"true\" textpadding=\"46,0,0,0\""));\
 	RECT r={5,1,0,0};
 	new_bk->SetPadding(r);
 	new_bk->SetName(_T("btnviewgame"));
@@ -260,15 +215,7 @@ void CList_Game::AddGameNode(const CString& name, const CString& imgurl, int gam
 	new_bk->SetBkImage(imgurlPos);
 	new_bk->SetText(name);
 	new_bk->SetTextStyle(DT_END_ELLIPSIS|DT_LEFT|DT_VCENTER|DT_SINGLELINE);
-
 	new_bk->SetToolTip(name);
-
-// 	CLabelUI *new_label = new CLabelUI;
-// 	new_label->ApplyAttributeList(_T("textcolor=\"#6AFFFFFF\" showhtml=\"true\""));
-// 	new_label->SetMaxWidth(75);
-// 	new_label->SetText(name);
-// 	new_label->SetName(_T("down_name"));
-// 	new_label->SetTextStyle(DT_END_ELLIPSIS|DT_VCENTER);
 
 	CButtonUI *new_btn_2 = new CButtonUI;
 	new_btn_2->SetName(_T("btn_ks"));
@@ -318,14 +265,8 @@ CHorizontalLayoutUI* CList_Game::AddGameBtn()
 	new_btn->SetBkImage(_T("file='\\images\\normal\\bj09_03.png' dest='0,0,44,44' "));
 	new_btn->SetText(_T("增加游戏"));
 	new_btn->SetTextStyle(DT_END_ELLIPSIS|DT_VCENTER);
-	//CLabelUI *new_label = new CLabelUI;
-	//new_label->ApplyAttributeList(_T("textcolor=\"#6AFFFFFF\" showhtml=\"true\""));
-	//new_label->SetText(_T("增加游戏"));
-	//new_label->SetTextStyle(DT_END_ELLIPSIS|DT_VCENTER);
 
 	new_h_lay->Add(new_btn);
-	//new_h_lay->Add(new_label);
-
 	new_node->Add(new_h_lay);
 	m_addnewgame = new_h_lay;
 	m_pList->Add(new_node);
@@ -367,6 +308,11 @@ void CList_Game::SetPopHwnd(HWND hWnd)
 	m_popHwnd = hWnd;
 }
 
+CList_Game::~CList_Game()
+{
+	delete m_pDSync;
+}
+
 //////////////////////////////////////////////////////////////////////////
 ///
 
@@ -387,7 +333,6 @@ CFrameWnd::CFrameWnd( LPCTSTR pszXMLPath ): CXMLWnd(pszXMLPath),m_pPopWnd(NULL)
 	HRESULT r = ::UrlMkSetSessionOption(URLMON_OPTION_USERAGENT,(void*)buf,dwlen,0);
 	m_Listgame.SetPaintMagager(&m_PaintManager);
 	AddVirtualWnd(_T("list_game"),&m_Listgame);
-	m_pDSync = new CDataSync(_T("192.168.1.62"), 80, g_strUserID);
 
 }
 
@@ -395,6 +340,7 @@ CFrameWnd::~CFrameWnd()
 {
 	::UnregisterHotKey(m_hWnd,199);
 	RemoveVirtualWnd(_T("list_game"));
+	delete m_pDSync;
 
 }
 HRESULT STDMETHODCALLTYPE CFrameWnd::GetHostInfo( DOCHOSTUIINFO __RPC_FAR *pInfo)
@@ -424,7 +370,6 @@ void CFrameWnd::InitWindow()
 	//    SetIcon(IDR_MAINFRAME); // 设置任务栏图标
 	CenterWindow();
 	::RegisterHotKey(m_hWnd, 199, MOD_ALT, 'Z');
-	m_pDSync->SetNoitfyHwnd(m_hWnd);
 	ResetNickName();
 	// 初始化CActiveXUI控件
 	 pINDEX = static_cast<CWebBrowserUI*>(m_PaintManager.FindControl(_T("index")));
@@ -491,7 +436,7 @@ void CFrameWnd::InitWindow()
 	m_Listgame.SetWebBrowserPtr(pSTART);
 	
 	int cMode = CGameManage::GetInstance().GetControlMode();
-	if(cMode == 1 || cMode == 3)//auto
+	if(cMode == 1 || cMode == 3 || cMode == 0)//auto
 	{
 		SQLiteDataReader sdr = CGameManage::GetInstance().GetAllGameByAutoMode();
 		int nCount =0;
@@ -531,9 +476,21 @@ void CFrameWnd::InitWindow()
 	}
 	CHorizontalLayoutUI* m_addnewgame = m_Listgame.AddGameBtn();
 	m_Listgame.SetAddGameBtnPtr(m_addnewgame);
-	//SendMessage(WM_JUMP_YXK);
 
-	//m_Listgame.AddGameNode(_T("天涯明月刀"), _T("\\images\\gamesign\\yxgzbz_13.png"), 25);
+	m_pDSync = new CDataSync(g_server, g_port, g_strUserID, m_hWnd);
+	m_pDSync->SetNoitfyHwnd(m_hWnd);
+
+	if(g_runtimes == 0)
+	{
+		m_pDSync->GetUser_GameInfo();
+		CGameManage::GetInstance().UpdateSysConfig(g_server, true);
+	}
+	else
+	{
+		CGameManage::GetInstance().UpdateSysConfig(g_server, false);
+	}
+
+
 }
 
 //刷新涉及游戏的窗口
@@ -551,7 +508,7 @@ void CFrameWnd::RefreshGameWnd()
 		}
 	}
 	int cMode = CGameManage::GetInstance().GetControlMode();
-	if(cMode == 1)//auto
+	if(cMode == 1 || cMode == 3 || cMode == 0)//auto
 	{
 		::SendMessage(this->GetHWND(), WM_REFRESH_GAMELIST_AUTO, 0, 0 );
 	}
@@ -578,19 +535,18 @@ void CFrameWnd::Notify( TNotifyUI& msg )
 		CControlUI* pItem = m_PaintManager.FindControl(msg.pSender->GetUserData());
 		pTabLayout->SelectItem(pItem);
 
-		
 		if(pItem!=NULL)
 		{
 			m_cur_selected = pItem->GetName().GetData();
 			m_pWebBrowser = static_cast<CWebBrowserUI*>(pItem);
-			
+			s_cur_webbrowser_ptr = m_pWebBrowser;	
+
 			int n = pItem->GetTag();
 			if(n == 0)
 			{
 				m_pWebBrowser->NavigateHomePage();
 				SetWbFocus(m_pWebBrowser);
 				pItem->SetTag(1);
-				s_cur_webbrowser_ptr = m_pWebBrowser;	
 
 			}
 		}
@@ -611,7 +567,6 @@ void CFrameWnd::Notify( TNotifyUI& msg )
 		else if( msg.pSender->GetName() == _T("btn_allgame") ) 
 		{
 
-			//CDataSync ds(_T("192.168.1.62"), 80, g_strUserID);
 			m_pDSync->GetUser_GameInfo();
 			if( m_pPopWnd == NULL )
 			{
@@ -624,13 +579,7 @@ void CFrameWnd::Notify( TNotifyUI& msg )
 			::ClientToScreen(*this, &pt);
 			::SetWindowPos(*m_pPopWnd, NULL, pt.x, pt.y,0 ,0,SWP_NOSIZE | SWP_NOZORDER );
 			::ShowWindow(*m_pPopWnd, SW_SHOW);
-// 			if(s_need_reload)
-// 			{
-// 				s_need_reload = false;
-// 				RefreshGameWnd();
-// 
-// 			}
-			
+
 		}
 		else if( msg.pSender->GetName() == _T("closebtn") )
 		{
@@ -669,8 +618,6 @@ void CFrameWnd::Notify( TNotifyUI& msg )
 
 		}
 	}
-
-
 	__super::Notify(msg);
 }
 
@@ -782,7 +729,6 @@ LRESULT CFrameWnd::HandleMessage( UINT uMsg,WPARAM wParam,LPARAM lParam )
 	else if(WM_HOTKEY == uMsg)
 	{
 		OnHotKey(wParam, lParam);
-
 	}
 	else if(WM_GAME_RESETHEAD == uMsg)
 	{
@@ -842,13 +788,6 @@ LRESULT CFrameWnd::HandleMessage( UINT uMsg,WPARAM wParam,LPARAM lParam )
 			{
 				break;
 			}
-			//TileNode* tn = AddTileNode(name, iconpath,gameid);
-			/*for test
-			if(m_nGameCount == 0) 
-			{
-				tn->SetVisible(false);
-			}
-			*/
 
 		}
 		if(nCount <10)
@@ -857,7 +796,6 @@ LRESULT CFrameWnd::HandleMessage( UINT uMsg,WPARAM wParam,LPARAM lParam )
 
 			m_Listgame.AddGameBtn();
 		}
-
 	}
 	else if(WM_REFRESH_GAMELIST ==uMsg)
 	{
@@ -871,8 +809,6 @@ LRESULT CFrameWnd::HandleMessage( UINT uMsg,WPARAM wParam,LPARAM lParam )
 	{
 		return WindowImplBase::HandleMessage(uMsg,wParam,lParam);
 	}
-
-
 	return 0;
 }
 
@@ -913,18 +849,14 @@ void CFrameWnd::BeforeNavigate2( IDispatch *pDisp,VARIANT *&url,VARIANT *&Flags,
 		if(pItem2!=NULL)
 		{
 			m_cur_selected = pItem2->GetName().GetData();
-
 			m_pWebBrowser = static_cast<CWebBrowserUI*>(pItem2);
-
 			m_pWebBrowser->Navigate2(urlSS);
 			SetWbFocus(m_pWebBrowser);
-
 			pItem2->SetTag(1);
 			s_cur_webbrowser_ptr = m_pWebBrowser;	
 
 		}
 	}
-
 }
 
 void CFrameWnd::SetWbFocus(CWebBrowserUI* pWebBrowser)
@@ -949,7 +881,6 @@ void CFrameWnd::CloseTab(const CString& tabdata)
 		pItem->SetTag(0);
 		JumpToIndex(pItem->GetName().GetData());
 	}
-
 }
 
 void CFrameWnd::JumpToIndex(const CString& name)
@@ -980,8 +911,6 @@ void CFrameWnd::JumpToYXK()
 	CWebBrowserUI* pw = static_cast<CWebBrowserUI*>(pItem2);
 	pw->Navigate2(pw->GetHomePage());
 	s_cur_webbrowser_ptr = pw;	
-
-
 }
 
 LRESULT CFrameWnd::OnChar( UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled )
@@ -998,4 +927,5 @@ LRESULT CFrameWnd::OnChar( UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandl
 	}
 	return 0;
 }
+
 

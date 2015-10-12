@@ -108,6 +108,10 @@ public:
 
 extern CString g_strUserID ;
 extern CString g_strUserAcct ;
+extern CString g_server;
+extern int g_port;
+extern int g_runtimes;
+
 
 #define WM_REFRESH_GAMELIST_MANUAL WM_USER+100
 #define WM_REFRESH_GAMELIST_AUTO   WM_USER+101

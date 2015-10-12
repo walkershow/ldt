@@ -100,27 +100,14 @@ void CPopWnd::OnClick( TNotifyUI &msg )
 				::SendMessage(hParent, WM_REFRESH_GAMELIST_MANUAL, 0, 0 );
 			}
 		}
-// 		else if(m_bMAN_AUTO == 1)
-// 		{
-// 			::SendMessage(hParent, WM_REFRESH_GAMELIST_AUTO, 0, 0 );
-// 		}
+
 		CGameManage::GetInstance().UpdateControlMode(m_bMAN_AUTO);
 
-
-		//m_pBtnConfirm->SetVisible(false);
-// 		int n = m_pGItem->GetCount();
-// 		for(int i=0; i<n; i++)
-// 		{
-// 			m_vecGameDelBtns[i]->SetVisible(false);
-// 		}
-// 		m_pBtnConfirm->SetVisible(false);
 
 	}
 	else if(msg.pSender == m_pBtnAddGame)
 	{
-// 		m_bShowFileDialog = true;
-//A 		ShowOpenFileDialog(GetHWND());
-// 		m_bShowFileDialog = false;
+
 		int n = m_pGItem->GetCount();
 		for(int i=0; i<n; i++)
 		{
@@ -158,7 +145,6 @@ LRESULT CPopWnd::HandleCustomMessage(UINT uMsg, WPARAM wParam, LPARAM lParam, BO
 				m_vecGameChkManBtns.clear();
 				m_vecGameDelBtns.clear();
 				m_nGameCount = 0;
-				//SQLiteDataReader sdr = CGameManage::GetInstance().ExcuteQuery(_T("select gameid,name,iconpath,topmost,playtimes,status from game_manage order by playtimes;"));
 				int cMode = CGameManage::GetInstance().GetControlMode();
 				if(cMode!=3)
 				{
@@ -173,12 +159,6 @@ LRESULT CPopWnd::HandleCustomMessage(UINT uMsg, WPARAM wParam, LPARAM lParam, BO
 						int playtimes= sdr.GetIntValue(4);
 						int type = sdr.GetIntValue(5);
 						TileNode* tn = AddTileNode(name, iconpath,gameid, topmost, type);
-						/*for test
-						if(m_nGameCount == 0) 
-						{
-							tn->SetVisible(false);
-						}
-						*/
 						m_nGameCount++;
 
 					}
@@ -187,7 +167,6 @@ LRESULT CPopWnd::HandleCustomMessage(UINT uMsg, WPARAM wParam, LPARAM lParam, BO
 				{
 					//Î´Íæ¹ýÒªÅÅÐò
 					SQLiteDataReader sdr = CGameManage::GetInstance().GetAllGameByWWGMode();
-					//CString err = CGameManage::GetInstance().GetLastErrorMsg();
 					while(sdr.Read())
 					{
 						int gameid = sdr.GetIntValue(0);
@@ -203,12 +182,7 @@ LRESULT CPopWnd::HandleCustomMessage(UINT uMsg, WPARAM wParam, LPARAM lParam, BO
 							continue;
 						}
 						TileNode* tn = AddTileNode(name, iconpath,gameid, topmost, type);
-						/*for test
-						if(m_nGameCount == 0) 
-						{
-							tn->SetVisible(false);
-						}
-						*/
+
 						m_nGameCount++;
 
 					}
@@ -268,7 +242,6 @@ void CPopWnd::Notify( TNotifyUI &msg )
 				m_vecGameChkManBtns[i]->SetVisible(true);
 				m_vecGameDelBtns[i]->SetVisible(false);
 			}
-			//CGameManage::GetInstance().UpdateControlMode(2);
 		}
 		else if( (msg.pSender->GetName().Find(_T("chk_order_auto")) )>=0 )
 		{
@@ -297,7 +270,7 @@ void CPopWnd::Notify( TNotifyUI &msg )
 			m_vecGameChkManBtns.erase(std::remove(m_vecGameChkManBtns.begin(),m_vecGameChkManBtns.end(),p_chk), m_vecGameChkManBtns.end());
 			m_nGameCount--;
 			SetBtnTabVisible();
-			if(m_bMAN_AUTO == 1 )
+			if(m_bMAN_AUTO == 1 || m_bMAN_AUTO == 3)
 			{
 				::SendMessage(hParent, WM_REFRESH_GAMELIST_AUTO, 0, 0 );
 
@@ -452,12 +425,7 @@ void CPopWnd::InitWindow()
 			int playtimes= sdr.GetIntValue(4);
 			int type = sdr.GetIntValue(5);
 			TileNode* tn = AddTileNode(name, iconpath,gameid, topmost, type);
-			/*for test
-			if(m_nGameCount == 0) 
-			{
-				tn->SetVisible(false);
-			}
-			*/
+
 			m_nGameCount++;
 
 		}
@@ -515,8 +483,6 @@ TileNode* CPopWnd::AddTileNode(const CString& gameName,const CString& iconPath, 
 		new_btn_3->Selected(true);
 	}
 
-
-
 	COptionUI *new_btn_1 = new COptionUI;
 	new_btn_1->ApplyAttributeList(_T("float=\"false\" width=\"56\" height=\"57\"  hotimage=\"file='\\images\\popwnd\\tcxzxg.png'\" pushedimage=\"file='\\images\\popwnd\\tcxzxg.png'\""));
 	new_btn_1->SetName(_T("btn_game"));
@@ -536,9 +502,6 @@ TileNode* CPopWnd::AddTileNode(const CString& gameName,const CString& iconPath, 
 	new_label->ApplyAttributeList(_T("textcolor=\"#FFFFFFFF\" showhtml=\"true\""));
 	new_label->SetFloat(false);
 
-// 	CString str;
-// 	str.Format(_T("%s%d"),_T("°ÉÒ°µØ¹Ï"),gameid);
-// 	new_label->SetText(str);
 	new_label->SetText(gameName);
 	new_label->SetName(_T("down_name"));
 	if(gameName.GetLength()>4)
@@ -583,9 +546,6 @@ TileNode* CPopWnd::AddTileNode(const CString& gameName,const CString& iconPath, 
 }
 LRESULT CPopWnd::OnKillFocus(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled)
 {
-	//::SendMessage(GetHWND(), WM_CLOSE, 0 ,0);
-	 //::PostQuitMessage(0L);
-	//this->OnFinalMessage(GetHWND());
 	::ShowWindow(GetHWND(), SW_HIDE);
 	return 0L;
 }

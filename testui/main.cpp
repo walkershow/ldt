@@ -4,6 +4,9 @@
 #include "DataSync.h"
 //#include "md52.h"
 #include "md5.h"
+CString g_server;
+int g_port;
+int g_runtimes;
 CString GetLocalVersion()
 {
 	return "1.0";
@@ -35,7 +38,6 @@ static bool is_user_login(const CString& userid)
 }
 
 
-
 int APIENTRY _tWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lpCmdLine, int nCmdShow)
 {
 // 	CPaintManagerUI::SetResourceZip(_T("testui.zip"));
@@ -64,27 +66,18 @@ int APIENTRY _tWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lpCm
 	CString strPath = str ;
 	strPath += strDBPath;
 	CGameManage::GetInstance().Open(strPath);
-	MD5 md5;
-	string str22 = md5.digestFile( _T("d:\\appcfg.ini" ));
- 	//MD5 md5;
-// 	md5.reset(); 
-// 	md5.update("HELLO THERE I AM MD5!");
-// 	//md5.update(ifstream(_T("D:\\为Win7安装软件和优化.exe")), ios::binary);
-// 	const byte* dig = md5.digest();
-	//md5.update( ifstream("d:\\appcfg.ini" ), ios::binary);
- 	//string digest = md5.toString();
-// 	CDataSync ds(_T("192.168.1.62"), 80, g_strUserID);
-// 	int id = 0;
-// 	CString name2, iconpath;
-// 	//ds.SyncUserInfo(id , name2, iconpath);
-// 	ds.GetGame_Manage_ByGameID(-1);
+	
+	bool bRet = CGameManage::GetInstance().GetSysConfig(g_server, g_port, g_runtimes);
+	if(!bRet)
+	{
+		::MessageBox(NULL,_T("初始化错误"),_T("错误"),MB_OK);
+		exit(1);
+	}
 
 	CFrameWnd *pFrame = new CFrameWnd(_T("UISkin2.xml"));
 	pFrame->Create(NULL, _T("6A游戏"), UI_WNDSTYLE_FRAME, WS_EX_WINDOWEDGE);
 
 	pFrame->ShowModal();
-	//pFrame->SetWbFocus(pFrame->pINDEX);
-
 	pFrame->SetIcon(IDI_ICON1);
 	
 	delete pFrame;

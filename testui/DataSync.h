@@ -8,7 +8,6 @@
 class CDataSync:public FCHttpRequestManager
 {
 public:
-
 	CDataSync(LPCTSTR server,int port, LPCTSTR userid,HWND notifyHwnd = NULL);
 	~CDataSync(void);
 
@@ -51,6 +50,10 @@ private:
 					bOK = true ;
 			}
 		}
+		else
+		{
+			CLog::getInstance()->AgentLog(_T("server:%s,port:%d http exp happend status code:%d"),(LPTSTR)(LPCTSTR)m_server, m_port, r.m_status_code);
+		}
 
 		if (bOK)
 		{
@@ -91,12 +94,7 @@ private:
 	int HandleUser_GameInfo();
 	int HandleProgmd5();
 	int HandleProg_to_Game_ByProgmd5();
-	// 	static void __stdcall Inet_Callback(HINTERNET hInternet,
-// 		DWORD dwContext,
-// 		DWORD dwInternetStatus,
-// 		LPVOID lpStatusInfo,
-// 		DWORD dwStatusInfoLen);
-	//CString DownloadFile(const CString& surl, const std::string& url);
+
 private:
 	CString m_server;
 	int m_port;
@@ -104,8 +102,5 @@ private:
 	char *m_databuf;
 	const int m_nbuflen;
 	HWND m_HwndNotify;
-
-
-	//bool m_bAllDone;
 
 };
