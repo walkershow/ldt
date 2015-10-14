@@ -1,7 +1,8 @@
 #pragma once
 #include "sqlite.h"
 #include <atlstr.h>
-
+extern CString g_strUserAcct;
+extern CString g_strUserID;
 class CGameManage
 {
 public:
@@ -88,6 +89,15 @@ public:
 			return sdr.GetInt64Value(0);
 		return -1;
 	}
+	long SelectMaxTimeFromUser()
+	{
+		CString sql = _T("select max(updatetime) from user");
+		SQLiteDataReader sdr = m_db.ExcuteQuery(sql);
+		bool bRet = sdr.Read();
+		if(bRet)
+			return sdr.GetInt64Value(0);
+		return -1;
+	}
 	bool ExistGame(int gameid)
 	{
 		CString sql;
@@ -96,7 +106,14 @@ public:
 		return sdr.Read();
 
 	}
+	bool ExistUser(int userid)
+	{
+		CString sql;
+		sql.Format(_T("select 1 from User where userid=%d;"), userid);
+		SQLiteDataReader sdr = m_db.ExcuteQuery(sql);
+		return sdr.Read();
 
+	}
 	bool UpdateGameByGameID(int gameid, LPCTSTR name, LPCTSTR iconpath, int topmost, int type, int playtimes, long updatesign, LPCTSTR url ,int rstatus=-1)
 	{
 		if(ExistGame(gameid))
@@ -109,6 +126,23 @@ public:
 		{
 			CString str;
 			str.Format(_T("insert into game_manage(gameid,name,iconpath,topmost,playtimes,type,status,lastplaytime,updatesign,url, rstatus) values(%d, '%s', '%s', %d, %d, %d, %d, CURRENT_TIMESTAMP,%d, '%s', %d)"),  gameid,name, iconpath, topmost,  playtimes, type, 0,updatesign, url, rstatus);
+			return m_db.ExcuteNonQuery(str);
+		}
+		return true;
+	}
+
+	bool UpdateUser(int userid, LPCTSTR nickname, LPCTSTR useracct, int year,int mon, int day, LPCTSTR sex,  LPCTSTR bt, int imageid, LPCTSTR imagehis ,LPCTSTR prov,LPCTSTR city,LPCTSTR area ,long updatetime,int countryindex, int provindex, int cityindex, int btindex, int sexindex,int areaindex)
+	{
+		if(ExistUser(userid))
+		{
+			CString str;
+			str.Format(_T("update user set nickname='%s', useracct='%s',birthyear=%d, birthmon=%d, birthday=%d,sex='%s' ,bloodtype='%s', headerid=%d,headerhis='%s',prov='%s',city='%s',area='%s',updatetime=%d,countryindex=%d, provindex=%d, cityindex=%d, sexindex=%d, btindex=%d,areaindex=%d where userid=%d"), nickname, useracct, year, mon, day, sex, bt, imageid, imagehis, prov, city, area,updatetime,0, provindex, cityindex,sexindex, btindex, areaindex,userid);
+			return m_db.ExcuteNonQuery(str);
+		}
+		else
+		{
+			CString str;
+//			str.Format(_T("insert into game_manage(gameid,name,iconpath,topmost,playtimes,type,status,lastplaytime,updatesign,url, rstatus) values(%d, '%s', '%s', %d, %d, %d, %d, CURRENT_TIMESTAMP,%d, '%s', %d)"),  gameid,name, iconpath, topmost,  playtimes, type, 0,updatesign, url, rstatus);
 			return m_db.ExcuteNonQuery(str);
 		}
 		return true;
@@ -170,7 +204,7 @@ public:
 
 	}
 	//用户信息
-	bool SetUser(int userid,CString useracct,CString bt,CString sex,int y,int m,int d,CString country,CString prov,CString city,CString nickName, int countryindex, int provindex, int cityindex, int btindex, int sexindex)
+	bool SetUser(int userid,CString useracct,CString bt,CString sex,int y,int m,int d,CString country,CString prov,CString city,CString nickName, int countryindex, int provindex, int cityindex, int btindex, int sexindex,int headerid, CString headerhis,CString area,int areaindex)
 	{
 		CString sql;
 		sql.Format(_T("select 1 from user where userid=%d;"), userid);
@@ -179,12 +213,12 @@ public:
 
 		if(!bRet)
 		{
-			sql.Format(_T("insert into user(userid,useracct,bloodtype,sex,birthyear,birthmon,birthday,country,prov,city,nickname,countryindex, provindex, cityindex, sexindex, btindex) values(%d,'%s','%s','%s',%d,%d,%d,'%s','%s','%s','%s',%d,%d,%d,%d,%d)"),userid, useracct,bt, sex,y,m,d,country,prov,city, nickName,countryindex, provindex, cityindex, sexindex, btindex);
+			sql.Format(_T("insert into user(userid,useracct,bloodtype,sex,birthyear,birthmon,birthday,country,prov,city,nickname,countryindex, provindex, cityindex, sexindex, btindex,headerid,headerhis,area,areaindex) values(%d,'%s','%s','%s',%d,%d,%d,'%s','%s','%s','%s',%d,%d,%d,%d,%d,%d,'%s','%s',%d)"),userid, useracct,bt, sex,y,m,d,country,prov,city, nickName,countryindex, provindex, cityindex, sexindex, btindex,headerid,headerhis,area,areaindex);
 			return m_db.ExcuteNonQuery(sql);
 		}
 		else
 		{
-			sql.Format(_T("update user set bloodtype='%s',sex='%s',birthyear=%d,birthmon=%d,birthday=%d,country='%s',prov='%s',city='%s',nickname='%s',countryindex=%d, provindex=%d, cityindex=%d, sexindex=%d, btindex=%d where userid=%d"), bt, sex,y,m,d,country,prov,city, nickName,countryindex, provindex, cityindex, sexindex, btindex, userid);
+			sql.Format(_T("update user set bloodtype='%s',sex='%s',birthyear=%d,birthmon=%d,birthday=%d,country='%s',prov='%s',city='%s',nickname='%s',countryindex=%d, provindex=%d, cityindex=%d, sexindex=%d, btindex=%d ,headerid=%d,headerhis='%s',area='%s',areaindex=%d where userid=%d"), bt, sex,y,m,d,country,prov,city, nickName,countryindex, provindex, cityindex, sexindex, btindex,headerid,headerhis,area,areaindex, userid);
 			return m_db.ExcuteNonQuery(sql);
 		}
 		return false;
@@ -194,7 +228,14 @@ public:
 	SQLiteDataReader GetUser(int userid)
 	{
 		CString str;
-		str.Format(_T("select userid,useracct,bloodtype,sex,birthyear,birthmon,birthday,country,prov,city,nickname,countryindex, provindex, cityindex, sexindex, btindex from user where userid=%d"),userid);
+		str.Format(_T("select userid,useracct,bloodtype,sex,birthyear,birthmon,birthday,country,prov,city,nickname,countryindex, provindex, cityindex, sexindex, btindex,headerid,headerhis,area,areaindex from user where userid=%d"),userid);
+		return m_db.ExcuteQuery(str);
+	}
+
+	SQLiteDataReader GetUserHeaderURI(int userid, int headerid)
+	{
+		CString str;
+		str.Format(_T("select URI from header_info where (userid=%d or userid=0) and headerid=%d"),userid, headerid);
 		return m_db.ExcuteQuery(str);
 	}
 
@@ -304,6 +345,47 @@ public:
 			sql.Format(_T("update sysconfig set runtimes=runtimes+1,lasttime=CURRENT_TIMESTAMP where server='%s' "), server );
 
 		return m_db.ExcuteNonQuery(sql);
+	}
+
+	SQLiteDataReader GetProv()
+	{
+		CString str = _T("select title,area_id from area where pid=0 order by sort");
+		return m_db.ExcuteQuery(str);
+	}
+
+	SQLiteDataReader GetCity(int provid)
+	{
+		CString str ;
+		str.Format(_T("select title,area_id from area where pid=%d order by sort"), provid);
+		return m_db.ExcuteQuery(str);
+	}
+	SQLiteDataReader GetArea(int cityid)
+	{
+		CString str ;
+		str.Format(_T("select title,area_id from area where pid=%d order by sort"), cityid);
+		return m_db.ExcuteQuery(str);
+	}
+	bool GetAreaNameAndIdx(int id,CString& title, int& idx)
+	{
+		CString str ;
+		str.Format(_T("select title,sort from area where area_id=%d "), id);
+		SQLiteDataReader sdr = m_db.ExcuteQuery(str);
+		bool bRet = sdr.Read();
+		if(!bRet) return false;
+		title = sdr.GetStringValue(0);
+		idx = sdr.GetIntValue(1) -1;
+		return bRet;
+	}
+	bool CreateUser()
+	{
+		int userid = _ttoi((LPCTSTR)g_strUserID);
+		if(!ExistUser(userid))
+		{
+			CString str;
+			str.Format( _T("insert into user(userid ,useracct) values(%s,'%s')"), g_strUserID, g_strUserAcct);
+			return m_db.ExcuteNonQuery(str);
+		}
+		return true;
 	}
 
 private:

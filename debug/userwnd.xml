@@ -60,9 +60,9 @@
           <!-- padding="0,16,0,0" editing -->
           <Label name="lbl2" bkimage="images\userwnd\gryh-grzlxb.png"  padding="0,16,0,0" width="38" height="12" />
           <!-- <Label text="hello" textcolor="#6AFFFFFF" width="66" height="28"/> -->
-           <VerticalLayout width="50" height="28" >
+           <VerticalLayout width="70" height="28" >
             <Label name="lblsex" text="男" padding="5,0,0,0" width="88" height="28" valign="bottom" align="left"/>
-          <ComboBox name="cbsex" visible="false" itemselectedtextcolor="#ff000000" droptype="droplist" padding="5,6,0,0"  width="50" height="22"  valign="bottom" align="left" normalimage="file='combo.png' source='0,0,100,22' corner='2,2,20,2'" hotimage="file='combo.png' source='0,22,100,44' corner='2,2,22,2'" pushedimage="file='combo.png' source='0,44,100,66' corner='2,2,22,2'" >
+          <ComboBox name="cbsex" visible="false" itemselectedtextcolor="#ff000000" droptype="droplist" padding="5,6,0,0"  width="70" height="25"  valign="bottom" align="left" >
             <ListLabelElement text="男" selected="true" height="23"/>
             <ListLabelElement text="女" height="23" />
           </ComboBox>
@@ -73,9 +73,9 @@
         <HorizontalLayout name="item_bar" height="28" float="false" >
           <Label name="lbl3" bkimage="images\userwnd\gryh-grzlxx.png" padding="0,16,0,0" width="38" height="12" />
       <!-- <DateTime name="DateTime1" bkimage="images\userwnd\gryh-grzlyhbj.png"/> -->
-       <VerticalLayout width="50" height="28" >
+       <VerticalLayout width="60" height="28" >
             <Label  name="lblbt" text="A"  padding="5,0,0,0" valign="bottom" align="left" width="50" height="28"/>
-          <ComboBox name="cbbt" visible="false" droptype="droplist" padding="5,8,0,0" valign="bottom" align="left"   width="50"  height="20" normalimage="file='combo.png' source='0,0,100,22' corner='2,2,20,2'" hotimage="file='combo.png' source='0,22,100,44' corner='2,2,22,2'" pushedimage="file='combo.png' source='0,44,100,66' corner='2,2,22,2'" >
+          <ComboBox name="cbbt" visible="false" droptype="droplist" padding="5,8,0,0" valign="bottom" align="left"   width="60"  height="20"  >
             <ListLabelElement text="A" selected="true" />
             <ListLabelElement text="B"  />
             <ListLabelElement text="AB"  />
@@ -92,13 +92,13 @@
           <!-- //<Label text="hello" textcolor="#6AFFFFFF" width="66" height="28"/> -->
        <VerticalLayout maxwidth="75"  height="28">
           <!-- <Label name="lblyear" text="2015"   visible="false"  width="50" height="28"/> -->
-          <ComboBox name="cbyear"  virtualwnd="cb_year" visible="false"  width="75" padding="5,5,0,0" valign="bottom" align="left" height="22" normalimage="file='combo.png' source='0,0,100,22' corner='2,2,20,2'" hotimage="file='combo.png' source='0,22,100,44' corner='2,2,22,2'" pushedimage="file='combo.png' source='0,44,100,66' corner='2,2,22,2'"> 
+          <ComboBox name="cbyear"  virtualwnd="cb_year" visible="false"  width="75" padding="5,5,0,0" valign="bottom" align="left" height="22" > 
           </ComboBox>
         </VerticalLayout>
         <!-- <Control width="8"/> -->
        <VerticalLayout maxwidth="70"  height="28">
         <Label name="lblmon" text="1" visible="false" textcolor="" width="70" height="28"/>
-         <ComboBox name="cbmon"  virtualwnd="cb_mon" visible="false" width="65" padding="0,5,0,0"  normalimage="file='combo.png' source='0,0,100,22' corner='2,2,20,2'" hotimage="file='combo.png' source='0,22,100,44' corner='2,2,22,2'" pushedimage="file='combo.png' source='0,44,100,66' corner='2,2,22,2'"> 
+         <ComboBox name="cbmon"  virtualwnd="cb_mon" visible="false" width="65" padding="0,5,0,0"  > 
             <ListLabelElement text="01月"  userdata="1" />
             <ListLabelElement text="02月"  userdata="2" />
             <ListLabelElement text="03月"  userdata="3" />
@@ -118,7 +118,7 @@
         <Control width="12"/>
        <VerticalLayout maxwidth="50"  height="28">
         <Label name="lblday" text="1"  visible="false" textcolor="" width="50" height="28"/>
-          <ComboBox name="cbday"  visible="false" textcolor="" width="50" padding="0,5,0,0" normalimage="file='combo.png' source='0,0,100,22' corner='2,2,20,2'" hotimage="file='combo.png' source='0,22,100,44' corner='2,2,22,2'" pushedimage="file='combo.png' source='0,44,100,66' corner='2,2,22,2'"> 
+          <ComboBox name="cbday"  visible="false" textcolor="" width="50" padding="0,5,0,0" > 
             <ListLabelElement text="1" selected="true"/>
           </ComboBox>
         </VerticalLayout>
@@ -149,22 +149,29 @@
 
           <VerticalLayout maxwidth="70">
           <Label name="lblnat" text="中国" visible="false"  width="70" height="22"/>
-          <ComboBox name="cbnat"  visible="false" focusbordercolor="#6affffff" width="70" padding="5,5,0,0" normalimage="file='combo.png' source='0,0,100,22' corner='2,2,20,2'" hotimage="file='combo.png' source='0,22,100,44' corner='2,2,22,2'" pushedimage="file='combo.png' source='0,44,100,66' corner='2,2,22,2'" > 
+          <ComboBox name="cbnat"  visible="false" focusbordercolor="#6affffff" width="70" padding="5,5,0,0"  > 
             <ListLabelElement text="中国" selected="true"/>
           </ComboBox>
         </VerticalLayout>
         <Control width="12"/>
        <VerticalLayout maxwidth="70" >
         <Label name="lblprov" text="广东省" visible="false" textcolor="" width="70" height="22"/>
-         <ComboBox name="cbprov"  visible="false" textcolor="" width="70" padding="0,5,0,0" normalimage="file='combo.png' source='0,0,100,22' corner='2,2,20,2'" hotimage="file='combo.png' source='0,22,100,44' corner='2,2,22,2'" pushedimage="file='combo.png' source='0,44,100,66' corner='2,2,22,2'" > 
-            <ListLabelElement text="广东省" selected="true"/>
+         <ComboBox name="cbprov"  visible="false" textcolor="" width="70" padding="0,5,0,0"  > 
+            <!-- <ListLabelElement text="广东省" selected="true"/> -->
           </ComboBox>
         </VerticalLayout>
         <Control width="12"/>
        <VerticalLayout maxwidth="70">
         <Label name="lblcity" text="汕头" visible="false" textcolor="" width="70" height="22"/>
-          <ComboBox name="cbcity"   visible="false" textcolor="" width="70" padding="0,5,0,0"  normalimage="file='combo.png' source='0,0,100,22' corner='2,2,20,2'" hotimage="file='combo.png' source='0,22,100,44' corner='2,2,22,2'" pushedimage="file='combo.png' source='0,44,100,66' corner='2,2,22,2'"> 
-            <ListLabelElement text="汕头" selected="true"/>
+          <ComboBox name="cbcity"   visible="false" textcolor="" width="70" padding="0,5,0,0"  > 
+            <!-- <ListLabelElement text="汕头" selected="true"/> -->
+          </ComboBox>
+        </VerticalLayout>
+        <Control width="12"/>
+        <VerticalLayout maxwidth="70">
+        <Label name="lblarea" text="" visible="false" textcolor="" width="70" height="22"/>
+          <ComboBox name="cbarea"   visible="false" textcolor="" width="70" padding="0,5,0,0"  > 
+            <!-- <ListLabelElement text="汕头" selected="true"/> -->
           </ComboBox>
         </VerticalLayout>
         </HorizontalLayout>
@@ -191,18 +198,18 @@
          
 
            <TileLayout  name="headitem" inset="0,8,0,0"  focusbordercolor="#cccccccc" itemsize="55,55"  childpadding="15,0,0,0"  width="240" height="240" >
-             <Button name="btnhead1"   float="false"  group="toolbar_main" userdata="index" bordercolor="#6affffff" focusbordercolor="#00007eff" bordersize="1" width="51" height="51"   normalimage="images\head\t\1.jpg" />
-             <Button name="btnhead2"   float="false"  group="toolbar_main" userdata="index"  bordercolor="#6affffff" focusbordercolor="#00007eff" bordersize="1"  width="51" height="51"  normalimage="images\head\t\2.jpg" />
-            <Button name="btnhead3"   float="false"  group="toolbar_main" userdata="index"  bordercolor="#6affffff" focusbordercolor="#00007eff" bordersize="1"  width="51" height="51"  normalimage="images\head\t\3.jpg" />
-            <Button name="btnhead4"   float="false"  group="toolbar_main" userdata="index"  bordercolor="#6affffff" focusbordercolor="#00007eff" bordersize="1"  width="51" height="51"  normalimage="images\head\t\4.jpg" />
-             <Button name="btnhead5"   float="false"  group="toolbar_main" userdata="index"  bordercolor="#6affffff" focusbordercolor="#00007eff" bordersize="1"  width="51" height="51"  normalimage="images\head\t\5.jpg" />
-            <Button name="btnhead6"   float="false"  group="toolbar_main" userdata="index"  bordercolor="#6affffff" focusbordercolor="#00007eff" bordersize="1"  width="51" height="51"  normalimage="images\head\t\6.jpg" />
-            <Button name="btnhead7"   float="false"  group="toolbar_main" userdata="index"  bordercolor="#6affffff" focusbordercolor="#00007eff" bordersize="1"  width="51" height="51"  normalimage="images\head\t\7.jpg" />
-             <Button name="btnhead8"   float="false"  group="toolbar_main" userdata="index"  bordercolor="#6affffff" focusbordercolor="#00007eff" bordersize="1"  width="51" height="51"  normalimage="images\head\t\8.jpg" />
-            <Button name="btnhead9"   float="false"  group="toolbar_main" userdata="index"  bordercolor="#6affffff" focusbordercolor="#00007eff" bordersize="1"  width="51" height="51"  normalimage="images\head\t\9.jpg" />
-            <Button name="btnhead10"   float="false"  group="toolbar_main" userdata="index"  bordercolor="#6affffff" focusbordercolor="#00007eff" bordersize="1"  width="51" height="51"  normalimage="images\head\t\10.jpg" />
-             <Button name="btnhead11"   float="false"  group="toolbar_main" userdata="index"   bordercolor="#6affffff" focusbordercolor="#00007eff" bordersize="1"  width="51" height="51"  normalimage="images\head\t\11.jpg" />
-            <Button name="btnhead12"   float="false"  group="toolbar_main" userdata="index"  bordercolor="#6affffff" focusbordercolor="#00007eff" bordersize="1"  width="51" height="51"  normalimage="images\head\t\12.jpg" />
+             <Button name="btnhead1"   float="false"  group="toolbar_main" userdata="1" bordercolor="#6affffff" focusbordercolor="#00007eff" bordersize="1" width="51" height="51"   normalimage="images\head\t\1.jpg" />
+             <Button name="btnhead2"   float="false"  group="toolbar_main" userdata="2"  bordercolor="#6affffff" focusbordercolor="#00007eff" bordersize="1"  width="51" height="51"  normalimage="images\head\t\2.jpg" />
+            <Button name="btnhead3"   float="false"  group="toolbar_main" userdata="3"  bordercolor="#6affffff" focusbordercolor="#00007eff" bordersize="1"  width="51" height="51"  normalimage="images\head\t\3.jpg" />
+            <Button name="btnhead4"   float="false"  group="toolbar_main" userdata="4"  bordercolor="#6affffff" focusbordercolor="#00007eff" bordersize="1"  width="51" height="51"  normalimage="images\head\t\4.jpg" />
+             <Button name="btnhead5"   float="false"  group="toolbar_main" userdata="5"  bordercolor="#6affffff" focusbordercolor="#00007eff" bordersize="1"  width="51" height="51"  normalimage="images\head\t\5.jpg" />
+            <Button name="btnhead6"   float="false"  group="toolbar_main" userdata="6"  bordercolor="#6affffff" focusbordercolor="#00007eff" bordersize="1"  width="51" height="51"  normalimage="images\head\t\6.jpg" />
+            <Button name="btnhead7"   float="false"  group="toolbar_main" userdata="7"  bordercolor="#6affffff" focusbordercolor="#00007eff" bordersize="1"  width="51" height="51"  normalimage="images\head\t\7.jpg" />
+             <Button name="btnhead8"   float="false"  group="toolbar_main" userdata="8"  bordercolor="#6affffff" focusbordercolor="#00007eff" bordersize="1"  width="51" height="51"  normalimage="images\head\t\8.jpg" />
+            <Button name="btnhead9"   float="false"  group="toolbar_main" userdata="9"  bordercolor="#6affffff" focusbordercolor="#00007eff" bordersize="1"  width="51" height="51"  normalimage="images\head\t\9.jpg" />
+            <Button name="btnhead10"   float="false"  group="toolbar_main" userdata="10"  bordercolor="#6affffff" focusbordercolor="#00007eff" bordersize="1"  width="51" height="51"  normalimage="images\head\t\10.jpg" />
+             <Button name="btnhead11"   float="false"  group="toolbar_main" userdata="11"   bordercolor="#6affffff" focusbordercolor="#00007eff" bordersize="1"  width="51" height="51"  normalimage="images\head\t\11.jpg" />
+            <Button name="btnhead12"   float="false"  group="toolbar_main" userdata="12"  bordercolor="#6affffff" focusbordercolor="#00007eff" bordersize="1"  width="51" height="51"  normalimage="images\head\t\12.jpg" />
 
         </TileLayout >
 
@@ -210,7 +217,7 @@
        <VerticalLayout  inset="0,10,0,0" >
           <HorizontalLayout width="44" height="44">
           <Control name="bk"  width="44" height="44"  bkimage="images\userwnd\gryh-grzltxyl.png"/>
-          <Button name="btnshowhead"  userdata="head"   width="42" height="42" normalimage="images\head\r\1.png" float="true" pos="1,1,41,41" />
+          <Button name="btnshowhead"  userdata="0"   width="42" height="42" normalimage="images\head\r\1.png" float="true" pos="1,1,41,41" />
 
           </HorizontalLayout>
 <!-- 

@@ -20,11 +20,12 @@ CDataSync::CDataSync(LPCTSTR server, int port, LPCTSTR userid, HWND notifyHwnd):
 
 CDataSync::~CDataSync(void)
 {
+	delete []m_databuf;
+	m_databuf = NULL;
 }
 
 bool CDataSync::GetData(const CString& sUrl, char* szBuffer, DWORD dwBuffer)
 {
- 
 	HTTP_REQUEST_HEADER   h (HTTP_REQUEST_HEADER::VERB_TYPE_GET) ;
 	h.m_url = sUrl;
 	this->AddRequest(h);
@@ -33,9 +34,17 @@ bool CDataSync::GetData(const CString& sUrl, char* szBuffer, DWORD dwBuffer)
 }
 
 
-bool CDataSync::PostData(const CString& sUrl, char* data)
+bool CDataSync::PostData(const CString& sUrl, char* data, int datalen)
 {
-return true;
+	HTTP_REQUEST_HEADER   h (HTTP_REQUEST_HEADER::VERB_TYPE_POST) ;
+	
+	h.m_url = sUrl;
+	h.m_header += _T("Content-Type:application/json\r\n") ;
+	h.m_header += _T("Accept: */*\r\n") ;
+	h.AddPostData(data, datalen);
+	AddRequest(h);
+
+	return true;
 }
 
 CString CDataSync::CrackUrl(CString sUrl)
@@ -394,6 +403,85 @@ int CDataSync::HandleProgmd5()
 		int gameid = root[i]["gameid"].asInt();
 		bool bRet = CGameManage::GetInstance().InsertProgmd5byGameid(gameid, progmd5.c_str());
 
+	}
+	return 0;
+}
+
+
+int CDataSync::GetUserData()
+{
+	CString sUrl;
+	memset(m_databuf, 0, m_nbuflen);
+	long maxTime = CGameManage::GetInstance().SelectMaxTimeFromUser();
+	sUrl.Format(_T("http://%s:%d/puinfo?userid=%s&curtime=%d"),m_server, m_port, m_userid, maxTime);
+	CLog::getInstance()->AgentLog((LPTSTR)(LPCTSTR)sUrl);
+	//MessageBox(NULL,sUrl, _T("hi"), 0);
+	GetData(sUrl, m_databuf, m_nbuflen);
+	return 0;
+}
+int CDataSync::HandleUserData()
+{
+	CString sUrl;
+
+	Json::Reader reader;
+	Json::Value root;
+	if (!reader.parse(m_databuf, root, false))
+	{
+		return -2;
+	}
+	int userid = 0;
+	string nickname;
+	int birthyear,birthmon,birthday;
+	CString prov,city,area,useracct,sex,bloodtype;
+	int provid,cityid,areaid;
+	int countryindex, provindex, cityindex, sexindex, btindex,headerid,areaindex;
+	CString headerhis;
+	unsigned int upsign;
+	int size = root.size();
+	for (int i=0; i<size; ++i)
+	{
+		userid= root[i]["id"].asInt();
+		useracct= root[i]["username"].asCString();
+		nickname= root[i]["nick_name"].asString();
+		CString strName = UTF8ToUnicode((char*)nickname.c_str());
+		bloodtype= root[i]["blood"].asCString();
+		if( bloodtype == _T("A") ) btindex =0;
+		else if( bloodtype == _T("B") ) btindex =1;
+		else if( bloodtype == _T("AB") ) btindex =2;
+		else if( bloodtype == _T("O") ) btindex =3;
+		else btindex = -1;
+
+		//CString bt = UTF8ToUnicode((char*)bloodtype.c_str());
+		int sexid = root[i]["sex"].asInt();
+		string birthdaystr =  root[i]["birthday"].asString();
+		sscanf(birthdaystr.c_str(), "%d-%d-%d", &birthyear,&birthmon,&birthday);
+		int yidx = GetYearIdx(birthyear);
+		int midx = GetYearIdx(birthmon);
+		int didx = GetYearIdx(birthday);
+		provid = root[i]["province_id"].asInt();
+		cityid = root[i]["city_id"].asInt();
+		areaid = root[i]["area_id"].asInt();
+		CString prov;
+		int providx;
+		CGameManage::GetInstance().GetAreaNameAndIdx(provid, prov, providx);
+		CString city;
+		int cityidx;
+		CGameManage::GetInstance().GetAreaNameAndIdx(cityid, city, cityidx);
+		CString area;
+		int areaidx;
+		CGameManage::GetInstance().GetAreaNameAndIdx(areaid, area, areaidx);
+
+		if(sexid == 0) sex=_T("ÄÐ");
+		else if(sexid==1) sex=_T("Å®");
+		else sex=_T("");
+		//topmost= root[i]["topmost"].asInt();
+		//playtimes = root[i]["playtimes"].asInt();
+		headerid = root[i]["image"].asInt();
+		headerhis = root[i]["image_history1"].asCString();
+		upsign = root[i]["updatetime"].asUInt();
+		bool bRet = CGameManage::GetInstance().UpdateUser(userid, strName, useracct, birthyear,birthmon,birthday, sex,bloodtype, headerid, headerhis,prov,city,area, upsign,0, providx, cityidx, btindex,sexid, areaidx);
+
+		//break;
 	}
 	return 0;
 }

@@ -14,7 +14,7 @@ extern CString g_strUserAcct ;
 
 extern CString ShowOpenFileDialog(HWND hParent);
 
-class CDataSync;
+//class CDataSync;
 
 class CList_Game : public CNotifyPump
 {
@@ -45,7 +45,7 @@ private:
 	HWND m_frameHwnd;
 	HWND m_popHwnd;
 	bool m_bSomeOneSelected;
-	CDataSync *m_pDSync;
+	//CDataSync *m_pDSync;
 };
 
 
@@ -95,6 +95,6 @@ private:
 	CHorizontalLayoutUI* m_addnewgame;
 	CButtonUI* m_pBtntx;
 	CLabelUI* m_pLblNickName;
-	CDataSync *m_pDSync;
+	//CDataSync *m_pDSync;
 
 };

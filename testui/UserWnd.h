@@ -5,6 +5,7 @@
 #include "Date.h"
 using namespace  std;
 
+//class CDataSync;
 class CUserWnd: public CXMLWnd
 {
 public:
@@ -25,6 +26,11 @@ public:
 	void InitCtrlVal();
 	void SetParent(HWND hWnd);
 	void SetAgeXZSXByVal(int year,int mon,int day);
+	void SetUsedTx();
+	void InitUsedTx();
+	void InitCity(int idx);
+	void InitProv();
+	void InitArea(int nSel);
 
 	DUI_DECLARE_MESSAGE_MAP()
 		virtual void OnClick(TNotifyUI& msg);
@@ -45,6 +51,14 @@ private:
 	CButtonUI* m_pBtnTx;
 	CLabelUI* m_pLblName;
 	HWND m_parentHwnd;
+	int m_headerid;
+	CString m_headerhis;
+	vector<CButtonUI*> m_pUsedBtnTxVec;
+	CButtonUI* m_pUsedBtnTx2;
+	CButtonUI* m_pUsedBtnTx3;
+	CButtonUI* m_pUsedBtnTx4;
+	bool m_bShouldSave;
+	//CDataSync *m_pDSync;
 
 
 };

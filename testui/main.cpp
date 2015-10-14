@@ -7,6 +7,8 @@
 CString g_server;
 int g_port;
 int g_runtimes;
+CDataSync *g_pDSync  ;
+
 CString GetLocalVersion()
 {
 	return "1.0";
@@ -57,9 +59,6 @@ int APIENTRY _tWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lpCm
 
 	::CoInitialize(NULL);
 	
-
-	//SQLite.Instance().Open(strDBPath);
-
 	CPaintManagerUI::SetInstance(hInstance);
 	CPaintManagerUI::SetResourcePath(CPaintManagerUI::GetInstancePath());
 	CDuiString str = CPaintManagerUI::GetInstancePath();
@@ -73,9 +72,9 @@ int APIENTRY _tWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lpCm
 		::MessageBox(NULL,_T("初始化错误"),_T("错误"),MB_OK);
 		exit(1);
 	}
-
+	CGameManage::GetInstance().CreateUser();
 	CFrameWnd *pFrame = new CFrameWnd(_T("UISkin2.xml"));
-	pFrame->Create(NULL, _T("6A游戏"), UI_WNDSTYLE_FRAME, WS_EX_WINDOWEDGE);
+	pFrame->Create(NULL, _T("6A游戏数据研究中心"), UI_WNDSTYLE_FRAME, WS_EX_WINDOWEDGE);
 
 	pFrame->ShowModal();
 	pFrame->SetIcon(IDI_ICON1);
@@ -83,5 +82,7 @@ int APIENTRY _tWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lpCm
 	delete pFrame;
 	::CoUninitialize();
 	CGameManage::GetInstance().Close();
+	delete g_pDSync;
+	g_pDSync = NULL;
 	return 0;
 }

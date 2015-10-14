@@ -35,7 +35,7 @@ CList_Game::CList_Game()
 	m_popHwnd = NULL;
 	m_bSomeOneSelected = false;
 	m_nCurCount = 0;
-	m_pDSync = new CDataSync(g_server, g_port, g_strUserID, m_frameHwnd);
+	//m_pDSync = new CDataSync(g_server, g_port, g_strUserID, m_frameHwnd);
 	//AddGameNode(_T("baba"), 1001);
 }
 
@@ -141,8 +141,6 @@ void CList_Game::OnClick(TNotifyUI& msg)
 			//excute game
 		}
 	}
-
-
 }
 
 
@@ -285,7 +283,7 @@ int CList_Game::AddNewGame(CString filePath)
 	MD5 md5;
 	string digest = md5.digestFile((LPTSTR)(LPCTSTR) filePath );
 	//CDataSync ds(_T("192.168.1.62"), 80, g_strUserID);
-	int gameid=m_pDSync->GetProg_to_Game_ByProgmd5((LPSTR)digest.c_str());
+	int gameid=g_pDSync->GetProg_to_Game_ByProgmd5((LPSTR)digest.c_str());
 	if(gameid>0)
 	{
 		if(CGameManage::GetInstance().SetGamePath(filePath, gameid))
@@ -300,7 +298,7 @@ int CList_Game::AddNewGame(CString filePath)
 void CList_Game::SetFrameHwnd(HWND hWnd)
 {
 	m_frameHwnd = hWnd;
-	m_pDSync->SetNoitfyHwnd(m_frameHwnd);
+	//m_pDSync->SetNoitfyHwnd(m_frameHwnd);
 }
 
 void CList_Game::SetPopHwnd(HWND hWnd)
@@ -310,7 +308,6 @@ void CList_Game::SetPopHwnd(HWND hWnd)
 
 CList_Game::~CList_Game()
 {
-	delete m_pDSync;
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -340,7 +337,6 @@ CFrameWnd::~CFrameWnd()
 {
 	::UnregisterHotKey(m_hWnd,199);
 	RemoveVirtualWnd(_T("list_game"));
-	delete m_pDSync;
 
 }
 HRESULT STDMETHODCALLTYPE CFrameWnd::GetHostInfo( DOCHOSTUIINFO __RPC_FAR *pInfo)
@@ -477,12 +473,21 @@ void CFrameWnd::InitWindow()
 	CHorizontalLayoutUI* m_addnewgame = m_Listgame.AddGameBtn();
 	m_Listgame.SetAddGameBtnPtr(m_addnewgame);
 
-	m_pDSync = new CDataSync(g_server, g_port, g_strUserID, m_hWnd);
-	m_pDSync->SetNoitfyHwnd(m_hWnd);
 
+	int userid = _ttoi((LPCTSTR)g_strUserID);
+	SQLiteDataReader sdr = CGameManage::GetInstance().GetUser(userid);
+	bool bRet = sdr.Read();
+	int headerid = sdr.GetIntValue(16);
+	SQLiteDataReader sdr2 =CGameManage::GetInstance().GetUserHeaderURI(userid, headerid);
+	bRet = sdr2.Read();
+	CString uri = sdr2.GetStringValue(0);
+	if(headerid !=0)
+		m_pBtntx->SetBkImage(uri);
+	g_pDSync = new CDataSync(g_server, g_port, g_strUserID,m_hWnd);
+	g_pDSync->GetUserData();
 	if(g_runtimes == 0)
 	{
-		m_pDSync->GetUser_GameInfo();
+		g_pDSync->GetUser_GameInfo();
 		CGameManage::GetInstance().UpdateSysConfig(g_server, true);
 	}
 	else
@@ -567,7 +572,7 @@ void CFrameWnd::Notify( TNotifyUI& msg )
 		else if( msg.pSender->GetName() == _T("btn_allgame") ) 
 		{
 
-			m_pDSync->GetUser_GameInfo();
+			g_pDSync->GetUser_GameInfo();
 			if( m_pPopWnd == NULL )
 			{
 				m_pPopWnd = new CPopWnd(_T("popup.xml"));
@@ -631,6 +636,7 @@ void CFrameWnd::OnHotKey(WPARAM wp,LPARAM lp)
 			ShowWindow(SW_SHOWNORMAL);
 	}
 }
+
 CControlUI* CFrameWnd::CreateControl( LPCTSTR pstrClassName )
 {
 
@@ -708,11 +714,9 @@ LRESULT CFrameWnd::HandleMessage( UINT uMsg,WPARAM wParam,LPARAM lParam )
 	int nCount = 0;
 	if(WM_GAME_DETAIL == uMsg)
 	{
-
 		CTabLayoutUI* pTabLayout = static_cast<CTabLayoutUI*>(m_PaintManager.FindControl(_T("body_main_tablayout")));
 		CControlUI* pItem = m_PaintManager.FindControl(_T("start"));
 		pTabLayout->SelectItem(pItem);
-
 
 		if(pItem!=NULL)
 		{
@@ -834,7 +838,6 @@ void CFrameWnd::BeforeNavigate2( IDispatch *pDisp,VARIANT *&url,VARIANT *&Flags,
 			pos = i;
 			break;
 		}
-
 	}
 	if(pos != -1)
 	{

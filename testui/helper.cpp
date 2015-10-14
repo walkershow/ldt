@@ -1,5 +1,6 @@
 #include "helper.h"
 #include <string>
+#include "Date.h"
 using namespace std;
 CString ShowOpenFileDialog(HWND hParent)
 {
@@ -135,9 +136,9 @@ CString UTF8ToUnicode(char* UTF8)
 
 }
 
-char* UnicodeToUtf8( WCHAR*  wszUtf8)
+char* UnicodeToUtf8( WCHAR*  wszUtf8,int &len)
 {
-	int len= WideCharToMultiByte(CP_UTF8,0, wszUtf8,-1, NULL,0, NULL, NULL);
+	len= WideCharToMultiByte(CP_UTF8,0, wszUtf8,-1, NULL,0, NULL, NULL);
 	char* szUtf8=new char[len+1];
 	memset(szUtf8,0, len+1);
 	WideCharToMultiByte (CP_UTF8,0, wszUtf8,-1, szUtf8, len, NULL,NULL);
@@ -178,8 +179,8 @@ void SendReq2()
 		strError.Format(_T("HttpSendRequest failed, code=%d"),GetLastError());
 		return ;
 	}
-
 }
+
 void SendRequest()
 {
 	TCHAR* szHeaders =  _T("Content-Type:application/json\r\n");
@@ -443,6 +444,22 @@ wchar_t *c2w(const char *pc)
 
 }
 
+extern int GetYearIdx(int n)
+{
+	int curyear = CDate::GetCurDate().GetYear();
+	return curyear-n;
+}
+
+extern int GetMonIdx(int n)
+{
+	return n-1;
+}
+
+extern int GetDayIdx(int n)
+{
+	return n-1;
+}
+
 // int main(void)
 // {
 // 	setlocale(LC_ALL,"zh_CN.utf8");
@@ -488,378 +505,3 @@ wchar_t *c2w(const char *pc)
 // } 
 
 
-FILE *fp;
-static size_t write_data(void *ptr, size_t size, size_t nmemb, void *stream) //这个函数是为了符合CURLOPT_WRITEFUNCTION, 而构造的
-{
-	CString sInfo = (LPCTSTR)ptr;
-	wchar_t *p = (wchar_t *)ptr;
-	wchar_t *cw1 = c2w((const char*)ptr);   //char to wchar
-	char *buf = new char[nmemb+1];
-	memcpy(buf, ptr, nmemb);
-	buf[nmemb]=_T('\0');
-	//TCHAR *buf = (TCHAR*)ptr;
-	CString str= buf;
-		int written = fwrite(ptr, size, nmemb, (FILE *)fp);
-	return written;
-}
-
-// int test()
-// {
-// 	CURL *curl;
-// 
-// 	curl_global_init(CURL_GLOBAL_ALL); 
-// 	curl=curl_easy_init();
-// 	curl_easy_setopt(curl, CURLOPT_URL, "http://192.168.1.128:8080/user?id=1");
-// 	if((fp=fopen("d:\\1.txt","w"))==NULL)
-// 	{
-// 		curl_easy_cleanup(curl);
-// 		exit(1);
-// 	}
-// 	curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, write_data); //CURLOPT_WRITEFUNCTION 将后继的动作交给write_data函数处理
-// 	CURLcode res = curl_easy_perform(curl);
-// 	if(CURLE_OK != res)
-// 		fprintf(stderr, "curl told us %d\n", res);
-// 	curl_easy_cleanup(curl);
-// 	exit(0);
-//}
-
-
-bool CHttpHelper::GetData(const CString& sUrl, char* szBuffer, DWORD dwBuffer)
-{
-	//CString data;
-	bool bRet = false;
-
-	HINTERNET hInstance = InternetOpen(_T("asynchttp"),
-		INTERNET_OPEN_TYPE_PRECONFIG,
-		NULL,
-		NULL,
-		INTERNET_FLAG_ASYNC); // ASYNC Flag
-
-	if (hInstance == NULL)
-	{
-		cout << "InternetOpen failed, error " << GetLastError();
-		return 0;
-	}
-	unsigned long pThis = (unsigned long) this;
-	INTERNET_STATUS_CALLBACK TempFuncAddr = NULL;
-	_asm
-	{
-		mov eax,pThis;
-		mov edx,dword ptr [eax];
-		mov eax, dword ptr [edx+0D8h];
-		mov TempFuncAddr,eax;
-	}
-	// Setup callback function
-	if (InternetSetStatusCallback(hInstance,
-		(INTERNET_STATUS_CALLBACK)&TempFuncAddr) == INTERNET_INVALID_STATUS_CALLBACK)
-	{
-		cout << "InternetSetStatusCallback failed, error " << GetLastError();
-		return 0;
-	}
-
-	// First call that will actually complete asynchronously even
-	// though there is no network traffic
-	HINTERNET hConnect = InternetConnect(hInstance, 
-		_T("192.168.1.242"), 
-		INTERNET_DEFAULT_HTTP_PORT,
-		NULL,
-		NULL,
-		INTERNET_SERVICE_HTTP,
-		0,
-		1); // Connection handle's Context
-	if (hConnect == NULL)
-	{
-		if (GetLastError() != ERROR_IO_PENDING)
-		{
-			cout << "InternetConnect failed, error " << GetLastError();
-			return 0;
-		}
-		// Wait until we get the connection handle
-		WaitForSingleObject(m_hConnectedEvent, 3000);
-		if(hConnect == NULL)
-		{
-			return 0;
-		}
-	}
-
-
-	CString Url = _T("/usergameinfo?userid=100&curtime=1443374306");
-
-	// Open the request
-	HINTERNET hRequest = HttpOpenRequest(hConnect, 
-		_T("GET"),
-		(LPCTSTR)Url,
-		NULL,
-		NULL,
-		NULL,
-		INTERNET_FLAG_RELOAD | INTERNET_FLAG_NO_CACHE_WRITE,
-		2);  // Request handle's context 
-	if (hRequest == NULL)
-	{
-		if (GetLastError() != ERROR_IO_PENDING)
-		{
-			cout << "HttpOpenRequest failed, error " << GetLastError();
-			return 0;
-		}
-		// Wait until we get the request handle
-		WaitForSingleObject(m_hRequestOpenedEvent, 3000);
-		if (hRequest == NULL)
-		{
-			return 0;
-		}
-	}
-
-	if (!HttpSendRequest(hRequest, 
-		NULL, 
-		0, 
-		NULL,
-		0))
-	{
-		if (GetLastError() != ERROR_IO_PENDING)
-		{
-			cout << "HttpSendRequest failed, error " << GetLastError();
-			return 0;
-		}
-	}
-
-	if (m_bVerbose)
-	{
-		cout << "HttpSendRequest called successfully" << endl;
-		cout.flush();
-	}
-
-	WaitForSingleObject(m_hRequestCompleteEvent, 3000);
-	if(m_bError) return 0;
-
-	cout << "------------------- Read the response -------------------" << endl;
-	char lpReadBuff[256];
-	int nRecved = 0;
-	do
-	{
-		INTERNET_BUFFERS InetBuff;
-		FillMemory(&InetBuff, sizeof(InetBuff), 0);
-		InetBuff.dwStructSize = sizeof(InetBuff);
-		InetBuff.lpvBuffer = lpReadBuff;
-		InetBuff.dwBufferLength = sizeof(lpReadBuff) - 1;
-
-		if (m_bVerbose)
-		{
-			cout << "Calling InternetReadFileEx" << endl;
-			cout.flush();
-		}
-
-		if (!InternetReadFileEx(hRequest,
-			&InetBuff,
-			0, 2))
-		{
-			if (GetLastError() == ERROR_IO_PENDING)
-			{
-				if (m_bVerbose)
-				{
-					cout << "Waiting for InternetReadFileEx to complete" << endl;
-					cout.flush();
-				}
-				WaitForSingleObject(m_hRequestCompleteEvent, INFINITE);
-			}
-			else
-			{
-				cout << "InternetReadFileEx failed, error " << GetLastError();
-				cout.flush();
-				return 0;
-			}
-		}
-
-		lpReadBuff[InetBuff.dwBufferLength] = 0;
-		memcpy(szBuffer + nRecved, lpReadBuff, InetBuff.dwBufferLength);
-		nRecved += InetBuff.dwBufferLength;
-
-		cout << lpReadBuff;
-		cout.flush();
-
-		if (InetBuff.dwBufferLength == 0) 
-			m_bAllDone = true;
-
-	} while (m_bAllDone == false);
-
-	cout << endl << endl << "------------------- Request Complete ----------------" << endl;
-	return bRet; 
-	//return data;
-}
-
-
-
-bool CHttpHelper::PostData(const CString& sUrl, char* data)
-{
-	return true;
-}
-
-CString CHttpHelper::CrackUrl(CString sUrl)
-{
-	URL_COMPONENTS uc;
-	TCHAR Scheme[1000]={0};
-	TCHAR HostName[1000]={0};
-	TCHAR UserName[1000]={0};
-	TCHAR Password[1000]={0};
-	TCHAR UrlPath[1000]={0};
-	TCHAR ExtraInfo[1000]={0};
-
-	uc.dwStructSize = sizeof(uc);
-	uc.lpszScheme = Scheme;
-	uc.lpszHostName = HostName;
-	uc.lpszUserName = UserName;
-	uc.lpszPassword = Password;
-	uc.lpszUrlPath = UrlPath;
-	uc.lpszExtraInfo = ExtraInfo;
-
-	uc.dwSchemeLength = 1000;
-	uc.dwHostNameLength = 1000;
-	uc.dwUserNameLength = 1000;
-	uc.dwPasswordLength = 1000;
-	uc.dwUrlPathLength = 1000;
-	uc.dwExtraInfoLength = 1000;
-
-	InternetCrackUrl(sUrl, 0, 0, &uc);
-	return UrlPath;
-}
-
-CString CHttpHelper::DownloadFile(const CString& surl)
-{
-	CString sAppPath = CPaintManagerUI::GetInstancePath().GetData();
-	CString sImageName = CrackUrl(surl);
-	sImageName.Replace(_T("/"), _T("\\"));
-	TCHAR szFile[MAX_PATH] = {0};
-	lstrcpy(szFile, sAppPath);
-	::PathAppend(szFile, sImageName);
-	// 	TCHAR szDir[MAX_PATH] = {0};
-	// 	lstrcpy(szDir, sAppPath);
-	// 	::PathAppend(szDir, _T("\\icon"));
-	//后期继续优化，先判断目录是否存在 20150918
-	if(!::PathFileExists(szFile))
-	{
-		bool bRet = CreateMultipleDirectory(szFile);
-		//bool bRet = CreateDirectory(szDir, NULL);
-		if(!bRet )
-		{
-			CString strError;
-			strError.Format(_T("MakeSureDirectoryPathExists failed, code=%d"),GetLastError());
-			return "";
-		}
-
-	}
-	// 	if(::PathFileExists(szFile))
-	// 	{
-	// 		BOOL bRet = DeleteFile(szFile);
-	// 		if(bRet == FALSE)
-	// 		{
-	// 			return "";
-	// 		}
-	// 	}
-
-	HRESULT hr = ::URLDownloadToFile(NULL, surl, szFile, 0, NULL);
-	if (hr != S_OK)
-	{
-		return "";
-	}
-	return sImageName;
-
-}
-
-
-void __stdcall CHttpHelper::Inet_Callback(HINTERNET hInternet, DWORD dwContext, DWORD dwInternetStatus, LPVOID lpStatusInfo, DWORD dwStatusInfoLen)
-{
-	if (true)
-	{
-		cout << "Callback dwInternetStatus: " << dwInternetStatus << " Context: " << dwContext << endl;
-		cout.flush();
-	}
-
-	switch(dwContext)
-	{
-	case 1: // Connection handle
-		if (dwInternetStatus == INTERNET_STATUS_HANDLE_CREATED)
-		{
-			INTERNET_ASYNC_RESULT *pRes = (INTERNET_ASYNC_RESULT *)lpStatusInfo;
-			HINTERNET hConnect = (HINTERNET)pRes->dwResult;
-			if (true)
-			{
-				cout << "Connect handle created" << endl;
-				cout.flush();
-			}
-			SetEvent(m_hConnectedEvent);
-		}
-		break;
-	case 2: // Request handle
-		switch(dwInternetStatus)
-		{
-		case INTERNET_STATUS_HANDLE_CREATED:
-			{
-				INTERNET_ASYNC_RESULT *pRes = (INTERNET_ASYNC_RESULT *)lpStatusInfo;
-				HINTERNET hRequest = (HINTERNET)pRes->dwResult;
-				if (true)
-				{
-					cout << "Request handle created" << endl;
-					cout.flush();
-				}
-				SetEvent(m_hRequestOpenedEvent);
-			}
-			break;
-		case INTERNET_STATUS_REQUEST_SENT:
-			{
-				DWORD *lpBytesSent = (DWORD*)lpStatusInfo;
-				if (true)
-				{
-					cout << "Bytes Sent: " << *lpBytesSent << endl;
-					cout.flush();
-				}
-			}
-			break;
-		case INTERNET_STATUS_REQUEST_COMPLETE:
-			{
-				INTERNET_ASYNC_RESULT *pAsyncRes = (INTERNET_ASYNC_RESULT *)lpStatusInfo;
-				if (true)
-				{
-					cout << "Function call finished" << endl;
-					cout << "dwResult: " << pAsyncRes->dwResult << endl;
-					cout << "dwError:  " << pAsyncRes->dwError << endl;
-					if(pAsyncRes->dwResult == 0 )
-						m_bError = true;
-					else
-						m_bError = false;
-					cout.flush();
-				}
-				SetEvent(m_hRequestCompleteEvent);
-			}
-			break;
-		case INTERNET_STATUS_RECEIVING_RESPONSE:
-			if (true)
-			{
-				cout << "Receiving Response" << endl;
-				cout.flush();
-			}
-			break;
-		case INTERNET_STATUS_RESPONSE_RECEIVED:
-			{
-				DWORD *dwBytesReceived = (DWORD*)lpStatusInfo;
-				if (*dwBytesReceived == 0)
-					m_bAllDone = true;
-				if (true)
-				{
-					cout << "Received " << *dwBytesReceived << endl;
-					cout.flush();
-				}
-			}
-
-		}
-
-	}
-
-}
-
-CHttpHelper::CHttpHelper()
-{
-	 m_hConnectedEvent = CreateEvent(NULL, FALSE, FALSE, NULL);
-	 m_hRequestOpenedEvent = CreateEvent(NULL, FALSE, FALSE, NULL);
-	 m_hRequestCompleteEvent = CreateEvent(NULL, FALSE, FALSE, NULL);
-	 m_bAllDone = false;
-	 m_bVerbose = true;
-}

@@ -20,10 +20,11 @@ public:
 	int UpdateLocalData();
 	int GetUser_GameInfo();
 	void SetNoitfyHwnd(HWND notifyHwnd);
+	bool PostData(const CString& sUrl, char* data, int datalen);
+	int GetUserData();
 
 private:
 	bool GetData(const CString& sUrl, char* buf, DWORD dwBuffer);
-	bool PostData(const CString& sUrl, char* data);
 	CString CrackUrl(CString sUrl);
 	CString DownloadFile(const CString& surl);
 
@@ -33,7 +34,6 @@ private:
 		const HTTP_RESPONSE_INFO   & r = rTask.GetResponseInfo() ;
 		CString url = rTask.GetURL();
 		
-
 		bool   bOK = false ;
 		if (r.m_status_code == HTTP_STATUS_OK)
 		{
@@ -87,6 +87,11 @@ private:
 				}
 
 			}
+			else if(url.Find(_T("puinfo"))!=-1)
+			{
+				HandleUserData();
+				//::SendMessage(m_HwndNotify, WM_REFRESH_GAMELIST, 0, 0 );
+			}
 
 			// ... process received data
 		}
@@ -94,7 +99,7 @@ private:
 	int HandleUser_GameInfo();
 	int HandleProgmd5();
 	int HandleProg_to_Game_ByProgmd5();
-
+	int HandleUserData();
 private:
 	CString m_server;
 	int m_port;

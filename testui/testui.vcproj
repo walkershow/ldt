@@ -214,6 +214,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\SplitStr.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\sqlite.cpp"
 				>
 			</File>
