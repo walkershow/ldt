@@ -118,52 +118,6 @@ CString CDataSync::DownloadFile(const CString& surl)
 
 }
 
-
-int CDataSync::SyncUserInfo()
-{
-	int id;
-	CString name;
-	CString iconpath;
-	bool bRet = CGameManage::GetInstance().GetUserInfo(id, name, iconpath);
-	if(!bRet || iconpath.IsEmpty())
-	{
-		CString sUrl;
-		sUrl.Format(_T("http://%s:%d/user?id=%s"),m_server, m_port, m_userid);
-		DWORD dwBuffer = 1024 * 60;
-		static char szBuffer[1024*60] = {0};
-		//char *szBuffer = new char[dwBuffer];
-		memset(szBuffer, 0, dwBuffer);
-		bRet = GetData(sUrl, szBuffer, dwBuffer);
-		if(!bRet)
-		{
-			return -1 ;
-		}
-		//sImageName.Replace(_T("/"), _T("\\"))
-		//CString str = UTF8ToUnicode(szBuffer);
-
-		Json::Reader reader;
-		Json::Value root;
-		if (!reader.parse(szBuffer, root, false))
-		{
-			return -2;
-		}
-		std::string name;
-		std::string iconpath;
-		int id;
-		int size = root.size();
-		for (int i=0; i<size; ++i)
-		{
-			name = root[i]["name"].asString();
-			CString str2 = UTF8ToUnicode((char*)name.c_str());
-			id = root[i]["userid"].asInt();
-			iconpath = root[i]["iconurl"].asString();
-			CString fPath = DownloadFile(iconpath.c_str());
-			//std::cout<<name<<" "<<id<<std::endl;
-		}
-	}
-	return 1;
-}
-
 int CDataSync::GetControlMode()
 {
 	CString sUrl;
@@ -230,7 +184,7 @@ int CDataSync::HandleProg_to_Game_ByProgmd5()
 		return -2;
 	}
 	string name,iconurl;
-	int topmost,playtimes,status,type;
+	int topmost,playtimes,type;
 	string upsign;
 	CString progmd5;
 	int size = root.size();
@@ -434,7 +388,7 @@ int CDataSync::HandleUserData()
 	int birthyear,birthmon,birthday;
 	CString prov,city,area,useracct,sex,bloodtype;
 	int provid,cityid,areaid;
-	int countryindex, provindex, cityindex, sexindex, btindex,headerid,areaindex;
+	int   btindex,headerid;
 	CString headerhis;
 	unsigned int upsign;
 	int size = root.size();
@@ -453,11 +407,9 @@ int CDataSync::HandleUserData()
 
 		//CString bt = UTF8ToUnicode((char*)bloodtype.c_str());
 		int sexid = root[i]["sex"].asInt();
+		sexid -= 1;
 		string birthdaystr =  root[i]["birthday"].asString();
 		sscanf(birthdaystr.c_str(), "%d-%d-%d", &birthyear,&birthmon,&birthday);
-		int yidx = GetYearIdx(birthyear);
-		int midx = GetYearIdx(birthmon);
-		int didx = GetYearIdx(birthday);
 		provid = root[i]["province_id"].asInt();
 		cityid = root[i]["city_id"].asInt();
 		areaid = root[i]["area_id"].asInt();
@@ -486,49 +438,11 @@ int CDataSync::HandleUserData()
 	return 0;
 }
 
-int CDataSync::UpdateLocalData()
+void CDataSync::SyncUser(CString url)
 {
-	CString sUrl;
-	memset(m_databuf, 0, m_nbuflen);
-
-	sUrl.Format(_T("http://%s:%d/dstatus?userid=%s"),m_server, m_port, m_userid);
-	bool bRet = GetData(sUrl, m_databuf, m_nbuflen);
-	if(!bRet)
-	{
-		return -1 ;
-	}
-	Json::Reader reader;
-	Json::Value root;
-	if (!reader.parse(m_databuf, root, false))
-	{
-		return -2;
-	}
-	int type;
-	int timestamp;
-	map<int,int> m_dmap;
-	int size = root.size();
-	for (int i=0; i<size; ++i)
-	{
-		type = root[i]["datatype"].asInt();
-		timestamp = root[i]["timestamp"].asInt();
-		m_dmap[type] = timestamp;
-	}
-
-	SQLiteDataReader sdr = CGameManage::GetInstance().GetDataStatus();
-
-	while( sdr.Read() )
-	{
-		type = sdr.GetIntValue(0);
-		timestamp = sdr.GetIntValue(1);
-		if( m_dmap[type] > timestamp)
-		{
-			
-		}
-	}
+	GetData(url, m_databuf, m_nbuflen);
 }
 
-void CDataSync::SetNoitfyHwnd(HWND notifyHwnd)
-{
-	m_HwndNotify = notifyHwnd;
-}
+
+
 

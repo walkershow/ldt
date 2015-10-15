@@ -58,6 +58,7 @@ private:
 	CButtonUI* m_pUsedBtnTx3;
 	CButtonUI* m_pUsedBtnTx4;
 	bool m_bShouldSave;
+	bool m_bShouldSaveImage;
 	//CDataSync *m_pDSync;
 
 

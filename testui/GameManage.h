@@ -204,25 +204,32 @@ public:
 
 	}
 	//用户信息
-	bool SetUser(int userid,CString useracct,CString bt,CString sex,int y,int m,int d,CString country,CString prov,CString city,CString nickName, int countryindex, int provindex, int cityindex, int btindex, int sexindex,int headerid, CString headerhis,CString area,int areaindex)
+	bool SetUser(CString userid,CString useracct,CString bt,CString sex,int y,int m,int d,CString country,CString prov,CString city,CString nickName, int countryindex, int provindex, int cityindex, int btindex, int sexindex,int headerid, CString headerhis,CString area,int areaindex)
 	{
 		CString sql;
-		sql.Format(_T("select 1 from user where userid=%d;"), userid);
+		sql.Format(_T("select 1 from user where userid=%s;"), userid);
 		SQLiteDataReader sdr = m_db.ExcuteQuery(sql);
 		bool bRet = sdr.Read();
 
 		if(!bRet)
 		{
-			sql.Format(_T("insert into user(userid,useracct,bloodtype,sex,birthyear,birthmon,birthday,country,prov,city,nickname,countryindex, provindex, cityindex, sexindex, btindex,headerid,headerhis,area,areaindex) values(%d,'%s','%s','%s',%d,%d,%d,'%s','%s','%s','%s',%d,%d,%d,%d,%d,%d,'%s','%s',%d)"),userid, useracct,bt, sex,y,m,d,country,prov,city, nickName,countryindex, provindex, cityindex, sexindex, btindex,headerid,headerhis,area,areaindex);
+			sql.Format(_T("insert into user(userid,useracct,bloodtype,sex,birthyear,birthmon,birthday,country,prov,city,nickname,countryindex, provindex, cityindex, sexindex, btindex,headerid,headerhis,area,areaindex) values(%s,'%s','%s','%s',%d,%d,%d,'%s','%s','%s','%s',%d,%d,%d,%d,%d,%d,'%s','%s',%d)"),userid, useracct,bt, sex,y,m,d,country,prov,city, nickName,countryindex, provindex, cityindex, sexindex, btindex,headerid,headerhis,area,areaindex);
 			return m_db.ExcuteNonQuery(sql);
 		}
 		else
 		{
-			sql.Format(_T("update user set bloodtype='%s',sex='%s',birthyear=%d,birthmon=%d,birthday=%d,country='%s',prov='%s',city='%s',nickname='%s',countryindex=%d, provindex=%d, cityindex=%d, sexindex=%d, btindex=%d ,headerid=%d,headerhis='%s',area='%s',areaindex=%d where userid=%d"), bt, sex,y,m,d,country,prov,city, nickName,countryindex, provindex, cityindex, sexindex, btindex,headerid,headerhis,area,areaindex, userid);
+			sql.Format(_T("update user set bloodtype='%s',sex='%s',birthyear=%d,birthmon=%d,birthday=%d,country='%s',prov='%s',city='%s',nickname='%s',countryindex=%d, provindex=%d, cityindex=%d, sexindex=%d, btindex=%d ,headerid=%d,headerhis='%s',area='%s',areaindex=%d where userid=%s"), bt, sex,y,m,d,country,prov,city, nickName,countryindex, provindex, cityindex, sexindex, btindex,headerid,headerhis,area,areaindex, userid);
 			return m_db.ExcuteNonQuery(sql);
 		}
 		return false;
 
+	}
+
+	bool SetUserHeaderInfo(CString userid,int headerid, CString headerhis)
+	{
+		CString sql;
+		sql.Format(_T("update user set headerid=%d,headerhis='%s' where userid=%s"), headerid,headerhis, userid);
+		return m_db.ExcuteNonQuery(sql);
 	}
 
 	SQLiteDataReader GetUser(int userid)

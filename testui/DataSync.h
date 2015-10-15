@@ -12,16 +12,14 @@ public:
 	~CDataSync(void);
 
 public:
-	int SyncUserInfo();
 	int GetProg_to_Game_ByProgmd5(CString progmd5);
 	int GetProg_to_Game();
 	int GetControlMode();
 	int GetGame_Manage_ByGameID(int gameid);
-	int UpdateLocalData();
 	int GetUser_GameInfo();
-	void SetNoitfyHwnd(HWND notifyHwnd);
 	bool PostData(const CString& sUrl, char* data, int datalen);
 	int GetUserData();
+	void SyncUser(CString url);
 
 private:
 	bool GetData(const CString& sUrl, char* buf, DWORD dwBuffer);

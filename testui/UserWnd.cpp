@@ -7,7 +7,7 @@ DUI_ON_MSGTYPE(DUI_MSGTYPE_CLICK,OnClick)
 DUI_ON_MSGTYPE(DUI_MSGTYPE_ITEMSELECT,OnSelect)
 DUI_END_MESSAGE_MAP()
 
-CUserWnd::CUserWnd(LPCTSTR pszXMLPath): CXMLWnd(pszXMLPath),m_bShouldSave(false)
+CUserWnd::CUserWnd(LPCTSTR pszXMLPath): CXMLWnd(pszXMLPath),m_bShouldSave(false),m_bShouldSaveImage(false)
 {
 }
 
@@ -52,6 +52,7 @@ void CUserWnd::OnSelect( TNotifyUI &msg )
 	{
 		int idx = m_vecPCBox[6]->GetCurSel();
 		InitCity(idx);
+		InitArea(-1);
 	}
 	else if(sName == _T("cbcity"))
 	{
@@ -125,7 +126,11 @@ void CUserWnd::InitCity(int nSel)
 	//int nSel = m_vecPCBox[6]->GetCurSel();
 	static int lastSel = 0;
 	if(lastSel == nSel) return;
-	if(nSel== -1) return;
+	if(nSel== -1) 
+	{
+		m_vecPCBox[7]->RemoveAll();
+		return;
+	}
 	CControlUI *pctrl = m_vecPCBox[6]->GetItemAt(nSel);
 	int id = pctrl->GetTag();
 	SQLiteDataReader sdr = CGameManage::GetInstance().GetCity(id);
@@ -148,12 +153,16 @@ void CUserWnd::InitArea(int nSel)
 	static int lastSel = 0;
 	if(lastSel == nSel) return;
 	//int nSel = m_vecPCBox[6]->GetCurSel();
-	if(nSel== -1) return;
+	if(nSel== -1) 
+	{
+		m_vecPCBox[8]->RemoveAll();
+		return;
+	}
 	CControlUI *pctrl = m_vecPCBox[7]->GetItemAt(nSel);
 	int id = pctrl->GetTag();
 	SQLiteDataReader sdr = CGameManage::GetInstance().GetCity(id);
+	
 	m_vecPCBox[8]->RemoveAll();
-
 	while(sdr.Read())
 	{
 		CString str = sdr.GetStringValue(0);
@@ -229,7 +238,7 @@ void CUserWnd::OnClick( TNotifyUI &msg )
 	sName.MakeLower();
 	if(sName == _T("closebtn") )
 	{
-		if(!m_bShouldSave)  
+		if(!m_bShouldSave && !m_bShouldSaveImage)  
 		{
 			__super::OnClick(msg);
 			return;
@@ -237,40 +246,30 @@ void CUserWnd::OnClick( TNotifyUI &msg )
 		else 
 		{
 			m_bShouldSave = false;
+			m_bShouldSaveImage = false;
 		}
 		int userid = _ttoi((LPCTSTR)g_strUserID);
 		SQLiteDataReader sdr = CGameManage::GetInstance().GetUser(userid);
 		bool bRet = sdr.Read();
 		if(!bRet) return;
-		CString sex = m_vecPCBox[0]->GetText();
-		CString bt = m_vecPCBox[1]->GetText();
+		int sexindex = -1;
+		sexindex = sdr.GetIntValue(14);
+		CString bt = sdr.GetStringValue(2);
 		int mon,year,day;
-		int nSel = m_vecPCBox[3]->GetCurSel();
-		if(nSel== -1) nSel = 0;
-		CControlUI *pctrl = m_vecPCBox[3]->GetItemAt(nSel);
-		mon = _ttoi(pctrl->GetUserData());
-		nSel = m_vecPCBox[2]->GetCurSel();
-		if(nSel== -1) nSel = 0;
-
-		pctrl = m_vecPCBox[2]->GetItemAt(nSel);
-		year = pctrl->GetTag();
-
-		nSel = m_vecPCBox[4]->GetCurSel();
-		if(nSel== -1) nSel = 0;
-
-		pctrl = m_vecPCBox[4]->GetItemAt(nSel);
-		day = pctrl->GetTag();
-		if(day == 0) day = 1;
-
-		CString country = m_vecPCBox[5]->GetText();
-		int countryindex = m_vecPCBox[5]->GetCurSel();
+		year = sdr.GetIntValue(4);
+		mon = sdr.GetIntValue(5);
+		day = sdr.GetIntValue(6);
+// 
+// 		CString country = m_vecPCBox[5]->GetText();
+// 		int countryindex = m_vecPCBox[5]->GetCurSel();
 		int countryid = 86;
 		int provid=0;
 		int cityid=0;
 		int areaid=0;
+
 		CString prov = m_vecPCBox[6]->GetText();
 		int provindex = sdr.GetIntValue(12);
-		pctrl = m_vecPCBox[6]->GetItemAt(provindex);
+		CControlUI* pctrl = m_vecPCBox[6]->GetItemAt(provindex);
 		if(pctrl != NULL) 
 		 provid = pctrl->GetTag();
 
@@ -286,43 +285,23 @@ void CUserWnd::OnClick( TNotifyUI &msg )
 		if(pctrl != NULL) 
 			areaid = pctrl->GetTag();
 		
-		CString nickname = m_PRedit->GetText();
-		int sexindex = m_vecPCBox[0]->GetCurSel();
-		int btindex = m_vecPCBox[0]->GetCurSel();
+		CString nickname = sdr.GetStringValue(10);
+		if(m_bShouldSaveImage)
+		{
+			m_headerid = 0;
+		}
 
-		//bool bRet =	CGameManage::GetInstance().SetUser(100, g_strUserAcct, bt,sex,year,mon,day,country,prov,city,nickname, countryindex, provindex, cityindex, sexindex, btindex, m_headerid, m_headerhis,area,areaindex);
-
-		m_pDate->SetVisible();
-		m_pSzd->SetVisible();
-		m_pEdit->SetVisible(true);
-		m_pSave->SetVisible(false);
-		m_pCancel->SetVisible(false);
-		for(int i=0;i<m_vecPLbl.size(); i++)
-		{
-			m_vecPLbl[i]->SetVisible(true);
-			RECT r={0,16,0,0};
-			m_vecPLblBK[i]->SetPadding(r);
-		}
-		for(int i=0;i<m_vecPCBox.size(); i++)
-		{
-			m_vecPCBox[i]->SetVisible(false);
-		}
-		for(int i=0; i<m_vecPLblBK.size(); i++)
-		{
-			RECT r={0,16,0,0};
-			m_vecPLblBK[i]->SetPadding(r);
-		}
-		m_PRedit->SetVisible(false);
-		//InitCtrlVal();
-		CString strHeadid = m_pShowBtn->GetUserData();
 		CString strPostData;
 		strPostData.Format(_T("{\"nickname\":\"%s\", \"sex\":%d,\"bt\":\"%s\",\"country\":%d,\"provid\":%d,\"cityid\":%d,\"areaid\":%d,\"year\":%d,\"mon\":%d,\"day\":%d,\"imageid\":%d,\"imagehis\":\"%s\",\"acctid\":\"%s\"}"),
-			nickname,sexindex, bt, countryid, provid, cityid, areaid, year, mon, day, m_headerid, m_headerhis, g_strUserID);
+			nickname,sexindex+1, bt, countryid, provid, cityid, areaid, year, mon, day, m_headerid, m_headerhis, g_strUserID);
 		int len = 0;
 		char* buf = UnicodeToUtf8((LPTSTR)(LPCTSTR)strPostData, len);
 		//UTF8toANSI(strPostData);
 		//g_pDSync->PostData(_T("http://192.168.1.62:80/puinfo"), buf, len);
 		g_pDSync->PostData(_T("http://192.168.1.62:80/user?name=1"), buf, len);
+		CString synurl;
+		synurl.Format(_T("http://lan.chinau.member/api/member/syn?id=%s"), g_strUserID);
+		g_pDSync->SyncUser(synurl);
 		
 	}
 	else if(sName == _T("btnedit") )
@@ -383,9 +362,9 @@ void CUserWnd::OnClick( TNotifyUI &msg )
 		int areaindex = m_vecPCBox[8]->GetCurSel();
 		CString nickname = m_PRedit->GetText();
 		int sexindex = m_vecPCBox[0]->GetCurSel();
-		int btindex = m_vecPCBox[0]->GetCurSel();
+		int btindex = m_vecPCBox[1]->GetCurSel();
 		
-		bool bRet =	CGameManage::GetInstance().SetUser(100, g_strUserAcct, bt,sex,year,mon,day,country,prov,city,nickname, countryindex, provindex, cityindex, sexindex, btindex, m_headerid, m_headerhis,area,areaindex);
+		bool bRet =	CGameManage::GetInstance().SetUser(g_strUserID, g_strUserAcct, bt,sex,year,mon,day,country,prov,city,nickname, countryindex, provindex, cityindex,  btindex, sexindex,m_headerid, m_headerhis,area,areaindex);
 
 		m_pDate->SetVisible();
 		m_pSzd->SetVisible();
@@ -436,6 +415,7 @@ void CUserWnd::OnClick( TNotifyUI &msg )
 		}
 		m_PRedit->SetVisible(false);
 		InitCtrlVal();
+		m_bShouldSave = false;
 
 	}
 	else if(sName == _T("btnpass"))
@@ -473,7 +453,12 @@ void CUserWnd::OnClick( TNotifyUI &msg )
 		CString str = m_vecPLbl[0]->GetText();
 		m_pLblName->SetText(str);
 		SetUsedTx();
-		m_bShouldSave = true;
+		bool bRet = CGameManage::GetInstance().SetUserHeaderInfo(g_strUserID,m_headerid, m_headerhis);
+		if(!bRet)
+		{
+			CLog::getInstance()->AgentLog(_T("SetUserHeaderInfo error"));
+		}
+		m_bShouldSaveImage = true;
 
 // 		CString sAppPath = CPaintManagerUI::GetInstancePath().GetData();
 // 		TCHAR szFile[MAX_PATH] = {0};
@@ -485,7 +470,7 @@ void CUserWnd::OnClick( TNotifyUI &msg )
 	}
 	else if(sName.Find(_T("btncancelhead"))>=0)
 	{
-
+		m_bShouldSaveImage =false;
 	}
 	__super::OnClick(msg);
 }
