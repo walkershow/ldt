@@ -9,22 +9,18 @@ using namespace std;
 
 
 
-CDataSync::CDataSync(LPCTSTR server, int port, LPCTSTR userid, HWND notifyHwnd):m_server(server),m_port(port),m_userid(userid),m_databuf(0),m_nbuflen(1024*60),m_HwndNotify(notifyHwnd)
+CDataSync::CDataSync(LPCTSTR server, int port, LPCTSTR userid, HWND notifyHwnd):m_server(server),m_port(port),m_userid(userid),m_HwndNotify(notifyHwnd)
 {
-	m_databuf = new char[m_nbuflen];
-	memset(m_databuf,0,m_nbuflen);
 
-	//m_bAllDone = false;
 
 }
 
 CDataSync::~CDataSync(void)
 {
-	delete []m_databuf;
-	m_databuf = NULL;
+
 }
 
-bool CDataSync::GetData(const CString& sUrl, char* szBuffer, DWORD dwBuffer)
+bool CDataSync::GetData(const CString& sUrl)
 {
 	HTTP_REQUEST_HEADER   h (HTTP_REQUEST_HEADER::VERB_TYPE_GET) ;
 	h.m_url = sUrl;
@@ -118,41 +114,41 @@ CString CDataSync::DownloadFile(const CString& surl)
 
 }
 
-int CDataSync::GetControlMode()
-{
-	CString sUrl;
-	memset(m_databuf, 0, m_nbuflen);
-
-	sUrl.Format(_T("http://%s:%d/userctrlmode?userid=%s"),m_server, m_port, m_userid);
-	bool bRet = GetData(sUrl, m_databuf, m_nbuflen);
-	if(!bRet)
-	{
-		return -1 ;
-	}
-	Json::Reader reader;
-	Json::Value root;
-	if (!reader.parse(m_databuf, root, false))
-	{
-		return -2;
-	}
-	int mode = 0;
-	int size = root.size();
-	for (int i=0; i<size; ++i)
-	{
-		mode= root[i]["man_auto"].asInt();
-		if(CGameManage::GetInstance().GetControlMode() == -1)
-		{
-			CGameManage::GetInstance().InsertControlMode(mode);
-		}
-		else
-		{
-			CGameManage::GetInstance().UpdateControlMode(mode);
-		}
-		break;
-	}
-
-	return 1;
-}
+// int CDataSync::GetControlMode()
+// {
+// 	CString sUrl;
+// 	memset(m_databuf, 0, m_nbuflen);
+// 
+// 	sUrl.Format(_T("http://%s:%d/userctrlmode?userid=%s"),m_server, m_port, m_userid);
+// 	bool bRet = GetData(sUrl, m_databuf, m_nbuflen);
+// 	if(!bRet)
+// 	{
+// 		return -1 ;
+// 	}
+// 	Json::Reader reader;
+// 	Json::Value root;
+// 	if (!reader.parse(m_databuf, root, false))
+// 	{
+// 		return -2;
+// 	}
+// 	int mode = 0;
+// 	int size = root.size();
+// 	for (int i=0; i<size; ++i)
+// 	{
+// 		mode= root[i]["man_auto"].asInt();
+// 		if(CGameManage::GetInstance().GetControlMode() == -1)
+// 		{
+// 			CGameManage::GetInstance().InsertControlMode(mode);
+// 		}
+// 		else
+// 		{
+// 			CGameManage::GetInstance().UpdateControlMode(mode);
+// 		}
+// 		break;
+// 	}
+// 
+// 	return 1;
+// }
 
 //增加游戏
 int CDataSync::GetProg_to_Game_ByProgmd5(CString progmd5)
@@ -163,7 +159,7 @@ int CDataSync::GetProg_to_Game_ByProgmd5(CString progmd5)
 	{
 		CString sUrl;
 		sUrl.Format(_T("http://%s:%d/progtogame?progmd5=%s&userid=%s"),m_server, m_port, progmd5, m_userid);
-		GetData(sUrl, m_databuf, m_nbuflen);
+		GetData(sUrl);
 
 	}
 	else
@@ -174,12 +170,12 @@ int CDataSync::GetProg_to_Game_ByProgmd5(CString progmd5)
 	return gameid;
 }
 //增加游戏服务端会根据用户所传信息添加到用户喜欢游戏列表，然后服务器返回游戏数据，客户端在存到本地数据库
-int CDataSync::HandleProg_to_Game_ByProgmd5()
+int CDataSync::HandleProg_to_Game_ByProgmd5(const string& data)
 {
 	bool bRet = true;
 	Json::Reader reader;
 	Json::Value root;
-	if (!reader.parse(m_databuf, root, false))
+	if (!reader.parse(data.c_str(), root, false))
 	{
 		return -2;
 	}
@@ -220,91 +216,90 @@ int CDataSync::HandleProg_to_Game_ByProgmd5()
 	return 1;
 }
 
-int CDataSync::GetProg_to_Game()
-{
-	CString sUrl;
-
-	sUrl.Format(_T("http://%s:%d/prog_to_game?progmd5=%s"),m_server, m_port, _T("all"));
-	GetData(sUrl, m_databuf, m_nbuflen);
-
-	
-	
-	Json::Reader reader;
-	Json::Value root;
-	if (!reader.parse(m_databuf, root, false))
-	{
-		return -2;
-	}
-	int gameid = 0;
-	string progmd5;
-	int size = root.size();
-	for (int i=0; i<size; ++i)
-	{
-		gameid= root[i]["gameid"].asInt();
-		progmd5 = root[i]["progmd5"].asString();
-	}
-	return 1;
-}
+// int CDataSync::GetProg_to_Game()
+// {
+// 	CString sUrl;
+// 
+// 	sUrl.Format(_T("http://%s:%d/prog_to_game?progmd5=%s"),m_server, m_port, _T("all"));
+// 	GetData(sUrl);
+// 
+// 	
+// 	
+// 	Json::Reader reader;
+// 	Json::Value root;
+// 	if (!reader.parse(m_databuf, root, false))
+// 	{
+// 		return -2;
+// 	}
+// 	int gameid = 0;
+// 	string progmd5;
+// 	int size = root.size();
+// 	for (int i=0; i<size; ++i)
+// 	{
+// 		gameid= root[i]["gameid"].asInt();
+// 		progmd5 = root[i]["progmd5"].asString();
+// 	}
+// 	return 1;
+// }
 
 //gameid -1:all data
-int CDataSync::GetGame_Manage_ByGameID(int gameid)
-{
-	CString sUrl;
-	memset(m_databuf, 0, m_nbuflen);
-
-	sUrl.Format(_T("http://%s:%d/gm?gameid=%d&userid=%s"),m_server, m_port, gameid, m_userid);
-	bool bRet = GetData(sUrl, m_databuf, m_nbuflen);
-	if(!bRet)
-	{
-		return -1 ;
-	}
-	Json::Reader reader;
-	Json::Value root;
-	if (!reader.parse(m_databuf, root, false))
-	{
-		return -2;
-	}
-	string name,iconurl;
-	int topmost, playtimes,type;
-	long upsign;
-	int size = root.size();
-	int lgameid = 0;
-	for (int i=0; i<size; ++i)
-	{
-		lgameid = root[i]["gameid"].asInt();
-		name = root[i]["name"].asString();
-		iconurl = root[i]["iconurl"].asString();
-		topmost = root[i]["topmost"].asInt();
-		playtimes = root[i]["playtimes"].asInt();
-		type = root[i]["type"].asInt();
-		upsign =root[i]["updatesign"].asUInt();
-		CString icon_url_uni = UTF8ToUnicode((char*)iconurl.c_str());
-		CString iconpath = DownloadFile(icon_url_uni);
-		CString name_uni = UTF8ToUnicode((char*)name.c_str());
-		CGameManage::GetInstance().UpdateGameByGameID(lgameid, name_uni, icon_url_uni, topmost, type, playtimes, upsign,_T(""));
-	}
-	return 1;
-}
+// int CDataSync::GetGame_Manage_ByGameID(int gameid)
+// {
+// 	CString sUrl;
+// 	memset(m_databuf, 0, m_nbuflen);
+// 
+// 	sUrl.Format(_T("http://%s:%d/gm?gameid=%d&userid=%s"),m_server, m_port, gameid, m_userid);
+// 	bool bRet = GetData(sUrl, m_databuf, m_nbuflen);
+// 	if(!bRet)
+// 	{
+// 		return -1 ;
+// 	}
+// 	Json::Reader reader;
+// 	Json::Value root;
+// 	if (!reader.parse(m_databuf, root, false))
+// 	{
+// 		return -2;
+// 	}
+// 	string name,iconurl;
+// 	int topmost, playtimes,type;
+// 	long upsign;
+// 	int size = root.size();
+// 	int lgameid = 0;
+// 	for (int i=0; i<size; ++i)
+// 	{
+// 		lgameid = root[i]["gameid"].asInt();
+// 		name = root[i]["name"].asString();
+// 		iconurl = root[i]["iconurl"].asString();
+// 		topmost = root[i]["topmost"].asInt();
+// 		playtimes = root[i]["playtimes"].asInt();
+// 		type = root[i]["type"].asInt();
+// 		upsign =root[i]["updatesign"].asUInt();
+// 		CString icon_url_uni = UTF8ToUnicode((char*)iconurl.c_str());
+// 		CString iconpath = DownloadFile(icon_url_uni);
+// 		CString name_uni = UTF8ToUnicode((char*)name.c_str());
+// 		CGameManage::GetInstance().UpdateGameByGameID(lgameid, name_uni, icon_url_uni, topmost, type, playtimes, upsign,_T(""));
+// 	}
+// 	return 1;
+// }
 
 int CDataSync::GetUser_GameInfo()
 {
 	CString sUrl;
-	memset(m_databuf, 0, m_nbuflen);
 	long maxTime = CGameManage::GetInstance().SelectMaxTimeFromGameManage();
 	sUrl.Format(_T("http://%s:%d/usergameinfo?userid=%s&curtime=%d"),m_server, m_port, m_userid, maxTime);
 	CLog::getInstance()->AgentLog((LPTSTR)(LPCTSTR)sUrl);
 	//MessageBox(NULL,sUrl, _T("hi"), 0);
-	GetData(sUrl, m_databuf, m_nbuflen);
+	GetData(sUrl);
 	return 0;
 }
 
-int CDataSync::HandleUser_GameInfo()
+int CDataSync::HandleUser_GameInfo(const string& data)
 {
 	CString sUrl;
 
 	Json::Reader reader;
 	Json::Value root;
-	if (!reader.parse(m_databuf, root, false))
+	if (!reader.parse(data.c_str(), root, false))
 	{
 		return -2;
 	}
@@ -335,17 +330,17 @@ int CDataSync::HandleUser_GameInfo()
 		{
 			sUrl.Empty();
 			sUrl.Format(_T("http://%s:%d/getprogmd5?gameid=%d"),m_server, m_port,gameid);
-			GetData(sUrl, m_databuf, m_nbuflen);
+			GetData(sUrl);
 		}
 		//break;
 	}
 	return gameid;
 }
-int CDataSync::HandleProgmd5()
+int CDataSync::HandleProgmd5(const string& data)
 {
 	Json::Reader reader;
 	Json::Value root;
-	if (!reader.parse(m_databuf, root, false))
+	if (!reader.parse(data.c_str(), root, false))
 	{
 		return -2;
 	}
@@ -365,21 +360,20 @@ int CDataSync::HandleProgmd5()
 int CDataSync::GetUserData()
 {
 	CString sUrl;
-	memset(m_databuf, 0, m_nbuflen);
 	long maxTime = CGameManage::GetInstance().SelectMaxTimeFromUser();
 	sUrl.Format(_T("http://%s:%d/puinfo?userid=%s&curtime=%d"),m_server, m_port, m_userid, maxTime);
 	CLog::getInstance()->AgentLog((LPTSTR)(LPCTSTR)sUrl);
 	//MessageBox(NULL,sUrl, _T("hi"), 0);
-	GetData(sUrl, m_databuf, m_nbuflen);
+	GetData(sUrl);
 	return 0;
 }
-int CDataSync::HandleUserData()
+int CDataSync::HandleUserData(const string& data)
 {
 	CString sUrl;
 
 	Json::Reader reader;
 	Json::Value root;
-	if (!reader.parse(m_databuf, root, false))
+	if (!reader.parse(data.c_str(), root, false))
 	{
 		return -2;
 	}
@@ -440,7 +434,7 @@ int CDataSync::HandleUserData()
 
 void CDataSync::SyncUser(CString url)
 {
-	GetData(url, m_databuf, m_nbuflen);
+	GetData(url);
 }
 
 

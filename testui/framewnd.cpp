@@ -737,6 +737,11 @@ LRESULT CFrameWnd::HandleMessage( UINT uMsg,WPARAM wParam,LPARAM lParam )
 	else if(WM_GAME_RESETHEAD == uMsg)
 	{
 		CString str = (LPCTSTR)lParam;
+		if(str.IsEmpty())
+		{
+			int userid = _ttoi((LPCTSTR)g_strUserID);
+			str = CGameManage::GetInstance().GetUserHeaderURI(userid);
+		}
 		m_pBtntx->SetBkImage(str);
 	}
 	else if(WM_GAME_RESETNICKNAME == uMsg)
@@ -918,7 +923,7 @@ void CFrameWnd::JumpToYXK()
 
 LRESULT CFrameWnd::OnChar( UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled )
 {
-	/*演示键盘消息的处理*/
+	/*解决界面上岸space 和tab 会导致关闭程序问题*/
 	TCHAR press_char = (TCHAR)wParam;
 	if(press_char == VK_TAB || press_char == VK_SPACE)
 	{

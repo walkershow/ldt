@@ -13,16 +13,16 @@ public:
 
 public:
 	int GetProg_to_Game_ByProgmd5(CString progmd5);
-	int GetProg_to_Game();
-	int GetControlMode();
-	int GetGame_Manage_ByGameID(int gameid);
+	//int GetProg_to_Game();
+	//int GetControlMode();
+	//int GetGame_Manage_ByGameID(int gameid);
 	int GetUser_GameInfo();
 	bool PostData(const CString& sUrl, char* data, int datalen);
 	int GetUserData();
 	void SyncUser(CString url);
 
 private:
-	bool GetData(const CString& sUrl, char* buf, DWORD dwBuffer);
+	bool GetData(const CString& sUrl);
 	CString CrackUrl(CString sUrl);
 	CString DownloadFile(const CString& surl);
 
@@ -57,23 +57,23 @@ private:
 		{
 			std::string   receive_data ;
 			rTask.PopReceived (receive_data) ;
-			memset(m_databuf, 0, m_nbuflen);
-			memcpy(m_databuf, receive_data.c_str(), receive_data.length());
+			//memset(m_databuf, 0, m_nbuflen);
+			//memcpy(m_databuf, receive_data.c_str(), receive_data.length());
 			if(url.Find(_T("usergameinfo")) !=-1)
 			{
-				if(HandleUser_GameInfo()>0)
+				if(HandleUser_GameInfo(receive_data)>0)
 				{
 					::SendMessage(m_HwndNotify, WM_REFRESH_GAMELIST, 0, 0 );
 				}
 			}
 			else if(url.Find(_T("getprogmd5"))!=-1)
 			{
-				HandleProgmd5();
+				HandleProgmd5(receive_data);
 				//::SendMessage(m_HwndNotify, WM_REFRESH_GAMELIST, 0, 0 );
 			}
 			else if(url.Find(_T("progtogame"))!=-1)
 			{
-				int nRet = HandleProg_to_Game_ByProgmd5();
+				int nRet = HandleProg_to_Game_ByProgmd5(receive_data);
 				if(nRet == 1)
 				{
 					::SendMessage(m_HwndNotify, WM_REFRESH_GAMELIST, 0, 0 );
@@ -87,23 +87,23 @@ private:
 			}
 			else if(url.Find(_T("puinfo"))!=-1)
 			{
-				HandleUserData();
-				//::SendMessage(m_HwndNotify, WM_REFRESH_GAMELIST, 0, 0 );
+				HandleUserData(receive_data);
+				::SendMessage(m_HwndNotify, WM_GAME_RESETNICKNAME, 0, 0 );
+				::SendMessage(m_HwndNotify, WM_GAME_RESETHEAD, 0, 0 );
+
 			}
 
 			// ... process received data
 		}
 	}
-	int HandleUser_GameInfo();
-	int HandleProgmd5();
-	int HandleProg_to_Game_ByProgmd5();
-	int HandleUserData();
+	int HandleUser_GameInfo(const string& data);
+	int HandleProgmd5(const string& data);
+	int HandleProg_to_Game_ByProgmd5(const string& data);
+	int HandleUserData(const string& data);
 private:
 	CString m_server;
 	int m_port;
 	CString m_userid;
-	char *m_databuf;
-	const int m_nbuflen;
 	HWND m_HwndNotify;
 
 };

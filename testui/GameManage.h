@@ -50,7 +50,6 @@ public:
 	SQLiteDataReader GetAllGameByWWGMode()
 	{
 		return m_db.ExcuteQuery(_T("select  a.gameid,name,iconpath,topmost,playtimes,type,status,rstatus from game_manage a left OUTER JOIN  game_path b on a.gameid=b.gameid  order by path,lastplaytime desc"));
-
 	}
 	SQLiteDataReader GetAllGameByAutoMode()
 	{
@@ -172,6 +171,7 @@ public:
 		str.Format(_T("delete from prog_to_game where gameid=%d"), gameid);
 		return m_db.ExcuteNonQuery(str);
 	}
+
 	CString ExistGamePath(int gameid)
 	{
 		CString sql;
@@ -245,7 +245,20 @@ public:
 		str.Format(_T("select URI from header_info where (userid=%d or userid=0) and headerid=%d"),userid, headerid);
 		return m_db.ExcuteQuery(str);
 	}
-
+	
+	CString GetUserHeaderURI(int userid)
+	{
+		SQLiteDataReader sdr = GetUser(userid);
+		bool bRet = sdr.Read();
+		if(!bRet) return "";
+		int headerid = sdr.GetIntValue(16);
+		sdr.Close();
+		SQLiteDataReader sdr2 = GetUserHeaderURI(userid, headerid);
+		bRet = sdr2.Read();
+		if(!bRet) return "";
+		return sdr2.GetStringValue(0);
+		
+	}
 	CString GetGamePath(int gameid)
 	{
 		CString str;
@@ -396,7 +409,7 @@ public:
 	}
 
 private:
-	CGameManage()   //构造函数是私有的  
+	CGameManage()  
 	{  
 	}  
 	CGameManage(const CGameManage &);  

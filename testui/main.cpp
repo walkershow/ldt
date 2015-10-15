@@ -39,6 +39,16 @@ static bool is_user_login(const CString& userid)
 	return true;
 }
 
+CString CreateUserDB(CString appPath)
+{
+	CString strModPath = appPath + _T("game");
+	CString strUserDBPath = appPath + g_strUserID;
+	if(!PathFileExists(strUserDBPath))
+	{
+		CopyFile(strModPath,strUserDBPath, true); 
+	}
+	return strUserDBPath;
+}
 
 int APIENTRY _tWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lpCmdLine, int nCmdShow)
 {
@@ -63,8 +73,10 @@ int APIENTRY _tWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lpCm
 	CPaintManagerUI::SetResourcePath(CPaintManagerUI::GetInstancePath());
 	CDuiString str = CPaintManagerUI::GetInstancePath();
 	CString strPath = str ;
-	strPath += strDBPath;
-	CGameManage::GetInstance().Open(strPath);
+// 	CString strModPath = strPath + _T("game");
+// 	CString strUserDBPath = strPath + strUserID;
+	CString userDb = CreateUserDB(strPath);
+	CGameManage::GetInstance().Open(userDb);
 	
 	bool bRet = CGameManage::GetInstance().GetSysConfig(g_server, g_port, g_runtimes);
 	if(!bRet)
