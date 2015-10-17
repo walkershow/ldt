@@ -34,6 +34,7 @@ void CUserWnd::OnSelect( TNotifyUI &msg )
 	sName.MakeLower();
 	if(sName == _T("cbyear") )
 	{
+		SetDay();
 		SetAgeXZSX();
 
 	}
@@ -124,8 +125,9 @@ void CUserWnd::InitProv()
 void CUserWnd::InitCity(int nSel)
 {
 	//int nSel = m_vecPCBox[6]->GetCurSel();
-	static int lastSel = 0;
+	static int lastSel = -1;
 	if(lastSel == nSel) return;
+	lastSel = nSel;
 	if(nSel== -1) 
 	{
 		m_vecPCBox[7]->RemoveAll();
@@ -150,9 +152,9 @@ void CUserWnd::InitCity(int nSel)
 
 void CUserWnd::InitArea(int nSel)
 {
-	static int lastSel = 0;
+	static int lastSel = -1;
 	if(lastSel == nSel) return;
-	//int nSel = m_vecPCBox[6]->GetCurSel();
+	lastSel = nSel;
 	if(nSel== -1) 
 	{
 		m_vecPCBox[8]->RemoveAll();
@@ -181,19 +183,21 @@ void CUserWnd::SetAgeXZSX()
 	if(nSel== -1) nSel = 0;
 	CControlUI *pctrl = m_vecPCBox[3]->GetItemAt(nSel);
 	mon = _ttoi(pctrl->GetUserData());
+	
 	nSel = m_vecPCBox[2]->GetCurSel();
 	if(nSel== -1) nSel = 0;
-
 	pctrl = m_vecPCBox[2]->GetItemAt(nSel);
 	year = pctrl->GetTag();
 
 	nSel = m_vecPCBox[4]->GetCurSel();
 	if(nSel== -1) nSel = 0;
-
 	pctrl = m_vecPCBox[4]->GetItemAt(nSel);
 	day = pctrl->GetTag();
 	if(day == 0) day = 1;
-
+	if(year == 0)
+	{
+		return;
+	}
 	CLabelUI *pLbl = static_cast<CLabelUI*>(m_PaintManager.FindControl(_T("lblnl")));
 	CDate birth(year, mon, day);
 	int age = birth.GetAge();
@@ -213,7 +217,10 @@ void CUserWnd::SetAgeXZSX()
 
 void CUserWnd::SetAgeXZSXByVal(int year,int mon,int day)
 {
-
+	if(year == 0)
+	{
+		return;
+	}
 	CLabelUI *pLbl = static_cast<CLabelUI*>(m_PaintManager.FindControl(_T("lblnl")));
 	CDate birth(year, mon, day);
 	int age = birth.GetAge();
@@ -222,8 +229,15 @@ void CUserWnd::SetAgeXZSXByVal(int year,int mon,int day)
 	pLbl->SetText(str);
 
 	pLbl = static_cast<CLabelUI*>(m_PaintManager.FindControl(_T("lblxz")));
+	if(mon !=0)
+	{
+		str = birth.constell();
+	}
+	else
+	{
+		str = _T("");
 
-	str = birth.constell();
+	}
 	pLbl->SetText(str);
 
 	pLbl = static_cast<CLabelUI*>(m_PaintManager.FindControl(_T("lblsx")));
@@ -334,23 +348,31 @@ void CUserWnd::OnClick( TNotifyUI &msg )
 
 		CString sex = m_vecPCBox[0]->GetText();
 		CString bt = m_vecPCBox[1]->GetText();
-		int mon,year,day;
+		int mon=0;
+		int year=0;
+		int day=0;
+		CControlUI *pctrl = NULL;
 		int nSel = m_vecPCBox[3]->GetCurSel();
-		if(nSel== -1) nSel = 0;
-		CControlUI *pctrl = m_vecPCBox[3]->GetItemAt(nSel);
-		mon = _ttoi(pctrl->GetUserData());
+
+		if(nSel != -1) 
+		{
+			CControlUI *pctrl = m_vecPCBox[3]->GetItemAt(nSel);
+			mon = _ttoi(pctrl->GetUserData());
+		}
+
 		nSel = m_vecPCBox[2]->GetCurSel();
-		if(nSel== -1) nSel = 0;
-
-		pctrl = m_vecPCBox[2]->GetItemAt(nSel);
-		year = pctrl->GetTag();
-
+		if(nSel!= -1)
+		{
+			pctrl = m_vecPCBox[2]->GetItemAt(nSel);
+			year = pctrl->GetTag();
+		}
 		nSel = m_vecPCBox[4]->GetCurSel();
-		if(nSel== -1) nSel = 0;
+		if(nSel!= -1) 
+		{
+			pctrl = m_vecPCBox[4]->GetItemAt(nSel);
+			day = pctrl->GetTag();
+		}
 
-		pctrl = m_vecPCBox[4]->GetItemAt(nSel);
-		day = pctrl->GetTag();
-		if(day == 0) day = 1;
 
 		CString country = m_vecPCBox[5]->GetText();
 		int countryindex = m_vecPCBox[5]->GetCurSel();
@@ -587,18 +609,7 @@ void CUserWnd::InitWindow()
 	m_vecPLblBK.push_back(pLbl);
 	pLbl = static_cast<CLabelUI*>(m_PaintManager.FindControl(_T("lbl5")));
 	m_vecPLblBK.push_back(pLbl);
-// 	pLbl = static_cast<CLabelUI*>(m_PaintManager.FindControl(_T("lblyear")));
-// 	m_vecPLbl.push_back(pLbl);
-// 	pLbl = static_cast<CLabelUI*>(m_PaintManager.FindControl(_T("lblmon")));
-// 	m_vecPLbl.push_back(pLbl);
-// 	pLbl = static_cast<CLabelUI*>(m_PaintManager.FindControl(_T("lblday")));
-// 	m_vecPLbl.push_back(pLbl);
-// 	pLbl = static_cast<CLabelUI*>(m_PaintManager.FindControl(_T("lblnat")));
-// 	m_vecPLbl.push_back(pLbl);
-// 	pLbl = static_cast<CLabelUI*>(m_PaintManager.FindControl(_T("lblprov")));
-// 	m_vecPLbl.push_back(pLbl);
-// 	pLbl = static_cast<CLabelUI*>(m_PaintManager.FindControl(_T("lblcity")));
-// 	m_vecPLbl.push_back(pLbl);
+
 	CRichEditUI *pedt = static_cast<CRichEditUI*>(m_PaintManager.FindControl(_T("edtnc")));
 	m_PRedit = pedt;
 	CComboBoxUI* pcb = static_cast<CComboBoxUI*>(m_PaintManager.FindControl(_T("cbsex")));
@@ -661,68 +672,98 @@ void CUserWnd::InitCtrlVal()
 		m_vecPLbl[1]->SetText(str);
 		str = sdr.GetStringValue(2);
 		m_vecPLbl[2]->SetText(str);
-		str.Format(_T("%d年"),sdr.GetIntValue(4));
+
+		int year = sdr.GetIntValue(4);
+		int mon = sdr.GetIntValue(5);
+		int day = sdr.GetIntValue(6);
+		str = _T("");
+		if(year!=0)
+		{
+			str.Format(_T("%d年"),sdr.GetIntValue(4));
+		}
 		strdate = str;
 		//m_vecPLbl[3]->SetText(str);
-		str.Format(_T("%d月"),sdr.GetIntValue(5));
+		if(mon!=0)
+		{
+			str.Format(_T("%d月"),sdr.GetIntValue(5));
+		}
 		strdate += str;
 		//m_vecPLbl[4]->SetText(str);
-		str.Format(_T("%d日"),sdr.GetIntValue(6));
+		if( day !=0)
+		{
+			str.Format(_T("%d日"),sdr.GetIntValue(6));
+		}
 		strdate += str;
 		//m_vecPLbl[5]->SetText(str);
 
 		m_pDate->SetText(strdate);
-		
+		str = _T("");
 		str.Format(_T("%s"),sdr.GetStringValue(7));
-		strszd = str;
+		strszd = _T("中国");
 		//m_vecPLbl[6]->SetText(str);
-		str.Format(_T("%s"),sdr.GetStringValue(8));
+		CString data = sdr.GetStringValue(8);
+		str.Format(_T("%s"),data);
 		strszd+= str;
 		///*m_vecPLbl*/[7]->SetText(str);
-		
-		str.Format(_T("%s"),sdr.GetStringValue(9));
+		data = sdr.GetStringValue(9);
+
+		str.Format(_T("%s"),data);
 		strszd+=str;
-		str.Format(_T("%s"),sdr.GetStringValue(18));
+		data = sdr.GetStringValue(18);
+		str.Format(_T("%s"),data);
 		strszd+=str;
 		//m_vecPLbl[8]->SetText(str);
 		str = sdr.GetStringValue(10);
 		m_vecPLbl[0]->SetText(str);
 
 		m_pSzd->SetText(strszd);
-
 		m_PRedit->SetText(str);
-
 		int idx= sdr.GetIntValue(14);
 		
 		m_vecPCBox[0]->SelectItem(idx);
 		idx= sdr.GetIntValue(15);
 		m_vecPCBox[1]->SelectItem(idx);
-
-		int year = sdr.GetIntValue(4);
+		
 		int nowyear = CDate::GetCurDate().GetYear();
-		idx = nowyear-year;
-		m_vecPCBox[2]->SelectItem(idx);
-		int mon = sdr.GetIntValue(5);
-		idx = mon-1;
-		m_vecPCBox[3]->SelectItem(idx);
-		int day = sdr.GetIntValue(6);
-		idx = day-1;
-		m_vecPCBox[4]->SelectItem(idx);
-
+		if(year!=0)
+		{
+			idx = nowyear-year;
+			m_vecPCBox[2]->SelectItem(idx);
+		}
+		if( mon != 0)
+		{
+			idx = mon-1;
+			m_vecPCBox[3]->SelectItem(idx);
+		}
+		if(day!=0)
+		{
+			idx = day-1;
+			m_vecPCBox[4]->SelectItem(idx);
+		}
 
 		idx= sdr.GetIntValue(11);
-		m_vecPCBox[5]->SelectItem(idx);
+		if(idx != -1)	
+		{
+			m_vecPCBox[5]->SelectItem(idx);
+		}
 		idx= sdr.GetIntValue(12);
-		m_vecPCBox[6]->SelectItem(idx);
-		InitCity(idx);
+		if(idx != -1)	
+		{
+			m_vecPCBox[6]->SelectItem(idx);
+			InitCity(idx);
+		}
 		idx= sdr.GetIntValue(13);
-		m_vecPCBox[7]->SelectItem(idx);
-		InitArea(idx);
+		if(idx != -1)	
+		{
+			m_vecPCBox[7]->SelectItem(idx);
+			InitArea(idx);
+		}
 
 		idx= sdr.GetIntValue(19);
 		m_vecPCBox[8]->SelectItem(idx);
 		m_headerid = sdr.GetIntValue(16);
 		m_headerhis = sdr.GetStringValue(17);
+		
 
 		SetAgeXZSXByVal(year, mon, day);
 	}

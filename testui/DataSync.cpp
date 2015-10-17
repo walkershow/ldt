@@ -183,10 +183,11 @@ int CDataSync::HandleProg_to_Game_ByProgmd5(const string& data)
 	int topmost,playtimes,type;
 	string upsign;
 	CString progmd5;
+	int gameid = 0;
 	int size = root.size();
 	for (int i=0; i<size; ++i)
 	{
-		int gameid= root[i]["gameid"].asInt();
+		gameid= root[i]["gameid"].asInt();
 
 		name= root[i]["name"].asString();
 		CString strName = UTF8ToUnicode((char*)name.c_str());
@@ -198,7 +199,8 @@ int CDataSync::HandleProg_to_Game_ByProgmd5(const string& data)
 			return -4; //ÏÂÔØÊ§°Ü
 		}
 		upsign = root[i]["updatesign"].asString();
-		progmd5 = root[i]["progmd5"].asCString();
+		string str_progmd5 = root[i]["progmd5"].asString();
+		progmd5 = str_progmd5.c_str();
 		long ups = atoi(upsign.c_str());
 		topmost = 0; playtimes=0;
 		//topmost= root[i]["topmost"].asInt();
@@ -210,10 +212,11 @@ int CDataSync::HandleProg_to_Game_ByProgmd5(const string& data)
 		if( !bRet ) return 0;
 		bRet = CGameManage::GetInstance().UpdateProgToGame(gameid, progmd5);
 		if( !bRet) return 0;
+
 		break;
 	}
 
-	return 1;
+	return gameid;
 }
 
 // int CDataSync::GetProg_to_Game()
@@ -324,7 +327,8 @@ int CDataSync::HandleUser_GameInfo(const string& data)
 		rstatus = root[i]["status"].asInt();
 		type = root[i]["type"].asInt();
 		upsign = root[i]["updatesign"].asUInt();
-		url = root[i]["url"].asCString();
+		string strurl = root[i]["url"].asString();
+		url = strurl.c_str();
 		bool bRet = CGameManage::GetInstance().UpdateGameByGameID(gameid, strName, fPath, topmost,  type, playtimes, upsign,url,rstatus);
 		if(type != 2)
 		{
@@ -379,12 +383,14 @@ int CDataSync::HandleUserData(const string& data)
 	}
 	int userid = 0;
 	string nickname;
-	int birthyear,birthmon,birthday;
+	int birthyear=0;
+	int birthmon=0;
+	int birthday=0;
 	CString prov,city,area,useracct,sex,bloodtype;
 	int provid,cityid,areaid;
 	int   btindex,headerid;
 	CString headerhis;
-	unsigned int upsign;
+	unsigned int upsign=0;
 	int size = root.size();
 	for (int i=0; i<size; ++i)
 	{
@@ -392,7 +398,8 @@ int CDataSync::HandleUserData(const string& data)
 		useracct= root[i]["username"].asCString();
 		nickname= root[i]["nick_name"].asString();
 		CString strName = UTF8ToUnicode((char*)nickname.c_str());
-		bloodtype= root[i]["blood"].asCString();
+		string bt= root[i]["blood"].asString();
+		bloodtype = bt.c_str();
 		if( bloodtype == _T("A") ) btindex =0;
 		else if( bloodtype == _T("B") ) btindex =1;
 		else if( bloodtype == _T("AB") ) btindex =2;
@@ -403,18 +410,21 @@ int CDataSync::HandleUserData(const string& data)
 		int sexid = root[i]["sex"].asInt();
 		sexid -= 1;
 		string birthdaystr =  root[i]["birthday"].asString();
-		sscanf(birthdaystr.c_str(), "%d-%d-%d", &birthyear,&birthmon,&birthday);
+		if(!birthdaystr.empty())
+		{
+			sscanf(birthdaystr.c_str(), "%d-%d-%d", &birthyear,&birthmon,&birthday);
+		}
 		provid = root[i]["province_id"].asInt();
 		cityid = root[i]["city_id"].asInt();
 		areaid = root[i]["area_id"].asInt();
 		CString prov;
-		int providx;
+		int providx=0;
 		CGameManage::GetInstance().GetAreaNameAndIdx(provid, prov, providx);
 		CString city;
-		int cityidx;
+		int cityidx=0;
 		CGameManage::GetInstance().GetAreaNameAndIdx(cityid, city, cityidx);
 		CString area;
-		int areaidx;
+		int areaidx=0;
 		CGameManage::GetInstance().GetAreaNameAndIdx(areaid, area, areaidx);
 
 		if(sexid == 0) sex=_T("ÄÐ");
@@ -423,8 +433,13 @@ int CDataSync::HandleUserData(const string& data)
 		//topmost= root[i]["topmost"].asInt();
 		//playtimes = root[i]["playtimes"].asInt();
 		headerid = root[i]["image"].asInt();
-		headerhis = root[i]["image_history1"].asCString();
+		string ss = root[i]["image_history1"].asString();
+		headerhis = ss.c_str();
+		//headerhis = ss;
 		upsign = root[i]["updatetime"].asUInt();
+		CString sLog;
+		sLog.Format(_T("%d,%s,%d"), userid,strName, upsign);
+		CLog::getInstance()->AgentLog((LPTSTR)(LPCTSTR)sLog);
 		bool bRet = CGameManage::GetInstance().UpdateUser(userid, strName, useracct, birthyear,birthmon,birthday, sex,bloodtype, headerid, headerhis,prov,city,area, upsign,0, providx, cityidx, btindex,sexid, areaidx);
 
 		//break;

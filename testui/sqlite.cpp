@@ -68,6 +68,17 @@ BOOL SQLite::Open(LPCTSTR lpDbFlie)
 	return TRUE;
 }
 
+BOOL SQLite::SetPassword(LPCTSTR pwd,int len)
+{
+	BOOL bRet = sqlite3_key(m_db, pwd, len);
+	return bRet;
+}
+
+BOOL SQLite::ResetPassword(LPCTSTR pwd,int len)
+{
+	BOOL bRet = sqlite3_rekey(m_db, pwd, len);
+	return bRet;
+}
 void SQLite::Close()
 {
 	if(m_db)

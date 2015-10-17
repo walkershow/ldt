@@ -95,7 +95,7 @@
           <ComboBox name="cbyear"  virtualwnd="cb_year" visible="false"  width="75" padding="5,5,0,0" valign="bottom" align="left" height="22" > 
           </ComboBox>
         </VerticalLayout>
-        <!-- <Control width="8"/> -->
+        <Control width="12"/>
        <VerticalLayout maxwidth="70"  height="28">
         <Label name="lblmon" text="1" visible="false" textcolor="" width="70" height="28"/>
          <ComboBox name="cbmon"  virtualwnd="cb_mon" visible="false" width="65" padding="0,5,0,0"  > 
@@ -119,7 +119,6 @@
        <VerticalLayout maxwidth="50"  height="28">
         <Label name="lblday" text="1"  visible="false" textcolor="" width="50" height="28"/>
           <ComboBox name="cbday"  visible="false" textcolor="" width="50" padding="0,5,0,0" > 
-            <ListLabelElement text="1" selected="true"/>
           </ComboBox>
         </VerticalLayout>
         </HorizontalLayout>
@@ -127,19 +126,19 @@
 
         <HorizontalLayout name="item_bar" height="28" float="false"  >
           <Label bkimage="images\userwnd\gryh-grzlnl.png"  padding="0,16,0,0" width="38" height="12"/>
-          <Label name="lblnl" text="hello" textcolor="" width="66" height="28"  padding="5,0,0,0" valign="bottom" align="left"/>
+          <Label name="lblnl" text="" textcolor="" width="66" height="28"  padding="5,0,0,0" valign="bottom" align="left"/>
         </HorizontalLayout>
         <Control height="12"/>
 
                 <HorizontalLayout name="item_bar" height="28" float="false"  >
           <Label bkimage="images\userwnd\gryh-grzlsx.png" padding="0,16,0,0" width="38" height="12"/>
-          <Label  name="lblsx" text="hello" textcolor=""  valign="bottom" align="left" padding="5,0,0,0" width="66" height="28"/>
+          <Label  name="lblsx" text="" textcolor=""  valign="bottom" align="left" padding="5,0,0,0" width="66" height="28"/>
         </HorizontalLayout>
         <Control height="12"/>
 
                 <HorizontalLayout name="item_bar" height="28" float="false"  >
           <Label bkimage="images\userwnd\gryh-grzlxz.png" padding="0,16,0,0" width="38" height="12"/>
-          <Label  name="lblxz" text="hello" textcolor=""  valign="bottom" align="left" padding="5,0,0,0" width="66" height="28"/>
+          <Label  name="lblxz" text="" textcolor=""  valign="bottom" align="left" padding="5,0,0,0" width="66" height="28"/>
         </HorizontalLayout>
         <Control height="12"/>
 

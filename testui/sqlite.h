@@ -8,8 +8,8 @@ purpose:	SQLite数据库操作类
 #pragma once
 #include <windows.h>
 #include <tchar.h>
-#include <sqlite3.h>
-#pragma comment(lib,"SQLite3.lib") 
+#include "../../SQLite3-Encryption/src/sqlite3.h"
+#pragma comment(lib,"sqlite3Encrypt.lib") 
 
 typedef int (*QueryCallback) (void *para, int n_column, char **column_value, char **column_name);
 
@@ -106,6 +106,8 @@ public:
 
 	// 获取上一条错误信息
 	LPCTSTR GetLastErrorMsg();
+	BOOL SetPassword(LPCTSTR pwd,int len);
+	BOOL ResetPassword(LPCTSTR pwd,int len);
 public:
 	friend class SQLiteCommand;
 private:

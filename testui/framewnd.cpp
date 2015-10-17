@@ -26,7 +26,7 @@ DUI_ON_MSGTYPE(DUI_MSGTYPE_ITEMCLICK,OnItemClick)
 DUI_END_MESSAGE_MAP()
 static CWebBrowserUI* s_cur_webbrowser_ptr=NULL;
 static bool s_need_reload = false;
-
+static CString s_selected_filepath;
 CList_Game::CList_Game()
 {
 	m_pPaintManager = NULL;
@@ -284,14 +284,11 @@ int CList_Game::AddNewGame(CString filePath)
 	string digest = md5.digestFile((LPTSTR)(LPCTSTR) filePath );
 	//CDataSync ds(_T("192.168.1.62"), 80, g_strUserID);
 	int gameid=g_pDSync->GetProg_to_Game_ByProgmd5((LPSTR)digest.c_str());
-	if(gameid>0)
+	if(gameid>=0)
 	{
-		if(CGameManage::GetInstance().SetGamePath(filePath, gameid))
-		{
-			return 1;
-		}
-
+		s_selected_filepath = filePath;
 	}
+
 	return gameid;
 }
 
@@ -730,6 +727,15 @@ LRESULT CFrameWnd::HandleMessage( UINT uMsg,WPARAM wParam,LPARAM lParam )
 
 		}
 	}
+	else if(WM_ADDGAME_SUCC == uMsg)
+	{
+		int gameid = (int)(wParam);
+		if(CGameManage::GetInstance().SetGamePath(s_selected_filepath, gameid))
+		{
+			return 1;
+		}
+		
+	}
 	else if(WM_HOTKEY == uMsg)
 	{
 		OnHotKey(wParam, lParam);
@@ -742,7 +748,10 @@ LRESULT CFrameWnd::HandleMessage( UINT uMsg,WPARAM wParam,LPARAM lParam )
 			int userid = _ttoi((LPCTSTR)g_strUserID);
 			str = CGameManage::GetInstance().GetUserHeaderURI(userid);
 		}
-		m_pBtntx->SetBkImage(str);
+		if(!str.IsEmpty())
+		{
+			m_pBtntx->SetBkImage(str);
+		}
 	}
 	else if(WM_GAME_RESETNICKNAME == uMsg)
 	{

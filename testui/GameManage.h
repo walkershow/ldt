@@ -1,6 +1,7 @@
 #pragma once
 #include "sqlite.h"
 #include <atlstr.h>
+#include "Log.h"
 extern CString g_strUserAcct;
 extern CString g_strUserID;
 class CGameManage
@@ -90,11 +91,16 @@ public:
 	}
 	long SelectMaxTimeFromUser()
 	{
-		CString sql = _T("select max(updatetime) from user");
+		CString sql = _T("select max(updatetime) from user where userid=%s",g_strUserID);
 		SQLiteDataReader sdr = m_db.ExcuteQuery(sql);
 		bool bRet = sdr.Read();
 		if(bRet)
+		{
+			CString slog ;
+			slog.Format(_T("max time:%d"), sdr.GetInt64Value(0));
+			CLog::getInstance()->AgentLog((LPTSTR)(LPCTSTR)slog);
 			return sdr.GetInt64Value(0);
+		}
 		return -1;
 	}
 	bool ExistGame(int gameid)
@@ -130,7 +136,9 @@ public:
 		return true;
 	}
 
-	bool UpdateUser(int userid, LPCTSTR nickname, LPCTSTR useracct, int year,int mon, int day, LPCTSTR sex,  LPCTSTR bt, int imageid, LPCTSTR imagehis ,LPCTSTR prov,LPCTSTR city,LPCTSTR area ,long updatetime,int countryindex, int provindex, int cityindex, int btindex, int sexindex,int areaindex)
+	bool UpdateUser(int userid, LPCTSTR nickname, LPCTSTR useracct, int year,int mon, int day, LPCTSTR sex,  LPCTSTR bt, int imageid, 
+					LPCTSTR imagehis ,LPCTSTR prov,LPCTSTR city,LPCTSTR area ,long updatetime,int countryindex, int provindex, 
+					int cityindex, int btindex, int sexindex,int areaindex)
 	{
 		if(ExistUser(userid))
 		{
@@ -181,7 +189,7 @@ public:
 		{
 			return sdr.GetStringValue(0);
 		}
-		return "";
+		return _T("");
 	}
 	bool SetGamePath(const CString& path, int gameid)
 	{
@@ -203,6 +211,14 @@ public:
 		return false;
 
 	}
+
+	bool DelGamePath(int gameid)
+	{
+		CString sql;
+		sql.Format(_T("delete from game_path where gameid=%d"), gameid);
+		return m_db.ExcuteNonQuery(sql);
+	}
+
 	//用户信息
 	bool SetUser(CString userid,CString useracct,CString bt,CString sex,int y,int m,int d,CString country,CString prov,CString city,CString nickName, int countryindex, int provindex, int cityindex, int btindex, int sexindex,int headerid, CString headerhis,CString area,int areaindex)
 	{
@@ -264,7 +280,7 @@ public:
 		CString str;
 		str.Format(_T("select path from game_path where gameid=%d"), gameid);
 		SQLiteDataReader sdr = m_db.ExcuteQuery(str);
-		CString path = "";
+		CString path = _T("");
 		while(sdr.Read())
 		{
 			path = sdr.GetStringValue(0);
@@ -277,7 +293,7 @@ public:
 		CString str;
 		str.Format(_T("select url from game_manage where gameid=%d"), gameid);
 		SQLiteDataReader sdr = m_db.ExcuteQuery(str);
-		CString url = "";
+		CString url = _T("");
 		while(sdr.Read())
 		{
 			url = sdr.GetStringValue(0);
@@ -335,6 +351,7 @@ public:
 		}
 		return false;
 	}
+
 	bool InsertProgmd5byGameid(int gameid, CString Progmd5)
 	{
 		CString str;
@@ -402,10 +419,20 @@ public:
 		if(!ExistUser(userid))
 		{
 			CString str;
-			str.Format( _T("insert into user(userid ,useracct) values(%s,'%s')"), g_strUserID, g_strUserAcct);
+			str.Format( _T("insert into user(userid ,useracct,updatetime) values(%s,'%s',0)"), g_strUserID, g_strUserAcct);
 			return m_db.ExcuteNonQuery(str);
 		}
 		return true;
+	}
+
+	BOOL SetPassword(LPCTSTR pwd,int len)
+	{
+		return m_db.SetPassword(pwd, len);
+	}
+
+	BOOL ResetPassword(LPCTSTR pwd,int len)
+	{
+		return m_db.ResetPassword(pwd, len);
 	}
 
 private:

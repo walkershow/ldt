@@ -116,6 +116,8 @@ extern int g_runtimes;
 class CDataSync;
 extern CDataSync *g_pDSync;
 
+#define USER_DBDIR  _T("user\\")
+#define SCHEMA_FILENAME  _T("schema")
 #define WM_REFRESH_GAMELIST_MANUAL WM_USER+100
 #define WM_REFRESH_GAMELIST_AUTO   WM_USER+101
 #define WM_JUMP_YXK				   WM_USER+102
@@ -124,4 +126,5 @@ extern CDataSync *g_pDSync;
 #define WM_GAME_RESETHEAD		   WM_USER+105
 #define WM_GAME_RESETNICKNAME	   WM_USER+106
 #define WM_REFRESH_GAMELIST		   WM_USER+107
+#define WM_ADDGAME_SUCC			   WM_USER+108
 #define WM_GAME_NOTSUPPORT		   WM_USER+200

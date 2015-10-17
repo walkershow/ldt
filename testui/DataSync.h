@@ -74,9 +74,10 @@ private:
 			else if(url.Find(_T("progtogame"))!=-1)
 			{
 				int nRet = HandleProg_to_Game_ByProgmd5(receive_data);
-				if(nRet == 1)
+				if(nRet >0 )
 				{
 					::SendMessage(m_HwndNotify, WM_REFRESH_GAMELIST, 0, 0 );
+					::SendMessage(m_HwndNotify, WM_ADDGAME_SUCC, (WPARAM)nRet, 0 );
 
 				}
 				else
