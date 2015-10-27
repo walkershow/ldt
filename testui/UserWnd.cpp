@@ -2,12 +2,14 @@
 #include "GameManage.h"
 #include "DataSync.h"
 #include "SplitStr.h"
+#include "helper.h"
+
 DUI_BEGIN_MESSAGE_MAP(CUserWnd, WindowImplBase)
 DUI_ON_MSGTYPE(DUI_MSGTYPE_CLICK,OnClick)
 DUI_ON_MSGTYPE(DUI_MSGTYPE_ITEMSELECT,OnSelect)
 DUI_END_MESSAGE_MAP()
 
-CUserWnd::CUserWnd(LPCTSTR pszXMLPath): CXMLWnd(pszXMLPath),m_bShouldSave(false),m_bShouldSaveImage(false)
+CUserWnd::CUserWnd(LPCTSTR pszXMLPath): CXMLWnd(pszXMLPath),m_bShouldSave(false),m_bShouldSaveImage(false),m_lastAreaSel(-1),m_lastCitySel(-1)
 {
 }
 
@@ -124,10 +126,8 @@ void CUserWnd::InitProv()
 }
 void CUserWnd::InitCity(int nSel)
 {
-	//int nSel = m_vecPCBox[6]->GetCurSel();
-	static int lastSel = -1;
-	if(lastSel == nSel) return;
-	lastSel = nSel;
+	if(m_lastCitySel == nSel) return;
+	m_lastCitySel = nSel;
 	if(nSel== -1) 
 	{
 		m_vecPCBox[7]->RemoveAll();
@@ -152,9 +152,8 @@ void CUserWnd::InitCity(int nSel)
 
 void CUserWnd::InitArea(int nSel)
 {
-	static int lastSel = -1;
-	if(lastSel == nSel) return;
-	lastSel = nSel;
+	if(m_lastAreaSel == nSel) return;
+	m_lastAreaSel = nSel;
 	if(nSel== -1) 
 	{
 		m_vecPCBox[8]->RemoveAll();
@@ -162,7 +161,7 @@ void CUserWnd::InitArea(int nSel)
 	}
 	CControlUI *pctrl = m_vecPCBox[7]->GetItemAt(nSel);
 	int id = pctrl->GetTag();
-	SQLiteDataReader sdr = CGameManage::GetInstance().GetCity(id);
+	SQLiteDataReader sdr = CGameManage::GetInstance().GetArea(id);
 	
 	m_vecPCBox[8]->RemoveAll();
 	while(sdr.Read())

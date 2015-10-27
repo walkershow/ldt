@@ -107,6 +107,17 @@ public:
 		return NULL;
 	}
 };
+
+typedef struct SNAP_INFO
+{
+	CString title;
+	CString classname;
+	CString jburl;
+	CString jbpath;
+	HWND	hwndParent;
+	int tryTimes;
+}Snap_Info;
+
 extern CString g_strUserID ;
 extern CString g_strUserAcct ;
 extern CString g_server;
@@ -115,6 +126,8 @@ extern int g_runtimes;
 
 class CDataSync;
 extern CDataSync *g_pDSync;
+class CBGThread;
+extern CBGThread *g_pBGTread;
 
 #define USER_DBDIR  _T("user\\")
 #define SCHEMA_FILENAME  _T("schema")

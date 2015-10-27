@@ -41,7 +41,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="D:\thirdpart\DuiLib_Redrain-master\DuiLib;D:\git\SQLite3-Encryption\src;d:\code\curl;jsoncpp;cJSON;http_request;"
+				AdditionalIncludeDirectories="D:\thirdpart\DuiLib_Redrain-master\DuiLib;../SQLite3-Encryption\src;d:\code\curl;jsoncpp;cJSON;http_request;"
 				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
@@ -63,6 +63,7 @@
 				Name="VCLinkerTool"
 				LinkIncremental="2"
 				AdditionalLibraryDirectories="D:\thirdpart\DuiLib_Redrain-master\DLL2008;D:\git\sqlite3Encrypt\Release;d:\code\curl\lib"
+				UACExecutionLevel="2"
 				IgnoreAllDefaultLibraries="false"
 				IgnoreDefaultLibraryNames=""
 				GenerateDebugInformation="true"
@@ -118,7 +119,7 @@
 				Name="VCCLCompilerTool"
 				Optimization="2"
 				EnableIntrinsicFunctions="true"
-				AdditionalIncludeDirectories="D:\thirdpart\DuiLib_Redrain-master\DuiLib;D:\git\3rdpart\sqlite\include;d:\code\curl;jsoncpp;cJSON;http_request"
+				AdditionalIncludeDirectories="D:\thirdpart\DuiLib_Redrain-master\DuiLib;../SQLite3-Encryption\src;d:\code\curl;jsoncpp;cJSON;http_request"
 				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS"
 				RuntimeLibrary="0"
 				EnableFunctionLevelLinking="true"
@@ -138,7 +139,7 @@
 			<Tool
 				Name="VCLinkerTool"
 				LinkIncremental="1"
-				AdditionalLibraryDirectories="D:\thirdpart\DuiLib_Redrain-master\DLL2008;D:\thirdpart\DuiLib_Redrain-master\DLL2008;D:\git\3rdpart\sqlite\lib;d:\code\curl\lib"
+				AdditionalLibraryDirectories="D:\thirdpart\DuiLib_Redrain-master\DLL2008;D:\thirdpart\DuiLib_Redrain-master\DLL2008;D:\git\sqlite3Encrypt\Release;d:\code\curl\lib"
 				IgnoreDefaultLibraryNames=""
 				GenerateDebugInformation="true"
 				SubSystem="2"
@@ -177,6 +178,10 @@
 			Filter="cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx"
 			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}"
 			>
+			<File
+				RelativePath=".\BGThread.cpp"
+				>
+			</File>
 			<File
 				RelativePath=".\DataSync.cpp"
 				>
@@ -231,6 +236,10 @@
 			Filter="h;hpp;hxx;hm;inl;inc;xsd"
 			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}"
 			>
+			<File
+				RelativePath=".\BGThread.h"
+				>
+			</File>
 			<File
 				RelativePath=".\DataSync.h"
 				>

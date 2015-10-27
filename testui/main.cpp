@@ -2,12 +2,12 @@
 #include "resource.h"
 #include "GameManage.h"
 #include "DataSync.h"
-//#include "md52.h"
 #include "helper.h"
 CString g_server;
 int g_port;
 int g_runtimes;
 CDataSync *g_pDSync  ;
+CBGThread *g_pBGTread;
 
 CString GetLocalVersion()
 {
@@ -55,7 +55,7 @@ CString CreateUserDB(CString appPath)
 		else SetFileAttributes(strUserDbDir, FILE_ATTRIBUTE_HIDDEN ); 
 		CopyFile(strModPath,strUserDBPath, true); 
 		CGameManage::GetInstance().Open(strUserDBPath);
-		CString pwd = _T("chinau6aontheworkdhgk");
+		CString pwd = _T("");
 		CGameManage::GetInstance().ResetPassword(pwd,pwd.GetLength());
 		CGameManage::GetInstance().Close();
 	}
@@ -65,19 +65,21 @@ CString CreateUserDB(CString appPath)
 int APIENTRY _tWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lpCmdLine, int nCmdShow)
 {
 // 	CPaintManagerUI::SetResourceZip(_T("testui.zip"));
+
 	if(::__argc <2)
 	{
 		return 0;
 	}
 	CString strUserID = ::__targv[1];
 	CString strUserAcct = ::__targv[2];
-	//CString strDBPath = ::__targv[3];
 	if(!is_user_login(strUserAcct))
 	{
 		//return 0;
 	}
 	g_strUserID = strUserID;
 	g_strUserAcct = strUserAcct;
+// 	g_strUserID = _T("100");
+// 	g_strUserAcct = _T("test200");
 
 	::CoInitialize(NULL);
 	
@@ -85,12 +87,10 @@ int APIENTRY _tWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lpCm
 	CPaintManagerUI::SetResourcePath(CPaintManagerUI::GetInstancePath());
 	CDuiString str = CPaintManagerUI::GetInstancePath();
 	CString strPath = str ;
-// 	CString strModPath = strPath + _T("game");
-// 	CString strUserDBPath = strPath + strUserID;
+
 	CString userDb = CreateUserDB(strPath);
 	CGameManage::GetInstance().Open(userDb);
-	CString pwd = _T("hello");
-	//CGameManage::GetInstance().ResetPassword(pwd,pwd.GetLength());
+	CString pwd = _T("");
 	CGameManage::GetInstance().SetPassword(pwd,pwd.GetLength());
 	
 	bool bRet = CGameManage::GetInstance().GetSysConfig(g_server, g_port, g_runtimes);

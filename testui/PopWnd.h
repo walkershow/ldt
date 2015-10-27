@@ -32,6 +32,7 @@ public:
 	LRESULT OnKillFocus(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled);
 	TileNode* AddTileNode(const CString& gameName,const CString& iconPath, int gameid, bool bChecked, int type);
 	void SetBtnTabVisible();
+	
 private:
 	CButtonUI* m_pCloseBtn;
 	CButtonUI* m_pMaxBtn;

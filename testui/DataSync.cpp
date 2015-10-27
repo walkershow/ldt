@@ -207,8 +207,20 @@ int CDataSync::HandleProg_to_Game_ByProgmd5(const string& data)
 		//playtimes = root[i]["playtimes"].asInt();
 		//status = root[i]["status"].asInt();
 		type = root[i]["type"].asInt();
+
+		string strjburl = root[i]["jburl"].asString();
+		CString jburl = strjburl.c_str(); 
+		CString jbPath;
+		if(!jburl.IsEmpty())
+			jbPath = DownloadFile(jburl);
+
+		string prog_title = root[i]["prog_title"].asString();
+		CString strPN = UTF8ToUnicode((char*)prog_title.c_str());
+
+		string prog_classname = root[i]["prog_classname"].asString();
+		CString strPC = UTF8ToUnicode((char*)prog_classname.c_str());
 		//游戏资料先入库，MD5后入，保证本地查询MD5时，游戏资料肯定存在（事务完整）
-		bRet = CGameManage::GetInstance().UpdateGameByGameID(gameid, strName, fPath, topmost,  type, playtimes, ups,_T(""));
+		bRet = CGameManage::GetInstance().UpdateGameByGameID(gameid, strName, fPath, topmost, type, playtimes, ups, _T(""), jbPath,jburl, strPN, strPC);
 		if( !bRet ) return 0;
 		bRet = CGameManage::GetInstance().UpdateProgToGame(gameid, progmd5);
 		if( !bRet) return 0;
@@ -329,17 +341,31 @@ int CDataSync::HandleUser_GameInfo(const string& data)
 		upsign = root[i]["updatesign"].asUInt();
 		string strurl = root[i]["url"].asString();
 		url = strurl.c_str();
-		bool bRet = CGameManage::GetInstance().UpdateGameByGameID(gameid, strName, fPath, topmost,  type, playtimes, upsign,url,rstatus);
+
+		string strjburl = root[i]["jburl"].asString();
+		CString jburl = strjburl.c_str();
+		CString jbPath;
+		if(!jburl.IsEmpty())
+			jbPath = DownloadFile(jburl);
+
+		string prog_title = root[i]["prog_title"].asString();
+		CString strPN = UTF8ToUnicode((char*)prog_title.c_str());
+
+		string prog_classname = root[i]["prog_classname"].asString();
+		CString strPC = UTF8ToUnicode((char*)prog_classname.c_str());
+
+		bool bRet = CGameManage::GetInstance().UpdateGameByGameID(gameid, strName, fPath, topmost,  type, playtimes, upsign, url, jbPath, jburl,strPN, strPC, rstatus);
 		if(type != 2)
 		{
 			sUrl.Empty();
-			sUrl.Format(_T("http://%s:%d/getprogmd5?gameid=%d"),m_server, m_port,gameid);
+			sUrl.Format(_T("http://%s:%d/getprogmd5?gameid=%d"),m_server, m_port, gameid);
 			GetData(sUrl);
 		}
 		//break;
 	}
 	return gameid;
 }
+
 int CDataSync::HandleProgmd5(const string& data)
 {
 	Json::Reader reader;
@@ -355,7 +381,6 @@ int CDataSync::HandleProgmd5(const string& data)
 		progmd5 = root[i]["progmd5"].asString();
 		int gameid = root[i]["gameid"].asInt();
 		bool bRet = CGameManage::GetInstance().InsertProgmd5byGameid(gameid, progmd5.c_str());
-
 	}
 	return 0;
 }

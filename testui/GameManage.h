@@ -65,6 +65,21 @@ public:
 	{
 		return m_db.ExcuteQuery(_T("select gameid,name,iconpath,topmost,playtimes,type from game_manage where status>=0 and rstatus=-1 order by lastplaytime desc;"));
 	}
+	bool GetSnapInfo(int gameid,CString& jburl, CString& jbpath,CString& prog_title, CString& prog_classname)
+	{
+		CString sql;
+		sql.Format(_T("select jburl,prog_title,prog_classname,jbpath from game_manage where gameid=%d"), gameid);
+		SQLiteDataReader sdr =  m_db.ExcuteQuery(sql);
+		bool bRet = sdr.Read();
+		if(bRet)
+		{
+			jbpath =sdr.GetStringValue(3);
+			jburl =sdr.GetStringValue(0);
+			prog_title =sdr.GetStringValue(1);
+			prog_classname =sdr.GetStringValue(2);
+		}
+		return bRet;
+	}
 	//local update status 0: 1:ÐÞ¸Ä -1£ºÉ¾³ý
 	bool UpdateGameTopmost(int gameid, int topmost=1)
 	{
@@ -91,7 +106,8 @@ public:
 	}
 	long SelectMaxTimeFromUser()
 	{
-		CString sql = _T("select max(updatetime) from user where userid=%s",g_strUserID);
+		CString sql ;
+		sql.Format(_T("select max(updatetime) from user where userid=%s"), g_strUserID);
 		SQLiteDataReader sdr = m_db.ExcuteQuery(sql);
 		bool bRet = sdr.Read();
 		if(bRet)
@@ -119,18 +135,18 @@ public:
 		return sdr.Read();
 
 	}
-	bool UpdateGameByGameID(int gameid, LPCTSTR name, LPCTSTR iconpath, int topmost, int type, int playtimes, long updatesign, LPCTSTR url ,int rstatus=-1)
+	bool UpdateGameByGameID(int gameid, LPCTSTR name, LPCTSTR iconpath, int topmost, int type, int playtimes, long updatesign, LPCTSTR url ,LPCTSTR jbpath, LPCTSTR jburl, LPCTSTR prog_title, LPCTSTR prog_classname, int rstatus=-1)
 	{
 		if(ExistGame(gameid))
 		{
 			CString str;
-			str.Format(_T("update game_manage set name='%s', iconpath='%s', topmost=%d ,type=%d, playtimes=%d,status=0, lastplaytime=CURRENT_TIMESTAMP,rstatus=%d,updatesign=%d,url='%s' where gameid=%d"), name, iconpath, topmost, type, playtimes, rstatus, updatesign, url,gameid );
+			str.Format(_T("update game_manage set name='%s', iconpath='%s', topmost=%d ,type=%d, playtimes=%d,status=0, lastplaytime=CURRENT_TIMESTAMP,rstatus=%d,updatesign=%d,url='%s',jbpath='%s',jburl='%s',prog_title='%s',prog_classname='%s' where gameid=%d"), name, iconpath, topmost, type, playtimes, rstatus, updatesign, url, jbpath, jburl, prog_title, prog_classname, gameid );
 			return m_db.ExcuteNonQuery(str);
 		}
 		else
 		{
 			CString str;
-			str.Format(_T("insert into game_manage(gameid,name,iconpath,topmost,playtimes,type,status,lastplaytime,updatesign,url, rstatus) values(%d, '%s', '%s', %d, %d, %d, %d, CURRENT_TIMESTAMP,%d, '%s', %d)"),  gameid,name, iconpath, topmost,  playtimes, type, 0,updatesign, url, rstatus);
+			str.Format(_T("insert into game_manage(gameid,name,iconpath,topmost,playtimes,type,status,lastplaytime,updatesign,url,jbpath,jburl, prog_title, prog_classname, rstatus) values(%d, '%s', '%s', %d, %d, %d, %d, CURRENT_TIMESTAMP,%d,'%s', '%s', '%s', '%s', '%s', %d)"),  gameid,name, iconpath, topmost,  playtimes, type, 0,updatesign, url, jbpath, jburl, prog_title, prog_classname, rstatus);
 			return m_db.ExcuteNonQuery(str);
 		}
 		return true;
@@ -146,12 +162,12 @@ public:
 			str.Format(_T("update user set nickname='%s', useracct='%s',birthyear=%d, birthmon=%d, birthday=%d,sex='%s' ,bloodtype='%s', headerid=%d,headerhis='%s',prov='%s',city='%s',area='%s',updatetime=%d,countryindex=%d, provindex=%d, cityindex=%d, sexindex=%d, btindex=%d,areaindex=%d where userid=%d"), nickname, useracct, year, mon, day, sex, bt, imageid, imagehis, prov, city, area,updatetime,0, provindex, cityindex,sexindex, btindex, areaindex,userid);
 			return m_db.ExcuteNonQuery(str);
 		}
-		else
-		{
-			CString str;
-//			str.Format(_T("insert into game_manage(gameid,name,iconpath,topmost,playtimes,type,status,lastplaytime,updatesign,url, rstatus) values(%d, '%s', '%s', %d, %d, %d, %d, CURRENT_TIMESTAMP,%d, '%s', %d)"),  gameid,name, iconpath, topmost,  playtimes, type, 0,updatesign, url, rstatus);
-			return m_db.ExcuteNonQuery(str);
-		}
+// 		else
+// 		{
+// 			CString str;
+// //			str.Format(_T("insert into game_manage(gameid,name,iconpath,topmost,playtimes,type,status,lastplaytime,updatesign,url, rstatus) values(%d, '%s', '%s', %d, %d, %d, %d, CURRENT_TIMESTAMP,%d, '%s', %d)"),  gameid,name, iconpath, topmost,  playtimes, type, 0,updatesign, url, rstatus);
+// 			return m_db.ExcuteNonQuery(str);
+// 		}
 		return true;
 	}
 

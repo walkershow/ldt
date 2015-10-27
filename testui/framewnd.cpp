@@ -10,7 +10,7 @@
 #include "UserWnd.h"
 #include "ListContainerElementUIex.h"
 #include "DataSync.h"
-
+#include "BGThread.h"
 CString g_strUserID ;
 CString g_strUserAcct ;
 
@@ -137,7 +137,60 @@ void CList_Game::OnClick(TNotifyUI& msg)
 				}
 			}
 			CGameManage::GetInstance().UpdateGamePlayTimes(gameid);
-			ShellExecute(0 ,_T("open"), filePath, _T(""), _T(""),SW_SHOWNORMAL);
+			//CString dir = _T("D:\\Program\ Files\\dtws0\\bin\\Release");
+
+			//HINSTANCE hInst = ShellExecute(0 ,_T("open"), filePath, _T(""), _T(""),SW_SHOWNORMAL);
+			CString gameDir = GetDir(filePath);
+			if(!SetCurrentDirectory(gameDir))
+			{
+				return ;
+			}
+			//CString instanceDir = GetCurrentDirectory();
+			long id = StartProc(filePath);
+			HWND hwnd = GetWinHandle(id);
+			TCHAR buf[64]={0};
+			GetWindowText(hwnd, buf, sizeof(buf));
+			//GetWindowText(hwnd, lpString, sizeof(lpString));
+			CString strTitle = buf;
+			CString jburl,jbpath, prog_title, prog_classname;
+			bool bRet = CGameManage::GetInstance().GetSnapInfo(gameid, jburl, jbpath, prog_title, prog_classname);
+			if(!bRet)
+			{
+				return;
+			}
+			
+			Snap_Info si;
+			si.classname = prog_classname;
+			si.hwndParent = hwnd;
+			si.jburl = jburl;
+			si.title = prog_title;
+			si.jbpath = jbpath;
+			si.tryTimes = 0;
+		
+			string str = GetJbTemplateContent2(jbpath);
+			if(strTitle == prog_title)
+			{
+				char strHwnd[12] = {0};
+				sprintf(strHwnd, "%d", hwnd);
+				str = ReplaceAll(str,"{hwnd}", strHwnd);
+				///ReplaceStringInPlace(str,"{hwnd}", strHwnd);
+				bool bRet = WriteJbFile(jbpath, str);
+				if(!bRet)
+				{
+					CLog::getInstance()->AgentLog(_T("run game mode 1 WriteJbFile failed!!!"));
+				}
+
+			}
+			else
+			{
+				g_pBGTread->AddTask(si);
+				
+				//put into queue
+			}
+			
+
+			//ReplaceStringInPlace(str,)
+			//str.replace()
 			//excute game
 		}
 	}
@@ -240,6 +293,7 @@ void CList_Game::AddGameNode(const CString& name, const CString& imgurl, int gam
 	}	
 	m_nCurCount++;
 }
+
 CHorizontalLayoutUI* CList_Game::AddGameBtn()
 {
 	CListContainerElementUIex *new_node = new CListContainerElementUIex;
@@ -491,6 +545,8 @@ void CFrameWnd::InitWindow()
 	{
 		CGameManage::GetInstance().UpdateSysConfig(g_server, false);
 	}
+	g_pBGTread = new CBGThread();
+	g_pBGTread->Start();
 
 
 }
@@ -581,6 +637,12 @@ void CFrameWnd::Notify( TNotifyUI& msg )
 			::ClientToScreen(*this, &pt);
 			::SetWindowPos(*m_pPopWnd, NULL, pt.x, pt.y,0 ,0,SWP_NOSIZE | SWP_NOZORDER );
 			::ShowWindow(*m_pPopWnd, SW_SHOW);
+			if(s_need_reload)
+			{
+				::SendMessage(m_pPopWnd->GetHWND(), WM_GAME_RELOAD, 0, 0 );
+				s_need_reload = false;
+				
+			}
 
 		}
 		else if( msg.pSender->GetName() == _T("closebtn") )

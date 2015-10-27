@@ -75,7 +75,7 @@ bool CreateMultipleDirectory(const CString& szPath)
 // 	ds.GetProg_to_Game_ByProgmd5((LPSTR)digest.c_str());
 // }
 //UTF8转ANSI
-void UTF8toANSI(CString &strUTF8)
+void UTF8toANSI(CString &strUTF8,string& strAnsi)
 {
 	//获取转换为多字节后需要的缓冲区大小，创建多字节缓冲区
 	UINT nLen = MultiByteToWideChar(CP_UTF8,NULL,(LPCSTR)(LPCTSTR)strUTF8,-1,NULL,NULL);
@@ -87,8 +87,9 @@ void UTF8toANSI(CString &strUTF8)
 	CHAR *szBuffer = new CHAR[nLen+1];
 	nLen = WideCharToMultiByte(936,NULL,wszBuffer,-1,szBuffer,nLen,NULL,NULL);
 	szBuffer[nLen] = 0;
-
-	strUTF8 = szBuffer;
+	
+	strAnsi = szBuffer;
+	//strUTF8 = szBuffer;
 	//清理内存
 	delete []szBuffer;
 	delete []wszBuffer;
@@ -162,6 +163,208 @@ extern int GetDayIdx(int n)
 	return n-1;
 }
 
+extern HWND GetWinHandle(long id)
+{
+	HWND tmpHwnd = FindWindow(NULL, NULL);
+	while (tmpHwnd != 0)
+	{
+		if(GetParent(tmpHwnd) == 0)
+		{
+			DWORD procid = 0;
+			DWORD threadId = GetWindowThreadProcessId(tmpHwnd, &procid);
+			if(id == procid)
+			{
+				return tmpHwnd;
+			}
+
+		}
+		tmpHwnd = GetWindow(tmpHwnd, GW_HWNDNEXT);
+	}
+	return tmpHwnd;
+}
+
+extern long StartProc(CString path)
+{
+	STARTUPINFO si = { sizeof(si) };   
+	PROCESS_INFORMATION pi;   
+
+	si.dwFlags = STARTF_USESHOWWINDOW;   
+	si.wShowWindow = TRUE; //TRUE表示显示创建的进程的窗口  
+	TCHAR cmdline[] =TEXT(""); //注意前面有空格，否则打开的是主页。  
+// 	BOOL bRet = ::CreateProcess (   
+// 		_T("D:\\Program Files\\TortoiseGit\\bin\\notepad2.exe"),  
+// 		(LPTSTR)(LPCTSTR)path, //在Unicode版本中此参数不能为常量字符串，因为此参数会被修改    
+// 		NULL,   
+// 		NULL,   
+// 		FALSE,   
+// 		CREATE_NEW_CONSOLE,   
+// 		NULL,   
+// 		NULL,   
+// 		&si,   
+// 		&pi);   
+
+	BOOL bRet = ::CreateProcess (   
+		path,  
+		cmdline, //在Unicode版本中此参数不能为常量字符串，因为此参数会被修改    
+		NULL,   
+		NULL,   
+		FALSE,   
+		CREATE_NEW_CONSOLE,   
+		NULL,   
+		NULL,   
+		&si,   
+		&pi); 
+
+	int error = GetLastError();  
+	if(bRet)   
+	{   
+		::CloseHandle (pi.hThread);   
+		::CloseHandle (pi.hProcess);   
+
+		printf(" 新进程的进程ID号：%d /n", pi.dwProcessId);   
+		printf(" 新进程的主线程ID号：%d /n", pi.dwThreadId);   
+	}   
+	else  
+	{  
+		printf("error code:%d/n",error );  
+		return 0;
+	}  
+	return pi.dwProcessId;   
+}
+
+//路径中有中文都不出内容
+string  GetJbTemplateContent(CString path)
+{
+	CString curDir = GetCurDir();
+	CString JbPath = curDir + path;
+
+	CString log;
+	log.Format(_T("file:%s ,content is null"),JbPath);
+	CLog::getInstance()->AgentLog((LPTSTR)(LPCTSTR)log);
+	char   szANSIString   [MAX_PATH]= {0};     
+	WideCharToMultiByte   (   CP_ACP,   WC_COMPOSITECHECK,   JbPath,   -1,   szANSIString,   sizeof(szANSIString),   NULL,   NULL   );  
+	std::ifstream ifs(szANSIString);
+	std::string content;
+	ifs.seekg(0, std::ios::end);   
+	int n = ifs.tellg();
+	content.reserve(ifs.tellg());
+	ifs.seekg(0, std::ios::beg);
+
+	content.assign( (std::istreambuf_iterator<char>(ifs) ),
+		(std::istreambuf_iterator<char>()    ) );
+	return content;
+}
+
+string  GetJbTemplateContent2(CString path)
+{
+	CString curDir = GetCurDir();
+	CString JbPath = curDir + path;
+	char   szANSIString   [MAX_PATH]= {0};     
+	WideCharToMultiByte   (   CP_ACP,   WC_COMPOSITECHECK,   JbPath,   -1,   szANSIString,   sizeof(szANSIString),   NULL,   NULL   );  
+
+	OFSTRUCT   ofStruct; 
+	HFILE   hFile   =   OpenFile( 
+		szANSIString, 
+		&ofStruct, 
+		OF_READ 
+		); 
+	DWORD filesize=GetFileSize((HANDLE)hFile,NULL);
+	char* buffer=new char[filesize+1]; // 最后一位为 '/0',C-Style 字符串的结束符
+	DWORD readsize;
+	ReadFile((HANDLE)hFile,buffer,filesize,&readsize,NULL);
+	buffer[filesize]=0;
+	string content = buffer;
+	delete [] buffer;
+	return content;
+}
+
+void ReplaceStringInPlace(std::string& subject, const std::string& search,
+						  const std::string& replace)
+{
+	size_t pos = 0;
+	while ((pos = subject.find(search, pos)) != std::string::npos) 
+	{
+	  subject.replace(pos, search.length(), replace);
+	  pos += replace.length();
+	}
+}
+
+std::string ReplaceAll(std::string str, const std::string& from, const std::string& to) {
+	size_t start_pos = 0;
+	while((start_pos = str.find(from, start_pos)) != std::string::npos) {
+		str.replace(start_pos, from.length(), to);
+		start_pos += to.length(); // Handles case where 'to' is a substring of 'from'
+	}
+	return str;
+}
+
+CString GetCurDir()
+{
+	CString    sPath;   
+	GetModuleFileName(NULL,sPath.GetBufferSetLength(MAX_PATH+1),MAX_PATH);   
+	sPath.ReleaseBuffer    ();   
+	int    nPos;   
+	nPos=sPath.ReverseFind('\\');   
+	sPath=sPath.Left(nPos);   
+	return    sPath;
+}
+
+CString GetDir(CString app_path)
+{
+	int len = app_path.GetLength(); 
+	//滤去文件名称，只保留路径
+	for(int i=0; i<=len-1; i++) 
+	{ 
+		if(app_path.Right(1)!="\\") 
+			app_path.Delete(len-1-i,1); 
+		else 
+		{
+			app_path.Delete(len-1-i,1); 
+			break; 
+		}
+	}
+	return app_path;
+}
+
+bool WriteJbFile(CString jbPath,const string& str)
+{
+	CString path = jbPath;
+	path.Replace( _T("jbt\\"), _T("jb\\") );
+	CString curDir = GetCurDir();
+	path = curDir + path;
+	//ReplaceStringInPlace( path, _T("jbt\\"), _T("jb\\") );
+
+	CString dir = GetDir(path);
+	dir += "\\";
+	if(!path.IsEmpty())
+	{
+		if(!PathFileExists(dir))
+		{
+			bool bRet = CreateMultipleDirectory(dir);
+			if(!bRet) 
+			{
+				//log
+				CLog::getInstance()->AgentLog(_T("create dir failed!"));
+				return false;
+			}
+		}
+	}
+	HANDLE hFile = ::CreateFile(path,     //创建文件的名称。
+		GENERIC_WRITE|GENERIC_READ,          // 写和读文件。
+		0,                      // 不共享读写。
+		NULL,                   // 缺省安全属性。
+		CREATE_ALWAYS,          // 如果文件存在，也创建。
+		FILE_ATTRIBUTE_NORMAL, // 一般的文件。      
+		NULL);                 // 模板文件为空。
+	DWORD dwWritenSize = 0;
+	BOOL bRet = ::WriteFile(hFile,str.c_str(),str.length(),&dwWritenSize,NULL);
+	CString log;
+	log.Format(_T("write content length:%d,actuall write:%d"), str.length(), dwWritenSize);
+	CLog::getInstance()->AgentLog((LPTSTR)(LPCTSTR)log);
+	CloseHandle(hFile);
+	return bRet;
+
+}
 // int main(void)
 // {
 // 	setlocale(LC_ALL,"zh_CN.utf8");

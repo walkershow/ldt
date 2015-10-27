@@ -5,7 +5,7 @@
 #include <functional>  
 #include <ShellAPI.h>
 #include <Commdlg.h>
-
+#include "BGThread.h"
 //////////////////////////////////////////////////////////////////////////
 ///
 
@@ -133,7 +133,6 @@ void CPopWnd::OnItemSelect( TNotifyUI &msg )
 
 LRESULT CPopWnd::HandleCustomMessage(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled)
  {
-	 // 关闭窗口，退出程序
 	 if(uMsg == WM_GAME_RELOAD)
 	 {
 			m_pGItem = static_cast<CTileLayoutUI*>(m_PaintManager.FindControl(_T("gameitem")));
@@ -341,7 +340,52 @@ void CPopWnd::Notify( TNotifyUI &msg )
 					}
 				}
 				CGameManage::GetInstance().UpdateGamePlayTimes(gameid);
-				ShellExecute(0 ,_T("open"), filePath, _T(""), _T(""),SW_SHOWNORMAL);
+				//ShellExecute(0 ,_T("open"), filePath, _T(""), _T(""),SW_SHOWNORMAL);
+				CString gameDir = GetDir(filePath);
+				if(!SetCurrentDirectory(gameDir))
+				{
+					return ;
+				}
+				//CString instanceDir = GetCurrentDirectory();
+				long id = StartProc(filePath);
+				HWND hwnd = GetWinHandle(id);
+				TCHAR buf[64]={0};
+				GetWindowText(hwnd, buf, sizeof(buf));
+				//GetWindowText(hwnd, lpString, sizeof(lpString));
+				CString strTitle = buf;
+				CString jburl,jbpath, prog_title, prog_classname;
+				bool bRet = CGameManage::GetInstance().GetSnapInfo(gameid, jburl, jbpath, prog_title, prog_classname);
+				if(!bRet)
+				{
+					return;
+				}
+
+				Snap_Info si;
+				si.classname = prog_classname;
+				si.hwndParent = hwnd;
+				si.jburl = jburl;
+				si.title = prog_title;
+				si.jbpath = jbpath;
+
+				string str = GetJbTemplateContent2(jbpath);
+				if(strTitle == prog_title)
+				{
+					char strHwnd[12] = {0};
+					sprintf(strHwnd, "%d", hwnd);
+					ReplaceStringInPlace(str,"{hwnd}", strHwnd);
+					bool bRet = WriteJbFile(jbpath, str);
+					if(!bRet)
+					{
+						CLog::getInstance()->AgentLog(_T("run game mode 1 WriteJbFile failed!!!"));
+					}
+
+				}
+				else
+				{
+					g_pBGTread->AddTask(si);
+
+					//put into queue
+				}
 			}
 		}
 	}

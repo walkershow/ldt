@@ -14,7 +14,6 @@ extern CString g_strUserAcct ;
 
 extern CString ShowOpenFileDialog(HWND hParent);
 
-//class CDataSync;
 
 class CList_Game : public CNotifyPump
 {
@@ -45,12 +44,10 @@ private:
 	HWND m_frameHwnd;
 	HWND m_popHwnd;
 	bool m_bSomeOneSelected;
-	//CDataSync *m_pDSync;
 };
 
 
 class CPopWnd;
-//#define  MSG_NAV WM_USER+100
 class CFrameWnd: public CXMLWnd, public CWebBrowserEventHandler
 {
 public:

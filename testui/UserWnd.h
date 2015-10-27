@@ -1,11 +1,9 @@
 #pragma once
 #include "duilib.h"
 #include <vector>
-#include "helper.h"
 #include "Date.h"
 using namespace  std;
 
-//class CDataSync;
 class CUserWnd: public CXMLWnd
 {
 public:
@@ -59,7 +57,8 @@ private:
 	CButtonUI* m_pUsedBtnTx4;
 	bool m_bShouldSave;
 	bool m_bShouldSaveImage;
-	//CDataSync *m_pDSync;
+	int m_lastCitySel;
+	int m_lastAreaSel;
 
 
 };
