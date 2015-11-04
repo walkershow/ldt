@@ -928,6 +928,8 @@ void CFrameWnd::BeforeNavigate2( IDispatch *pDisp,VARIANT *&url,VARIANT *&Flags,
 		if(pItem2!=NULL)
 		{
 			m_cur_selected = pItem2->GetName().GetData();
+			if(m_cur_selected == _T("wb"))
+				m_pWebBrowser->SetTag(0);
 			m_pWebBrowser = static_cast<CWebBrowserUI*>(pItem2);
 			m_pWebBrowser->Navigate2(urlSS);
 			SetWbFocus(m_pWebBrowser);

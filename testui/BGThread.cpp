@@ -56,7 +56,7 @@ void CBGThread::FindGameWindow()
 			while( hwnd!=0 )
 			{
 			//	HWND  hwnd = FindWindow(m_vecSnapInfo[i].classname, NULL);
-				TCHAR buf[256]={0};
+				TCHAR buf[256] = {0};
 				GetWindowText(hwnd, buf, sizeof(buf));
 				CString title = buf;
 				CString findTitle = m_vecSnapInfo[i].title;
