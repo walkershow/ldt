@@ -227,6 +227,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\TaskWnd.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\UserWnd.cpp"
 				>
 			</File>
@@ -286,6 +290,10 @@
 			</File>
 			<File
 				RelativePath=".\sqlite.h"
+				>
+			</File>
+			<File
+				RelativePath=".\TaskWnd.h"
 				>
 			</File>
 			<File

@@ -123,6 +123,10 @@ extern CString g_strUserAcct ;
 extern CString g_server;
 extern int g_port;
 extern int g_runtimes;
+extern CString g_strToken;
+extern CString g_strPwd;
+//是否要更新本地用户数据到服务端
+extern bool g_bShouldUpdateUserData;
 
 class CDataSync;
 extern CDataSync *g_pDSync;
@@ -140,4 +144,9 @@ extern CBGThread *g_pBGTread;
 #define WM_GAME_RESETNICKNAME	   WM_USER+106
 #define WM_REFRESH_GAMELIST		   WM_USER+107
 #define WM_ADDGAME_SUCC			   WM_USER+108
+#define WM_LOGIN_SUCC			   WM_USER+109
+#define WM_LOGIN_FAILED			   WM_USER+110
+#define WM_AUTH_FAILED			   WM_USER+111
+#define WM_VER_WRONG			   WM_USER+112
+#define WM_JUMP_FORTASK			   WM_USER+113
 #define WM_GAME_NOTSUPPORT		   WM_USER+200

@@ -7,7 +7,7 @@
 using namespace std;
 #pragma comment(lib, "WinInet.lib")
 
-
+CString g_strToken;
 
 CDataSync::CDataSync(LPCTSTR server, int port, LPCTSTR userid, HWND notifyHwnd):m_server(server),m_port(port),m_userid(userid),m_HwndNotify(notifyHwnd)
 {
@@ -24,6 +24,7 @@ bool CDataSync::GetData(const CString& sUrl)
 {
 	HTTP_REQUEST_HEADER   h (HTTP_REQUEST_HEADER::VERB_TYPE_GET) ;
 	h.m_url = sUrl;
+	h.m_header += _T("ver:1.0\r\n") ;
 	this->AddRequest(h);
 	return true;
 	//return data;
@@ -35,6 +36,7 @@ bool CDataSync::PostData(const CString& sUrl, char* data, int datalen)
 	HTTP_REQUEST_HEADER   h (HTTP_REQUEST_HEADER::VERB_TYPE_POST) ;
 	
 	h.m_url = sUrl;
+	h.m_header += _T("ver:1.0\r\n") ;
 	h.m_header += _T("Content-Type:application/json\r\n") ;
 	h.m_header += _T("Accept: */*\r\n") ;
 	h.AddPostData(data, datalen);
@@ -158,7 +160,7 @@ int CDataSync::GetProg_to_Game_ByProgmd5(CString progmd5)
 	if( gameid == 0 )
 	{
 		CString sUrl;
-		sUrl.Format(_T("http://%s:%d/progtogame?progmd5=%s&userid=%s"),m_server, m_port, progmd5, m_userid);
+		sUrl.Format(_T("http://%s:%d/progtogame?progmd5=%s&userid=%s&tok=%s"),m_server, m_port, progmd5, m_userid, g_strToken);
 		GetData(sUrl);
 
 	}
@@ -301,7 +303,7 @@ int CDataSync::GetUser_GameInfo()
 {
 	CString sUrl;
 	long maxTime = CGameManage::GetInstance().SelectMaxTimeFromGameManage();
-	sUrl.Format(_T("http://%s:%d/usergameinfo?userid=%s&curtime=%d"),m_server, m_port, m_userid, maxTime);
+	sUrl.Format(_T("http://%s:%d/usergameinfo?userid=%s&curtime=%d&tok=%s"),m_server, m_port, m_userid, maxTime, g_strToken);
 	CLog::getInstance()->AgentLog((LPTSTR)(LPCTSTR)sUrl);
 	//MessageBox(NULL,sUrl, _T("hi"), 0);
 	GetData(sUrl);
@@ -390,7 +392,7 @@ int CDataSync::GetUserData()
 {
 	CString sUrl;
 	long maxTime = CGameManage::GetInstance().SelectMaxTimeFromUser();
-	sUrl.Format(_T("http://%s:%d/puinfo?userid=%s&curtime=%d"),m_server, m_port, m_userid, maxTime);
+	sUrl.Format(_T("http://%s:%d/guinfo?userid=%s&curtime=%d&tok=%s"),m_server, m_port, m_userid, maxTime, g_strToken);
 	CLog::getInstance()->AgentLog((LPTSTR)(LPCTSTR)sUrl);
 	//MessageBox(NULL,sUrl, _T("hi"), 0);
 	GetData(sUrl);
@@ -417,8 +419,15 @@ int CDataSync::HandleUserData(const string& data)
 	CString headerhis;
 	unsigned int upsign=0;
 	int size = root.size();
+	long maxTime_local = CGameManage::GetInstance().SelectMaxTimeFromUser();
 	for (int i=0; i<size; ++i)
 	{
+		upsign = root[i]["updatetime"].asUInt();
+		if(maxTime_local > upsign)
+		{
+			g_bShouldUpdateUserData = true;
+			return 0;
+		}
 		userid= root[i]["id"].asInt();
 		useracct= root[i]["username"].asCString();
 		nickname= root[i]["nick_name"].asString();
@@ -461,7 +470,7 @@ int CDataSync::HandleUserData(const string& data)
 		string ss = root[i]["image_history1"].asString();
 		headerhis = ss.c_str();
 		//headerhis = ss;
-		upsign = root[i]["updatetime"].asUInt();
+		
 		CString sLog;
 		sLog.Format(_T("%d,%s,%d"), userid,strName, upsign);
 		CLog::getInstance()->AgentLog((LPTSTR)(LPCTSTR)sLog);
@@ -472,11 +481,92 @@ int CDataSync::HandleUserData(const string& data)
 	return 0;
 }
 
+
+void CDataSync::PostUserData()
+{
+	int userid = _ttoi((LPCTSTR)g_strUserID);
+	SQLiteDataReader sdr = CGameManage::GetInstance().GetUser(userid);
+	bool bRet = sdr.Read();
+	if(!bRet) return;
+	int sexindex = -1;
+	sexindex = sdr.GetIntValue(14);
+	CString bt = sdr.GetStringValue(2);
+	int mon,year,day;
+	year = sdr.GetIntValue(4);
+	mon = sdr.GetIntValue(5);
+	day = sdr.GetIntValue(6);
+	// 
+
+	int countryid = sdr.GetIntValue(20);
+	int provid=sdr.GetIntValue(21);
+	int cityid=sdr.GetIntValue(22);
+	int areaid=sdr.GetIntValue(23);
+
+	
+	CString nickname = sdr.GetStringValue(10);
+	int headerid = sdr.GetIntValue(16);
+	CString headerhis = sdr.GetStringValue(17);
+
+	CString strPostData;
+	strPostData.Format(_T("{\"nickname\":\"%s\", \"sex\":%d,\"bt\":\"%s\",\"country\":%d,\"provid\":%d,\"cityid\":%d,\"areaid\":%d,\"year\":%d,\"mon\":%d,\"day\":%d,\"imageid\":%d,\"imagehis\":\"%s\",\"acctid\":\"%s\"}"),
+		nickname,sexindex+1, bt, countryid, provid, cityid, areaid, year, mon, day, headerid, headerhis, g_strUserID);
+	int len = 0;
+	char* buf = UnicodeToUtf8((LPTSTR)(LPCTSTR)strPostData, len);
+	//UTF8toANSI(strPostData);
+	CString urlPost;
+	urlPost.Format(_T("http://192.168.1.62:80/puinfo?userid=%s&tok=%s"), g_strUserID, g_strToken);
+	g_pDSync->PostData(urlPost, buf, len);
+	//g_pDSync->PostData(_T("http://192.168.1.62:80/user?name=1"), buf, len);
+	CString synurl;
+	synurl.Format(_T("http://lan.chinau.member/api/member/syn?id=%s"), g_strUserID);
+	g_pDSync->SyncUser(synurl);
+}
 void CDataSync::SyncUser(CString url)
 {
 	GetData(url);
 }
 
+
+int CDataSync::Login()
+{
+	CString sUrl;
+
+	sUrl.Format(_T("http://%s:%d/account?act=login"),m_server, m_port);
+	CLog::getInstance()->AgentLog((LPTSTR)(LPCTSTR)sUrl);
+	HTTP_REQUEST_HEADER   h (HTTP_REQUEST_HEADER::VERB_TYPE_POST) ;
+	h.m_url = sUrl ;
+	h.m_header += _T("Content-Type:application/x-www-form-urlencoded\r\n") ;
+	h.m_header += _T("Accept: */*\r\n") ;
+	CString str = _T("uid=");
+	str += g_strUserID+_T("&pwd=")+g_strPwd;
+	int len = 0 ;
+	char* buf = UnicodeToUtf8((LPTSTR)(LPCTSTR)str, len);
+
+	//string str2 = "uid=100&pwd=e10adc3949ba59abbe56e057f20f883e";
+	//h.AddPostData(str2.c_str(), str2.length());
+	h.AddPostData(buf, len-1);//len必须减去1，否则查询是sql会带上\0一起查询
+	
+	AddRequest (h) ;
+	return 0;
+}
+int CDataSync::HandleLoginRsp(const string& data)
+{
+	CString sUrl;
+	//g_strToken = data;
+	g_strToken = UTF8ToUnicode((char*)data.c_str());
+	if(!g_strToken.IsEmpty())
+	{
+		::SendMessage(m_HwndNotify, WM_LOGIN_SUCC, 0, 0 );
+	}
+	else
+	{
+		::SendMessage(m_HwndNotify, WM_LOGIN_FAILED, 0, 0 );
+
+	}
+	CLog::getInstance()->AgentLog((LPTSTR)(LPCTSTR)g_strToken);
+	
+	return 0;
+}
 
 
 

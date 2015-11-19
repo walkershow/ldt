@@ -9,7 +9,7 @@
     <Default name="RichEdit" value="multiline=&quot;false&quot; textpadding=&quot;4,1,1,1&quot; rich=&quot;false&quot; wantreturn=&quot;false&quot;  wantctrlreturn=&quot;false&quot; readonly=&quot;false&quot; maxchar=&quot;10&quot; visible=&quot;true&quot; bkcolor=&quot;#FFffffff&quot;"/>
   <!-- <Default name="Combo" value="textpadding=&quot;2,1,2,1&quot; normalimage=&quot;file='sys_combo_btn.png' source='0,0,16,16' dest='160,2,176,18'&quot; hotimage=&quot;file='sys_combo_btn.png' source='16,0,32,16' dest='160,2,176,18'&quot; disabledimage=&quot;file='sys_combo_btn.png' source='32,0,48,16' dest='160,2,176,18'&quot; bordersize=&quot;1&quot; bordercolor=&quot;#FF6a6a6a&quot;"/> -->
 <!--   <Default name="Combo" value="textpadding=&quot;4,2,4,2&quot; vscrollbar=&quot;true&quot; height=&quot;22&quot; bordersize=&quot;1&quot; bordercolor=&quot;#FF6a6a6a&quot; arrowimage=&quot;file='images\userwnd\arrow.png' source='0,0,85,18' &quot; bkcolor=&quot;#5A000000&quot; itembkcolor=&quot;#aF000000&quot; itemtextcolor=&quot;#6AFFFFFF&quot; itemhotbkcolor=&quot;#6A000000&quot; itemselectedbkcolor=&quot;#99007eff&quot; itemalign=&quot;left&quot; "/> -->
-    <Default name="ComboBox" value="textpadding=&quot;4,1,1,1&quot; vscrollbar=&quot;true&quot; height=&quot;22&quot; bordersize=&quot;1&quot; bordercolor=&quot;#FF6a6a6a&quot; arrowimage=&quot;file='images\userwnd\arrow2.png' source='0,0,85,18' &quot;  valign=&quot;bottom&quot; align=&quot;left&quot; itemalign=&quot;left&quot;  itemhotimage=&quot;images\userwnd\itemhot.png&quot; itemselectedimage=&quot;images\userwnd\itemselected.png&quot; itembkcolor=&quot;#aFffffff&quot; bkcolor=&quot;#FFffffff&quot;"/>
+    <Default name="ComboBox" value="textpadding=&quot;4,1,1,1&quot; vscrollbar=&quot;true&quot; height=&quot;22&quot; bordersize=&quot;1&quot; bordercolor=&quot;#FF6a6a6a&quot; arrowimage=&quot;file='images\userwnd\arrow2.png' source='0,0,85,18' &quot;  valign=&quot;bottom&quot; align=&quot;left&quot; itemalign=&quot;left&quot;   itembkcolor=&quot;#aFffffff&quot; bkcolor=&quot;#FFffffff&quot;"/>
 
     <Default name="DateTime" value="width=&quot;120&quot; height=&quot;23&quot; bordercolor=&quot;#FFCECECE&quot; bordersize=&quot;0&quot; textpadding=&quot;4,2,4,2&quot; arrowimage=&quot;file='sys_datetimesel_btn.png' source='0,0,90,18'&quot; clearimage=&quot;file='sys_datetimeclr_btn.png' source='0,0,70,21'&quot;"/>
     <Default name="Label" value="textpadding=&quot;3,0,0,0&quot;"/>
@@ -20,7 +20,7 @@
        <Button name="closebtn" padding="480,0,0,0" width="32" height="24" normalimage="images\normal\gb.png" hotimage="images\push\gb.png" selectedimage="images\normal\gb.png"/>
       </HorizontalLayout>
       <HorizontalLayout name="toolbar_main" height="49" float="false"  >
-         <HorizontalLayout name="IContainer"  float="false"   padding="34,0,0,0" width="152">
+         <HorizontalLayout name="IContainer"  float="false"   padding="34,0,0,0" width="252">
           <HorizontalLayout width="44" height="44">
           <Control name="bk"  width="44" height="44"  bkimage="images\userwnd\gryh-grzltxyl.png"/>
           <Button name="btntx"  userdata="head"   width="42" height="42" normalimage="images\head\r\1.png" float="true" pos="1,1,41,41" />
@@ -62,20 +62,20 @@
           <!-- <Label text="hello" textcolor="#6AFFFFFF" width="66" height="28"/> -->
            <VerticalLayout width="70" height="28" >
             <Label name="lblsex" text="男" padding="5,0,0,0" width="88" height="28" valign="bottom" align="left"/>
-          <ComboBox name="cbsex" visible="false" itemselectedtextcolor="#ff000000" droptype="droplist" padding="5,6,0,0"  width="70" height="25"  valign="bottom" align="left" >
+          <ComboBox name="cbsex" visible="false" itemselectedtextcolor="#ff000000"  padding="5,6,0,0"  width="65"  valign="bottom" align="left" >
             <ListLabelElement text="男" selected="true" height="23"/>
             <ListLabelElement text="女" height="23" />
           </ComboBox>
            </VerticalLayout>
         </HorizontalLayout>
         <Control height="10"/>
-        
+
         <HorizontalLayout name="item_bar" height="28" float="false" >
           <Label name="lbl3" bkimage="images\userwnd\gryh-grzlxx.png" padding="0,16,0,0" width="38" height="12" />
       <!-- <DateTime name="DateTime1" bkimage="images\userwnd\gryh-grzlyhbj.png"/> -->
        <VerticalLayout width="60" height="28" >
             <Label  name="lblbt" text="A"  padding="5,0,0,0" valign="bottom" align="left" width="50" height="28"/>
-          <ComboBox name="cbbt" visible="false" droptype="droplist" padding="5,8,0,0" valign="bottom" align="left"   width="60"  height="20"  >
+          <ComboBox name="cbbt" visible="false"  padding="5,8,0,0"   width="55"  height="20"  >
             <ListLabelElement text="A" selected="true" />
             <ListLabelElement text="B"  />
             <ListLabelElement text="AB"  />
@@ -92,13 +92,13 @@
           <!-- //<Label text="hello" textcolor="#6AFFFFFF" width="66" height="28"/> -->
        <VerticalLayout maxwidth="75"  height="28">
           <!-- <Label name="lblyear" text="2015"   visible="false"  width="50" height="28"/> -->
-          <ComboBox name="cbyear"  virtualwnd="cb_year" visible="false"  width="75" padding="5,5,0,0" valign="bottom" align="left" height="22" > 
+          <ComboBox name="cbyear"  virtualwnd="cb_year" visible="false"  width="70" padding="5,5,0,0" valign="bottom" align="left" height="22" >
           </ComboBox>
         </VerticalLayout>
         <Control width="12"/>
        <VerticalLayout maxwidth="70"  height="28">
         <Label name="lblmon" text="1" visible="false" textcolor="" width="70" height="28"/>
-         <ComboBox name="cbmon"  virtualwnd="cb_mon" visible="false" width="65" padding="0,5,0,0"  > 
+         <ComboBox name="cbmon"  virtualwnd="cb_mon" visible="false" width="65" padding="0,5,0,0"  >
             <ListLabelElement text="01月"  userdata="1" />
             <ListLabelElement text="02月"  userdata="2" />
             <ListLabelElement text="03月"  userdata="3" />
@@ -118,7 +118,7 @@
         <Control width="12"/>
        <VerticalLayout maxwidth="50"  height="28">
         <Label name="lblday" text="1"  visible="false" textcolor="" width="50" height="28"/>
-          <ComboBox name="cbday"  visible="false" textcolor="" width="50" padding="0,5,0,0" > 
+          <ComboBox name="cbday"  visible="false" textcolor="" width="50" padding="0,5,0,0" >
           </ComboBox>
         </VerticalLayout>
         </HorizontalLayout>
@@ -147,29 +147,29 @@
            <Label  name="lblszd"   textcolor=""  valign="bottom" align="left" width="200" height="28"/>
 
           <VerticalLayout maxwidth="70">
-          <Label name="lblnat" text="中国" visible="false"  width="70" height="22"/>
-          <ComboBox name="cbnat"  visible="false" focusbordercolor="#6affffff" width="70" padding="5,5,0,0"  > 
+          <Label name="lblnat" text="中国" visible="false"  width="65" height="22"/>
+          <ComboBox name="cbnat"  visible="false" focusbordercolor="#6affffff" width="65" padding="5,5,0,0"  >
             <ListLabelElement text="中国" selected="true"/>
           </ComboBox>
         </VerticalLayout>
         <Control width="12"/>
        <VerticalLayout maxwidth="70" >
         <Label name="lblprov" text="广东省" visible="false" textcolor="" width="70" height="22"/>
-         <ComboBox name="cbprov"  visible="false" textcolor="" width="70" padding="0,5,0,0"  > 
+         <ComboBox name="cbprov"  visible="false" textcolor="" width="70" padding="0,5,0,0"  >
             <!-- <ListLabelElement text="广东省" selected="true"/> -->
           </ComboBox>
         </VerticalLayout>
         <Control width="12"/>
        <VerticalLayout maxwidth="70">
         <Label name="lblcity" text="汕头" visible="false" textcolor="" width="70" height="22"/>
-          <ComboBox name="cbcity"   visible="false" textcolor="" width="70" padding="0,5,0,0"  > 
+          <ComboBox name="cbcity"   visible="false" textcolor="" width="70" padding="0,5,0,0"  >
             <!-- <ListLabelElement text="汕头" selected="true"/> -->
           </ComboBox>
         </VerticalLayout>
         <Control width="12"/>
         <VerticalLayout maxwidth="70">
         <Label name="lblarea" text="" visible="false" textcolor="" width="70" height="22"/>
-          <ComboBox name="cbarea"   visible="false" textcolor="" width="70" padding="0,5,0,0"  > 
+          <ComboBox name="cbarea"   visible="false" textcolor="" width="70" padding="0,5,0,0"  >
             <!-- <ListLabelElement text="汕头" selected="true"/> -->
           </ComboBox>
         </VerticalLayout>
@@ -194,7 +194,7 @@
         </HorizontalLayout>
 
         <HorizontalLayout height="210">
-         
+
 
            <TileLayout  name="headitem" inset="0,8,0,0"  focusbordercolor="#cccccccc" itemsize="55,55"  childpadding="15,0,0,0"  width="240" height="240" >
              <Button name="btnhead1"   float="false"  group="toolbar_main" userdata="1" bordercolor="#6affffff" focusbordercolor="#00007eff" bordersize="1" width="51" height="51"   normalimage="images\head\t\1.jpg" />
@@ -219,7 +219,7 @@
           <Button name="btnshowhead"  userdata="0"   width="42" height="42" normalimage="images\head\r\1.png" float="true" pos="1,1,41,41" />
 
           </HorizontalLayout>
-<!-- 
+<!--
           <Button name="btnshowhead"  userdata="head"   width="44" height="44"  bkimage="images\userwnd\gryh-grzltxyl.png" hotimage="file='images\head\r\1.png' dest='1,1,20,20" /> -->
           <Control height="30"/>
           <Label text="选择头像" width="66" height="28"/>

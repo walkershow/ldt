@@ -8,9 +8,11 @@
 #include "json.h"
 #include "md5.h"
 #include "UserWnd.h"
+#include "TaskWnd.h"
 #include "ListContainerElementUIex.h"
 #include "DataSync.h"
 #include "BGThread.h"
+
 CString g_strUserID ;
 CString g_strUserAcct ;
 
@@ -184,14 +186,7 @@ void CList_Game::OnClick(TNotifyUI& msg)
 			else
 			{
 				g_pBGTread->AddTask(si);
-				
-				//put into queue
 			}
-			
-
-			//ReplaceStringInPlace(str,)
-			//str.replace()
-			//excute game
 		}
 	}
 }
@@ -373,6 +368,7 @@ CFrameWnd::CFrameWnd( LPCTSTR pszXMLPath ): CXMLWnd(pszXMLPath),m_pPopWnd(NULL)
 	pWB = NULL;
 	pYXK = NULL;
 	pSTART = NULL;
+	pZB = NULL;
 	m_pLastClickBtn = NULL;
 	m_pLastKsBtn = NULL;
 	char* buf="Mozilla/4.0 (compatible; MSIE 7.0; Windows NT 6.2;6A Browser 1.0)";
@@ -401,6 +397,7 @@ HRESULT STDMETHODCALLTYPE CFrameWnd::GetHostInfo( DOCHOSTUIINFO __RPC_FAR *pInfo
 	}
 	return S_OK;
 }
+
 void CFrameWnd::ResetNickName()
 {
 	int userid = _ttoi((LPCTSTR)g_strUserID);
@@ -425,6 +422,7 @@ void CFrameWnd::InitWindow()
 	 pWB = static_cast<CWebBrowserUI*>(m_PaintManager.FindControl(_T("wb")));
 	 pYXK = static_cast<CWebBrowserUI*>(m_PaintManager.FindControl(_T("yxk")));
 	 pSTART = static_cast<CWebBrowserUI*>(m_PaintManager.FindControl(_T("start")));
+	 pZB = static_cast<CWebBrowserUI*>(m_PaintManager.FindControl(_T("zb")));
 	
 	 m_pBtntx = static_cast<CButtonUI*>(m_PaintManager.FindControl(_T("btntx")));
 	pINDEX->SetWebBrowserEventHandler(this);
@@ -445,6 +443,7 @@ void CFrameWnd::InitWindow()
 	pWB->SetWebBrowserEventHandler(this);
 	pYXK->SetWebBrowserEventHandler(this);
 	pSTART->SetWebBrowserEventHandler(this);
+	pZB->SetWebBrowserEventHandler(this);
 
 
 	pZX->Navigate2(_T("about:blank"));
@@ -452,6 +451,7 @@ void CFrameWnd::InitWindow()
 	pWB->Navigate2(_T("about:blank"));
 	pYXK->Navigate2(_T("about:blank"));
 	pSTART->Navigate2(_T("about:blank"));
+	pZB->Navigate2(_T("about:blank"));
 
 
 	m_vec_url.push_back(pINDEX->GetHomePage());
@@ -459,18 +459,21 @@ void CFrameWnd::InitWindow()
 	m_vec_url.push_back(pSP->GetHomePage());
 	m_vec_url.push_back(pWB->GetHomePage());
 	m_vec_url.push_back(pYXK->GetHomePage());
+	m_vec_url.push_back(pZB->GetHomePage());
 
 	m_vec_wbtext.push_back(pINDEX->GetName().GetData());
 	m_vec_wbtext.push_back(pZX->GetName().GetData());
 	m_vec_wbtext.push_back(pSP->GetName().GetData());
 	m_vec_wbtext.push_back(pWB->GetName().GetData());
 	m_vec_wbtext.push_back(pYXK->GetName().GetData());
+	m_vec_wbtext.push_back(pZB->GetName().GetData());
 
 	m_vec_btntext.push_back(_T("btnindex"));
 	m_vec_btntext.push_back(_T("btnzx"));
 	m_vec_btntext.push_back(_T("btnsp"));
 	m_vec_btntext.push_back(_T("btnwb"));
 	m_vec_btntext.push_back(_T("btnyxk"));
+	m_vec_btntext.push_back(_T("btnzb"));
 
 	m_pWebBrowser= pINDEX;
 	s_cur_webbrowser_ptr = m_pWebBrowser;
@@ -524,7 +527,6 @@ void CFrameWnd::InitWindow()
 	CHorizontalLayoutUI* m_addnewgame = m_Listgame.AddGameBtn();
 	m_Listgame.SetAddGameBtnPtr(m_addnewgame);
 
-
 	int userid = _ttoi((LPCTSTR)g_strUserID);
 	SQLiteDataReader sdr = CGameManage::GetInstance().GetUser(userid);
 	bool bRet = sdr.Read();
@@ -534,19 +536,11 @@ void CFrameWnd::InitWindow()
 	CString uri = sdr2.GetStringValue(0);
 	if(headerid !=0)
 		m_pBtntx->SetBkImage(uri);
-	g_pDSync = new CDataSync(g_server, g_port, g_strUserID,m_hWnd);
-	g_pDSync->GetUserData();
-	if(g_runtimes == 0)
-	{
-		g_pDSync->GetUser_GameInfo();
-		CGameManage::GetInstance().UpdateSysConfig(g_server, true);
-	}
-	else
-	{
-		CGameManage::GetInstance().UpdateSysConfig(g_server, false);
-	}
-	g_pBGTread = new CBGThread();
-	g_pBGTread->Start();
+	g_pDSync = new CDataSync(g_server, g_port, g_strUserID, m_hWnd);
+	//g_pDSync->Login();
+	//g_pDSync->GetUserData();
+	g_pDSync->Login();
+
 
 
 }
@@ -660,8 +654,12 @@ void CFrameWnd::Notify( TNotifyUI& msg )
 		}
 		else if(msg.pSender->GetName() == _T("btnim"))
 		{
-			CString path = msg.pSender->GetUserData();
-			ShellExecute(0 ,_T("open"), path, _T(""), _T(""),SW_SHOWNORMAL);
+
+			CTaskWnd  *pTaskWnd= new CTaskWnd(_T("taskwnd.xml"));
+			pTaskWnd->Create(GetHWND(), _T("任务信息"), WS_POPUP | WS_VISIBLE, WS_EX_TOOLWINDOW );
+			pTaskWnd->SetParent(GetHWND());
+			pTaskWnd->CenterWindow();
+			::ShowWindow(*pTaskWnd, SW_SHOW);
 
 		}
 	}
@@ -719,57 +717,6 @@ CControlUI* CFrameWnd::CreateControl( LPCTSTR pstrClassName )
 
 LRESULT CFrameWnd::HandleMessage( UINT uMsg,WPARAM wParam,LPARAM lParam )
 {
-	/*处理切换用户消息，暂时废弃采用关闭后打开方式
-	if(WM_CONTROLPRINT == uMsg)
-	{
-		CString MemMapFileName=_T("senddata_001");
-		//if (GetFileAttributes(MemMapFileName) != INVALID_FILE_ATTRIBUTES)
-		//{
-		HANDLE hFileMap = OpenFileMapping(FILE_MAP_ALL_ACCESS, FALSE, MemMapFileName);
-		if (hFileMap)
-		{
-			TCHAR* ptChar = (TCHAR* )MapViewOfFile(hFileMap, FILE_MAP_ALL_ACCESS, 0, 0, 0);
-			CString strTmp(ptChar);
-			TCHAR sz1[20] = {0}, sz2[20] = {0};
-			_stscanf( strTmp.GetBuffer(), _T("%s %s"), sz1, sz2);
-			CString strCompare = sz1;
-			if(g_strUserID != strCompare) //user changed
-			{
-				g_strUserID = sz1;
-				g_strUserAcct = sz2;
-			}
-			::MessageBox(NULL,g_strUserID, g_strUserAcct, 0);
-			UnmapViewOfFile(ptChar);
-
-			CloseHandle(hFileMap);
-
-			pZX->Navigate2(_T("about:blank"));
-			pSP->Navigate2(_T("about:blank"));
-			pWB->Navigate2(_T("about:blank"));
-			pYXK->Navigate2(_T("about:blank"));
-			pSTART->Navigate2(_T("about:blank"));
-
-			pZX->SetTag(0);
-			pSP->SetTag(0);
-			pWB->SetTag(0);
-			pZX->SetTag(0);
-			pYXK->SetTag(0);
-			pSTART->SetTag(0);
-			pINDEX->SetTag(0);
-			CString strLoginSSO =  pINDEX->GetUserData();
-			strLoginSSO += _T("user_id=") + g_strUserID + _T("&");
-			strLoginSSO += _T("user_name=") + g_strUserAcct + _T("&");
-			strLoginSSO += _T("turl="); 
-			strLoginSSO += pINDEX->GetHomePage() ;
-			//tmp.Format(strLoginSSO, g_strUserID, g_strUserAcct);
-			pINDEX->Navigate2(strLoginSSO);
-			CTabLayoutUI* pTabLayout = static_cast<CTabLayoutUI*>(m_PaintManager.FindControl(_T("body_main_tablayout")));
-			CControlUI* pItem = m_PaintManager.FindControl(_T("index"));
-			pTabLayout->SelectItem(pItem);
-
-		}
-	}
-	*/
 	int nCount = 0;
 	if(WM_GAME_DETAIL == uMsg)
 	{
@@ -885,6 +832,42 @@ LRESULT CFrameWnd::HandleMessage( UINT uMsg,WPARAM wParam,LPARAM lParam )
 	{
 		::MessageBox(NULL,_T("不支持此游戏"),_T("错误"),MB_OK);
 	}
+	else if(WM_LOGIN_SUCC ==uMsg)
+	{
+		g_pDSync->GetUserData();
+		if(g_runtimes == 0)
+		{
+			g_pDSync->GetUser_GameInfo();
+			CGameManage::GetInstance().UpdateSysConfig(g_server, true);
+		}
+		else
+		{
+			CGameManage::GetInstance().UpdateSysConfig(g_server, false);
+		}
+		g_pBGTread = new CBGThread();
+		g_pBGTread->Start();
+
+	}
+	else if(WM_LOGIN_SUCC ==uMsg)
+	{
+		::MessageBox(NULL,_T("用户认证失败"),_T("错误"),MB_OK);
+	}
+	else if(WM_AUTH_FAILED ==uMsg)
+	{
+		::MessageBox(NULL,_T("认证失败或该账号已在其他地方登录"),_T("错误"),MB_OK);
+	}
+	else if(WM_VER_WRONG ==uMsg)
+	{
+		::MessageBox(NULL,_T("无效请求，请下载最新客户端"),_T("错误"),MB_OK);
+		PostQuitMessage(0);
+	}
+	else if(WM_JUMP_FORTASK ==uMsg)
+	{
+		TCHAR* buf = (TCHAR*)(wParam);
+		if(buf != NULL)
+			s_cur_webbrowser_ptr->NavigateUrl(buf);
+		
+	}
 	else if(WM_NCLBUTTONDBLCLK != uMsg)
 	{
 		return WindowImplBase::HandleMessage(uMsg,wParam,lParam);
@@ -897,7 +880,7 @@ void CFrameWnd::BeforeNavigate2( IDispatch *pDisp,VARIANT *&url,VARIANT *&Flags,
 {
 	CString strTest,strOut;
 
-	TCHAR *szUrl = new TCHAR[MAX_PATH];
+	TCHAR szUrl[MAX_PATH] = {0};
 	_tcscpy( szUrl, (TCHAR*)(_bstr_t)url );
 	CString urlSS=szUrl;
 	//urlSS+=szUrl;

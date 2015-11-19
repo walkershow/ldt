@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes" ?>
 <Window size="1041,616" caption="0,0,0,32" mininfo="1041,616" maxinfo="1041,616"  roundcorner="4,4" showshadow="true" shadowimage="images\shadow.png" shadowcorner="23,13,23,33">
     <!-- <Font name="微软雅黑" size="13" bold="true" /> -->
-    <Font name="微软雅黑" size="12" bold="false" default="true" />  
+    <Font name="微软雅黑" size="12" bold="false" default="true" />
     <VerticalLayout width="1041" height="616" bkimage="images\bj.png" bkcolor="#ffffffff" bordercolor="#EE768D9B" bordersize="1" borderround="4,4" corner="4,4" >
       <!-- <TabLayout name="toolbar" height="42" > -->
       <HorizontalLayout name="toolbar_main" height="26"  float="false"  >
@@ -25,8 +25,8 @@
           <Button name="btntx"  userdata="head"   width="42" height="42" bkimage="images\head\r\1.png" hotimage="images\head\txbk.png" float="true" pos="1,1,41,41" />
 
           </HorizontalLayout>
-        <Label name="lblnickname" text="天空无限号" visible= "true" float="true"  textcolor="#6AFFFFFF"  pos="-87,15,-10,30"  />
-            
+        <Label name="lblnickname" text="天空无限号" visible= "true" float="true"  endellipsis= "true" textcolor="#6AFFFFFF"  pos="-87,15,-10,30"  />
+
            </HorizontalLayout>
         <HorizontalLayout name="IContainer"  float="false"   maxwidth="92">
             <!-- <HorizontalLayout  name="Item0"   > -->
@@ -35,7 +35,7 @@
            <!--  <Control height="1"/> -->
             <Button name="btnzx_close"  userdata="zx" visible= "true" float="true"  pos="-19,5,-8,17"  hotimage="images\hot\qljmhc.png" selectedimage="images\normal\gb.png" />
     <!--               <Button  float="true" pos="-24,12,-12,24" normalimage="file='tab_close.png' source='0,0,12,12'" hotimage="file='tab_close.png' source='12,0,24,12'" pushedimage="file='tab_close.png' source='24,0,36,12'"/> -->
-         </HorizontalLayout> 
+         </HorizontalLayout>
         <HorizontalLayout name="IContainer"  float="false"   maxwidth="92">
             <!-- <HorizontalLayout  name="Item0"   > -->
                 <!--  pos="165,8,0,0" -->
@@ -43,33 +43,39 @@
            <!--  <Control height="1"/> -->
             <Button name="btnzx_close"  userdata="zx" visible= "true" float="true"  pos="-19,5,-8,17"  hotimage="images\hot\qljmhc.png" selectedimage="images\normal\gb.png" />
     <!--               <Button  float="true" pos="-24,12,-12,24" normalimage="file='tab_close.png' source='0,0,12,12'" hotimage="file='tab_close.png' source='12,0,24,12'" pushedimage="file='tab_close.png' source='24,0,36,12'"/> -->
-         </HorizontalLayout> 
+         </HorizontalLayout>
         <HorizontalLayout name="IContainer"  float="false"   maxwidth="92">
 
             <Option name="btnsp"  group="toolbar_main" userdata="sp"  padding="0,5,0,0" float="false" pos="233,8,0,0" width="92" height="45" textcolor="#FF000000" disabledtextcolor="#FFA7A6AA" align="center" normalimage="images\normal\sp.png" hotimage="images\push\sp.png" pushedimage="images\push\sp.png" focusedimage="images\push\sp.png" selectedimage="images\push\sp.png"/>
             <Button name="btnsp_close" userdata="sp"  visible= "true" float="true"  pos="-19,5,-8,17"  hotimage="images\hot\qljmhc.png" selectedimage="images\normal\gb.png" />
 
-         </HorizontalLayout> 
+         </HorizontalLayout>
 
         <HorizontalLayout name="IContainer"  float="false"   maxwidth="92">
 
             <Option name="btnwb"  group="toolbar_main"  userdata="wb" padding="0,5,0,0" float="false" pos="301,8,0,0" width="92" height="45" textcolor="#FF000000" disabledtextcolor="#FFA7A6AA" align="center" normalimage="images\normal\ss.png" hotimage="images\push\ss.png" pushedimage="images\push\ss.png" focusedimage="images\push\ss.png"  selectedimage="images\push\ss.png"/>
             <Button name="btnwb_close"   userdata="wb" visible= "true" float="true"  pos="-19,5,-8,17"  hotimage="images\hot\qljmhc.png" selectedimage="images\normal\gb.png" />
 
-         </HorizontalLayout> 
+         </HorizontalLayout>
 
         <HorizontalLayout name="IContainer"  float="false"   maxwidth="92">
 
             <Option name="btnyxk"  group="toolbar_main" userdata="yxk" padding="0,5,0,0" float="false" pos="369,8,0,0" width="92" height="45" textcolor="#FF000000" disabledtextcolor="#FFA7A6AA" align="center" normalimage="images\normal\yxk.png" hotimage="images\push\yxk.png" pushedimage="images\push\yxk.png" focusedimage="images\push\yxk.png"  selectedimage="images\push\yxk.png"/>
             <Button name="btnyxk_close"  userdata="yxk" visible= "true" float="true"  pos="-19,5,-8,17"  hotimage="images\hot\qljmhc.png" selectedimage="images\normal\gb.png" />
 
-         </HorizontalLayout> 
-         <HorizontalLayout name="IContainer"  float="false" padding="270,0,0,0"  maxwidth="49">
-         <Button name="btnim" width="49" height="49"  userdata="C:\Users\Administrator\Desktop\华游_150717\release\qtim.exe"  normalimage="images\normal\goim.png" hotimage="images\normal\goim.png" pushedimage="images\normal\goim.png"/>
-         </HorizontalLayout> 
-          <HorizontalLayout name="IContainer"  float="false" padding="20,0,0,0"  maxwidth="92">
+         </HorizontalLayout>
+         <HorizontalLayout name="IContainer"  float="false"   maxwidth="92">
+
+             <Option name="btnzb"  group="toolbar_main" userdata="zb" padding="0,5,0,0" float="false" pos="437,8,0,0" width="92" height="45" textcolor="#FF000000" disabledtextcolor="#FFA7A6AA" align="center" normalimage="images\normal\zb.png" hotimage="images\push\zb.png" pushedimage="images\push\zb.png" focusedimage="images\push\zb.png"  selectedimage="images\push\zb.png"/>
+             <Button name="btnzb_close"  userdata="zb" visible= "true" float="true"  pos="-19,5,-8,17"  hotimage="images\hot\qljmhc.png" selectedimage="images\normal\gb.png" />
+
+          </HorizontalLayout>
+         <HorizontalLayout name="IContainer"  visible="false" float="false" padding="270,0,0,0"  maxwidth="49">
+         <Button name="btnim" width="49" height="49"   userdata="C:\Users\Administrator\Desktop\华游_150717\release\qtim.exe"  normalimage="images\normal\goim.png" hotimage="images\normal\goim.png" pushedimage="images\normal\goim.png"/>
+         </HorizontalLayout>
+          <HorizontalLayout name="IContainer"  float="false" padding="339,0,0,0"  maxwidth="92">
          <Button name="btnback" width="92" height="47"  padding="0,4,0,0"  normalimage="images\normal\fh.png" hotimage="images\normal\fhed.png" pushedimage="images\normal\fhed.png"/>
-         </HorizontalLayout> 
+         </HorizontalLayout>
 
       </HorizontalLayout>
 
@@ -101,10 +107,11 @@
             <WebBrowser name="sp"   homepage="http://lan.chinau.video/"  autonavi="true" delaycreate="false" />
             <WebBrowser name="wb"   homepage="http://lan.chinau.shuoshuo/"  autonavi="true" delaycreate="false" />
             <WebBrowser name="yxk"   homepage="http://lan.chinau.game/"  autonavi="true" delaycreate="false" />
+            <WebBrowser name="zb"   homepage="http://lan.chinau.live/"  autonavi="true" delaycreate="false" />
             <WebBrowser name="start"   homepage="http://lan.chinau.game.newslist/site/index?game_id="  autonavi="false" delaycreate="false" />
     </TabLayout>
   </VerticalLayout>
-  
+
     </HorizontalLayout>
 
 

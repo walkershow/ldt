@@ -8,6 +8,8 @@ int g_port;
 int g_runtimes;
 CDataSync *g_pDSync  ;
 CBGThread *g_pBGTread;
+CString g_strPwd;
+bool g_bShouldUpdateUserData;
 
 CString GetLocalVersion()
 {
@@ -66,7 +68,7 @@ int APIENTRY _tWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lpCm
 {
 // 	CPaintManagerUI::SetResourceZip(_T("testui.zip"));
 
-	if(::__argc <2)
+	if(::__argc <3)
 	{
 		return 0;
 	}
@@ -78,6 +80,8 @@ int APIENTRY _tWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lpCm
 	}
 	g_strUserID = strUserID;
 	g_strUserAcct = strUserAcct;
+	g_strPwd = ::__targv[3];
+	g_bShouldUpdateUserData = false;
 // 	g_strUserID = _T("100");
 // 	g_strUserAcct = _T("test200");
 
@@ -100,6 +104,8 @@ int APIENTRY _tWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lpCm
 		exit(1);
 	}
 	CGameManage::GetInstance().CreateUser();
+
+
 	CFrameWnd *pFrame = new CFrameWnd(_T("UISkin2.xml"));
 	pFrame->Create(NULL, _T("6A游戏数据研究中心"), UI_WNDSTYLE_FRAME, WS_EX_WINDOWEDGE);
 

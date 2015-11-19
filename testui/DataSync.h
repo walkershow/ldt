@@ -20,7 +20,8 @@ public:
 	bool PostData(const CString& sUrl, char* data, int datalen);
 	int GetUserData();
 	void SyncUser(CString url);
-
+	int Login();
+	void PostUserData();
 private:
 	bool GetData(const CString& sUrl);
 	CString CrackUrl(CString sUrl);
@@ -48,8 +49,17 @@ private:
 					bOK = true ;
 			}
 		}
+		else if(r.m_status_code == HTTP_STATUS_FORBIDDEN)
+		{
+			::SendMessage(m_HwndNotify, WM_AUTH_FAILED, 0, 0 );
+		}
+		else if(r.m_status_code == HTTP_STATUS_BAD_REQUEST)
+		{
+			::SendMessage(m_HwndNotify, WM_VER_WRONG, 0, 0 );
+		}
 		else
 		{
+			CGameManage::GetInstance().GetSQLite().RollbackTransaction(); 
 			CLog::getInstance()->AgentLog(_T("server:%s,port:%d http exp happend status code:%d"),(LPTSTR)(LPCTSTR)m_server, m_port, r.m_status_code);
 		}
 
@@ -88,9 +98,22 @@ private:
 			}
 			else if(url.Find(_T("puinfo"))!=-1)
 			{
+				//HandleUserData(receive_data);
+				CGameManage::GetInstance().GetSQLite().CommitTransaction(); 
+				::SendMessage(m_HwndNotify, WM_GAME_RESETNICKNAME, 0, 0 );
+				::SendMessage(m_HwndNotify, WM_GAME_RESETHEAD, 0, 0 );
+
+			}
+			else if(url.Find(_T("guinfo"))!=-1)
+			{
 				HandleUserData(receive_data);
 				::SendMessage(m_HwndNotify, WM_GAME_RESETNICKNAME, 0, 0 );
 				::SendMessage(m_HwndNotify, WM_GAME_RESETHEAD, 0, 0 );
+
+			}
+			else if(url.Find(_T("account"))!=-1)
+			{
+				HandleLoginRsp(receive_data);
 
 			}
 
@@ -101,6 +124,8 @@ private:
 	int HandleProgmd5(const string& data);
 	int HandleProg_to_Game_ByProgmd5(const string& data);
 	int HandleUserData(const string& data);
+
+	int HandleLoginRsp(const string& data);
 private:
 	CString m_server;
 	int m_port;

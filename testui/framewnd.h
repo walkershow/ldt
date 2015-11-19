@@ -85,6 +85,7 @@ private:
 	CWebBrowserUI* pWB;
 	CWebBrowserUI* pYXK;
 	CWebBrowserUI* pSTART;
+	CWebBrowserUI* pZB;
 	CList_Game m_Listgame;
 	CPopWnd* m_pPopWnd;
 	CListUI* m_pList;

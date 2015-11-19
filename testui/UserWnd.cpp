@@ -36,6 +36,7 @@ void CUserWnd::OnSelect( TNotifyUI &msg )
 	sName.MakeLower();
 	if(sName == _T("cbyear") )
 	{
+		m_vecPCBox[3]->SelectItem(0,true);
 		SetDay();
 		SetAgeXZSX();
 
@@ -87,6 +88,7 @@ void CUserWnd::SetDay()
 		new_node->SetTag(i);
 		m_vecPCBox[4]->Add(new_node);
 	}
+	m_vecPCBox[4]->SelectItem(0,true);
 	CLabelUI *pLbl = static_cast<CLabelUI*>(m_PaintManager.FindControl(_T("lblnn")));
 	CDate birth(year, mon, 1);
 	birth.GetAge();
@@ -261,57 +263,60 @@ void CUserWnd::OnClick( TNotifyUI &msg )
 			m_bShouldSave = false;
 			m_bShouldSaveImage = false;
 		}
-		int userid = _ttoi((LPCTSTR)g_strUserID);
-		SQLiteDataReader sdr = CGameManage::GetInstance().GetUser(userid);
-		bool bRet = sdr.Read();
-		if(!bRet) return;
-		int sexindex = -1;
-		sexindex = sdr.GetIntValue(14);
-		CString bt = sdr.GetStringValue(2);
-		int mon,year,day;
-		year = sdr.GetIntValue(4);
-		mon = sdr.GetIntValue(5);
-		day = sdr.GetIntValue(6);
+		g_pDSync->PostUserData();
+// 		int userid = _ttoi((LPCTSTR)g_strUserID);
+// 		SQLiteDataReader sdr = CGameManage::GetInstance().GetUser(userid);
+// 		bool bRet = sdr.Read();
+// 		if(!bRet) return;
+// 		int sexindex = -1;
+// 		sexindex = sdr.GetIntValue(14);
+// 		CString bt = sdr.GetStringValue(2);
+// 		int mon,year,day;
+// 		year = sdr.GetIntValue(4);
+// 		mon = sdr.GetIntValue(5);
+// 		day = sdr.GetIntValue(6);
+// // 
+// // 		CString country = m_vecPCBox[5]->GetText();
+// // 		int countryindex = m_vecPCBox[5]->GetCurSel();
+// 		int countryid = 86;
+// 		int provid=0;
+// 		int cityid=0;
+// 		int areaid=0;
 // 
-// 		CString country = m_vecPCBox[5]->GetText();
-// 		int countryindex = m_vecPCBox[5]->GetCurSel();
-		int countryid = 86;
-		int provid=0;
-		int cityid=0;
-		int areaid=0;
-
-		CString prov = m_vecPCBox[6]->GetText();
-		int provindex = sdr.GetIntValue(12);
-		CControlUI* pctrl = m_vecPCBox[6]->GetItemAt(provindex);
-		if(pctrl != NULL) 
-		 provid = pctrl->GetTag();
-
-		CString city = m_vecPCBox[7]->GetText();
-		int cityindex = sdr.GetIntValue(13);
-		pctrl = m_vecPCBox[7]->GetItemAt(cityindex);
-		if(pctrl != NULL) 
-			cityid = pctrl->GetTag();
-		
-		CString area = m_vecPCBox[8]->GetText();
-		int areaindex = sdr.GetIntValue(19);
-		pctrl = m_vecPCBox[8]->GetItemAt(areaindex);
-		if(pctrl != NULL) 
-			areaid = pctrl->GetTag();
-		
-		CString nickname = sdr.GetStringValue(10);
-		if(m_bShouldSaveImage)
-		{
-			m_headerid = 0;
-		}
-
-		CString strPostData;
-		strPostData.Format(_T("{\"nickname\":\"%s\", \"sex\":%d,\"bt\":\"%s\",\"country\":%d,\"provid\":%d,\"cityid\":%d,\"areaid\":%d,\"year\":%d,\"mon\":%d,\"day\":%d,\"imageid\":%d,\"imagehis\":\"%s\",\"acctid\":\"%s\"}"),
-			nickname,sexindex+1, bt, countryid, provid, cityid, areaid, year, mon, day, m_headerid, m_headerhis, g_strUserID);
-		int len = 0;
-		char* buf = UnicodeToUtf8((LPTSTR)(LPCTSTR)strPostData, len);
+// 		CString prov = m_vecPCBox[6]->GetText();
+// 		int provindex = sdr.GetIntValue(12);
+// 		CControlUI* pctrl = m_vecPCBox[6]->GetItemAt(provindex);
+// 		if(pctrl != NULL) 
+// 		 provid = pctrl->GetTag();
+// 
+// 		CString city = m_vecPCBox[7]->GetText();
+// 		int cityindex = sdr.GetIntValue(13);
+// 		pctrl = m_vecPCBox[7]->GetItemAt(cityindex);
+// 		if(pctrl != NULL) 
+// 			cityid = pctrl->GetTag();
+// 		
+// 		CString area = m_vecPCBox[8]->GetText();
+// 		int areaindex = sdr.GetIntValue(19);
+// 		pctrl = m_vecPCBox[8]->GetItemAt(areaindex);
+// 		if(pctrl != NULL) 
+// 			areaid = pctrl->GetTag();
+// 		
+// 		CString nickname = sdr.GetStringValue(10);
+// 		if(m_bShouldSaveImage)
+// 		{
+// 			m_headerid = 0;
+// 		}
+// 
+// 		CString strPostData;
+// 		strPostData.Format(_T("{\"nickname\":\"%s\", \"sex\":%d,\"bt\":\"%s\",\"country\":%d,\"provid\":%d,\"cityid\":%d,\"areaid\":%d,\"year\":%d,\"mon\":%d,\"day\":%d,\"imageid\":%d,\"imagehis\":\"%s\",\"acctid\":\"%s\"}"),
+// 			nickname,sexindex+1, bt, countryid, provid, cityid, areaid, year, mon, day, m_headerid, m_headerhis, g_strUserID);
+// 		int len = 0;
+// 		char* buf = UnicodeToUtf8((LPTSTR)(LPCTSTR)strPostData, len);
 		//UTF8toANSI(strPostData);
-		//g_pDSync->PostData(_T("http://192.168.1.62:80/puinfo"), buf, len);
-		g_pDSync->PostData(_T("http://192.168.1.62:80/user?name=1"), buf, len);
+// 		CString urlPost;
+// 		urlPost.Format(_T("http://192.168.1.62:80/puinfo?userid=%s&tok=%s"), g_strUserID, g_strToken);
+// 		g_pDSync->PostData(urlPost, buf, len);
+		//g_pDSync->PostData(_T("http://192.168.1.62:80/user?name=1"), buf, len);
 		CString synurl;
 		synurl.Format(_T("http://lan.chinau.member/api/member/syn?id=%s"), g_strUserID);
 		g_pDSync->SyncUser(synurl);
@@ -385,7 +390,27 @@ void CUserWnd::OnClick( TNotifyUI &msg )
 		int sexindex = m_vecPCBox[0]->GetCurSel();
 		int btindex = m_vecPCBox[1]->GetCurSel();
 		
-		bool bRet =	CGameManage::GetInstance().SetUser(g_strUserID, g_strUserAcct, bt,sex,year,mon,day,country,prov,city,nickname, countryindex, provindex, cityindex,  btindex, sexindex,m_headerid, m_headerhis,area,areaindex);
+		int countryid = 86;
+		int provid=0;
+		int cityid=0;
+		int areaid=0;
+
+		pctrl = m_vecPCBox[6]->GetItemAt(provindex);
+		if(pctrl != NULL) 
+			provid = pctrl->GetTag();
+
+		pctrl = m_vecPCBox[7]->GetItemAt(cityindex);
+		if(pctrl != NULL) 
+			cityid = pctrl->GetTag();
+
+		pctrl = m_vecPCBox[8]->GetItemAt(areaindex);
+		if(pctrl != NULL) 
+			areaid = pctrl->GetTag();
+
+		CGameManage::GetInstance().GetSQLite().BeginTransaction(); 
+		bool bRet =	CGameManage::GetInstance().SetUser(g_strUserID, g_strUserAcct, bt,sex,year,mon,day,country,prov,city,nickname, 
+														countryindex, provindex, cityindex,  btindex, sexindex,m_headerid, m_headerhis,area,areaindex,
+														countryid, provid, cityid, areaid);
 
 		m_pDate->SetVisible();
 		m_pSzd->SetVisible();
@@ -685,14 +710,16 @@ void CUserWnd::InitCtrlVal()
 		if(mon!=0)
 		{
 			str.Format(_T("%dÔÂ"),sdr.GetIntValue(5));
+			strdate += str;
+
 		}
-		strdate += str;
 		//m_vecPLbl[4]->SetText(str);
 		if( day !=0)
 		{
 			str.Format(_T("%dÈÕ"),sdr.GetIntValue(6));
+			strdate += str;
 		}
-		strdate += str;
+		
 		//m_vecPLbl[5]->SetText(str);
 
 		m_pDate->SetText(strdate);
