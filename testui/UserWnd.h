@@ -29,7 +29,6 @@ public:
 	void InitCity(int idx);
 	void InitProv();
 	void InitArea(int nSel);
-
 	DUI_DECLARE_MESSAGE_MAP()
 		virtual void OnClick(TNotifyUI& msg);
 		void OnSelect( TNotifyUI &msg );

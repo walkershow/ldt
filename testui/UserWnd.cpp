@@ -255,7 +255,7 @@ void CUserWnd::OnClick( TNotifyUI &msg )
 	{
 		if(!m_bShouldSave && !m_bShouldSaveImage)  
 		{
-			__super::OnClick(msg);
+			::ShowWindow(GetHWND(), SW_HIDE);
 			return;
 		}
 		else 
@@ -264,62 +264,10 @@ void CUserWnd::OnClick( TNotifyUI &msg )
 			m_bShouldSaveImage = false;
 		}
 		g_pDSync->PostUserData();
-// 		int userid = _ttoi((LPCTSTR)g_strUserID);
-// 		SQLiteDataReader sdr = CGameManage::GetInstance().GetUser(userid);
-// 		bool bRet = sdr.Read();
-// 		if(!bRet) return;
-// 		int sexindex = -1;
-// 		sexindex = sdr.GetIntValue(14);
-// 		CString bt = sdr.GetStringValue(2);
-// 		int mon,year,day;
-// 		year = sdr.GetIntValue(4);
-// 		mon = sdr.GetIntValue(5);
-// 		day = sdr.GetIntValue(6);
-// // 
-// // 		CString country = m_vecPCBox[5]->GetText();
-// // 		int countryindex = m_vecPCBox[5]->GetCurSel();
-// 		int countryid = 86;
-// 		int provid=0;
-// 		int cityid=0;
-// 		int areaid=0;
-// 
-// 		CString prov = m_vecPCBox[6]->GetText();
-// 		int provindex = sdr.GetIntValue(12);
-// 		CControlUI* pctrl = m_vecPCBox[6]->GetItemAt(provindex);
-// 		if(pctrl != NULL) 
-// 		 provid = pctrl->GetTag();
-// 
-// 		CString city = m_vecPCBox[7]->GetText();
-// 		int cityindex = sdr.GetIntValue(13);
-// 		pctrl = m_vecPCBox[7]->GetItemAt(cityindex);
-// 		if(pctrl != NULL) 
-// 			cityid = pctrl->GetTag();
-// 		
-// 		CString area = m_vecPCBox[8]->GetText();
-// 		int areaindex = sdr.GetIntValue(19);
-// 		pctrl = m_vecPCBox[8]->GetItemAt(areaindex);
-// 		if(pctrl != NULL) 
-// 			areaid = pctrl->GetTag();
-// 		
-// 		CString nickname = sdr.GetStringValue(10);
-// 		if(m_bShouldSaveImage)
-// 		{
-// 			m_headerid = 0;
-// 		}
-// 
-// 		CString strPostData;
-// 		strPostData.Format(_T("{\"nickname\":\"%s\", \"sex\":%d,\"bt\":\"%s\",\"country\":%d,\"provid\":%d,\"cityid\":%d,\"areaid\":%d,\"year\":%d,\"mon\":%d,\"day\":%d,\"imageid\":%d,\"imagehis\":\"%s\",\"acctid\":\"%s\"}"),
-// 			nickname,sexindex+1, bt, countryid, provid, cityid, areaid, year, mon, day, m_headerid, m_headerhis, g_strUserID);
-// 		int len = 0;
-// 		char* buf = UnicodeToUtf8((LPTSTR)(LPCTSTR)strPostData, len);
-		//UTF8toANSI(strPostData);
-// 		CString urlPost;
-// 		urlPost.Format(_T("http://192.168.1.62:80/puinfo?userid=%s&tok=%s"), g_strUserID, g_strToken);
-// 		g_pDSync->PostData(urlPost, buf, len);
-		//g_pDSync->PostData(_T("http://192.168.1.62:80/user?name=1"), buf, len);
 		CString synurl;
 		synurl.Format(_T("http://lan.chinau.member/api/member/syn?id=%s"), g_strUserID);
 		g_pDSync->SyncUser(synurl);
+		::ShowWindow(GetHWND(), SW_HIDE);
 		
 	}
 	else if(sName == _T("btnedit") )
@@ -518,7 +466,7 @@ void CUserWnd::OnClick( TNotifyUI &msg )
 	{
 		m_bShouldSaveImage =false;
 	}
-	__super::OnClick(msg);
+	//__super::OnClick(msg);
 }
 
 void CUserWnd::SetUsedTx()

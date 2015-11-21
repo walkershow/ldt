@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes" ?>
-<Window size="1041,616" caption="0,0,0,32" mininfo="1041,616" maxinfo="1041,616"  roundcorner="4,4" showshadow="true" shadowimage="images\shadow.png" shadowcorner="23,13,23,33">
+<Window size="1043,620" caption="0,0,0,32" mininfo="1043,620" maxinfo="1043,620"  roundcorner="4,4" showshadow="true" shadowimage="images\shadow.png" shadowcorner="23,13,23,33">
     <!-- <Font name="微软雅黑" size="13" bold="true" /> -->
     <Font name="微软雅黑" size="12" bold="false" default="true" />
-    <VerticalLayout width="1041" height="616" bkimage="images\bj.png" bkcolor="#ffffffff" bordercolor="#EE768D9B" bordersize="1" borderround="4,4" corner="4,4" >
+    <VerticalLayout width="1043" height="620" bkimage="images\bj01.png" bkcolor="#ffffffff" bordercolor="#EE768D9B" bordersize="1" borderround="4,4" corner="4,4" >
       <!-- <TabLayout name="toolbar" height="42" > -->
       <HorizontalLayout name="toolbar_main" height="26"  float="false"  >
          <!-- <VerticalLayout  name="" text="" float="false" /> -->
           <!-- <VerticalLayout  name="" text="" float="false" width="128"> -->
-            <Button name="btnmenu" float="true" pos="944,1,0,0" width="32" height="24"  normalimage="images\normal\cd.png" hotimage="images\push\cd.png" pushedimage="images\push\cd.png"/>
-            <Button name="minbtn" float="true" pos="976,1,0,0" width="32" height="24" normalimage="images\normal\sx.png" hotimage="images\push\sx.png" selectedimage="images\normal\sx.png"/>
-            <Button name="closebtn" float="true" pos="1008,1,0,0" width="32" height="24" normalimage="images\normal\gb.png" hotimage="images\push\gb.png" selectedimage="images\normal\gb.png"/>
+            <Button name="btnmenu" float="true" pos="946,1,0,0" width="32" height="24"  normalimage="images\normal\cd.png" hotimage="images\push\cd.png" pushedimage="images\push\cd.png"/>
+            <Button name="minbtn" float="true" pos="978,1,0,0" width="32" height="24" normalimage="images\normal\sx.png" hotimage="images\push\sx.png" selectedimage="images\normal\sx.png"/>
+            <Button name="closebtn" float="true" pos="1010,1,0,0" width="32" height="24" normalimage="images\normal\gb.png" hotimage="images\push\gb.png" selectedimage="images\normal\gb.png"/>
 <!--             <Button name="closebtn" float="true" pos="1006,2,0,0" width="32" height="24" normalimage="file='images\normal\close.png' source='0,0,45,29'" hotimage="file='images\normal\close.png' source='45,0,90,29'" selectedimage="images\normal\close.png"/> -->
             <!-- <Button name="" text="" width="32" height="24"  normalimage="images\normal\fh.png" hotimage="images\normal\fh.png" /> -->
             <!-- <Button name="" text="" padding="32,0,0,0" width="32" height="24"  normalimage="images\normal\设置.png" hotimage="images\push\设置.png" /> -->
@@ -70,7 +70,7 @@
              <Button name="btnzb_close"  userdata="zb" visible= "true" float="true"  pos="-19,5,-8,17"  hotimage="images\hot\qljmhc.png" selectedimage="images\normal\gb.png" />
 
           </HorizontalLayout>
-         <HorizontalLayout name="IContainer"  visible="false" float="false" padding="270,0,0,0"  maxwidth="49">
+         <HorizontalLayout name="IContainer" visible="false"  float="false" padding="270,0,0,0"  maxwidth="49">
          <Button name="btnim" width="49" height="49"   userdata="C:\Users\Administrator\Desktop\华游_150717\release\qtim.exe"  normalimage="images\normal\goim.png" hotimage="images\normal\goim.png" pushedimage="images\normal\goim.png"/>
          </HorizontalLayout>
           <HorizontalLayout name="IContainer"  float="false" padding="339,0,0,0"  maxwidth="92">
@@ -101,9 +101,11 @@
 
 
    <VerticalLayout  width="885">
-     <TabLayout name="body_main_tablayout"  float="true"  pos="5,0,0,0" width="885" height="538">
-            <WebBrowser name="index"  userdata="http://lan.chinau.member/ssot/login?" homepage="http://lan.chinau.change/" autonavi="true" delaycreate="false" />
-            <WebBrowser name="zx"   homepage="http://lan.chinau.news" autonavi="true" delaycreate="false" bkimage="images\nybj.png"/>
+     <TabLayout name="body_main_tablayout" float="true"  pos="7,2,0,0" width="885" height="538">
+                <WebBrowser name="index"   userdata="http://lan.chinau.member/ssot/login?" homepage="http://lan.chinau.change" autonavi="true" delaycreate="false" />
+
+            <WebBrowser name="zx" homepage="http://lan.chinau.news" autonavi="true" delaycreate="false" />
+
             <WebBrowser name="sp"   homepage="http://lan.chinau.video/"  autonavi="true" delaycreate="false" />
             <WebBrowser name="wb"   homepage="http://lan.chinau.shuoshuo/"  autonavi="true" delaycreate="false" />
             <WebBrowser name="yxk"   homepage="http://lan.chinau.game/"  autonavi="true" delaycreate="false" />

@@ -31,6 +31,9 @@ public:
 	int AddNewGame( CString filePath);
 	void SetFrameHwnd(HWND hWnd);
 	void SetPopHwnd(HWND hWnd);
+	CListContainerElementUIex* GetCurNode(){return m_pCurNode;}
+	void SetUnSelected();
+
 	DUI_DECLARE_MESSAGE_MAP()
 	virtual void OnClick(TNotifyUI& msg);
 	virtual void OnItemClick( TNotifyUI &msg );
@@ -44,10 +47,14 @@ private:
 	HWND m_frameHwnd;
 	HWND m_popHwnd;
 	bool m_bSomeOneSelected;
+	CListContainerElementUIex* m_pCurNode;
 };
 
 
 class CPopWnd;
+class CTaskWnd;
+class CUserWnd;
+
 class CFrameWnd: public CXMLWnd, public CWebBrowserEventHandler
 {
 public:
@@ -88,8 +95,11 @@ private:
 	CWebBrowserUI* pZB;
 	CList_Game m_Listgame;
 	CPopWnd* m_pPopWnd;
+	CUserWnd* m_pUserWnd;
+	CTaskWnd* m_pTaskWnd;
 	CListUI* m_pList;
 	CControlUI* m_pLastKsBtn;
+	COptionUI* m_pLastOpt;
 	CHorizontalLayoutUI* m_addnewgame;
 	CButtonUI* m_pBtntx;
 	CLabelUI* m_pLblNickName;

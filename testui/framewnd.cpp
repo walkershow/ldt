@@ -26,15 +26,18 @@ DUI_ON_MSGTYPE(DUI_MSGTYPE_CLICK,OnClick)
 DUI_ON_MSGTYPE(DUI_MSGTYPE_ITEMCLICK,OnItemClick)
 // DUI_ON_MSGTYPE(DUI_MSGTYPE_ITEMSELECT,OnItemSelect)
 DUI_END_MESSAGE_MAP()
+
 static CWebBrowserUI* s_cur_webbrowser_ptr=NULL;
 static bool s_need_reload = false;
 static CString s_selected_filepath;
+
 CList_Game::CList_Game()
 {
 	m_pPaintManager = NULL;
 	m_pLastKsBtn = NULL;
 	m_pWebBrowser = NULL;
 	m_popHwnd = NULL;
+	m_pCurNode = NULL;
 	m_bSomeOneSelected = false;
 	m_nCurCount = 0;
 	//m_pDSync = new CDataSync(g_server, g_port, g_strUserID, m_frameHwnd);
@@ -69,6 +72,7 @@ void CList_Game::OnClick(TNotifyUI& msg)
 		CHorizontalLayoutUI* pNodeContainer = static_cast<CHorizontalLayoutUI*>(msg.pSender->GetParent());
 		CListContainerElementUIex* pNode = static_cast<CListContainerElementUIex*>(pNodeContainer->GetParent());
 		m_bSomeOneSelected  = pNode->Select();
+		m_pCurNode = pNode;
 		CControlUI* pKs = pNode->FindSubControl(_T("btn_ks"));
 		if(pKs!=NULL)
 		{
@@ -219,6 +223,14 @@ void CList_Game::OnItemClick( TNotifyUI &msg )
 	}
 }
 
+void CList_Game::SetUnSelected()
+{
+	if(m_pLastKsBtn !=	NULL)
+		m_pLastKsBtn->SetVisible(false);
+	if(m_pCurNode !=	NULL)
+		m_pCurNode->Select(false);
+}
+
 void CList_Game::Reset()
 {
 	m_pList->RemoveAll();
@@ -359,7 +371,7 @@ CList_Game::~CList_Game()
 //////////////////////////////////////////////////////////////////////////
 ///
 
-CFrameWnd::CFrameWnd( LPCTSTR pszXMLPath ): CXMLWnd(pszXMLPath),m_pPopWnd(NULL)
+CFrameWnd::CFrameWnd( LPCTSTR pszXMLPath ): CXMLWnd(pszXMLPath),m_pPopWnd(NULL),m_pUserWnd(NULL),m_pTaskWnd(NULL)
 {
 	m_pWebBrowser = NULL;
 	pINDEX = NULL;
@@ -436,7 +448,6 @@ void CFrameWnd::InitWindow()
 	pINDEX->Navigate2(_T("about:blank"));
 	pINDEX->Navigate2(strLoginSSO);
 
-	//pINDEX->Navigate2(pINDEX->GetHomePage());
 
 	pZX->SetWebBrowserEventHandler(this);
 	pSP->SetWebBrowserEventHandler(this);
@@ -474,6 +485,11 @@ void CFrameWnd::InitWindow()
 	m_vec_btntext.push_back(_T("btnwb"));
 	m_vec_btntext.push_back(_T("btnyxk"));
 	m_vec_btntext.push_back(_T("btnzb"));
+
+	CControlUI* pItem = m_PaintManager.FindControl(m_vec_btntext[0].c_str());
+	COptionUI* pui =  static_cast<COptionUI*>(pItem);
+	pui->Selected(true);
+	m_pLastOpt = pui;
 
 	m_pWebBrowser= pINDEX;
 	s_cur_webbrowser_ptr = m_pWebBrowser;
@@ -587,8 +603,15 @@ void CFrameWnd::Notify( TNotifyUI& msg )
 		CControlUI* pItem = m_PaintManager.FindControl(msg.pSender->GetUserData());
 		pTabLayout->SelectItem(pItem);
 
+
+
 		if(pItem!=NULL)
 		{
+			COptionUI* pOpt =  static_cast<COptionUI*>(msg.pSender);
+			m_pLastOpt = pOpt;
+			
+			m_Listgame.SetUnSelected();
+
 			m_cur_selected = pItem->GetName().GetData();
 			m_pWebBrowser = static_cast<CWebBrowserUI*>(pItem);
 			s_cur_webbrowser_ptr = m_pWebBrowser;	
@@ -646,20 +669,31 @@ void CFrameWnd::Notify( TNotifyUI& msg )
 		}
 		else if(msg.pSender->GetName() == _T("btntx"))
 		{
-			CUserWnd  *pUserWnd= new CUserWnd(_T("userwnd.xml"));
-			pUserWnd->Create(GetHWND(), _T("用户信息"), WS_POPUP | WS_VISIBLE, WS_EX_TOOLWINDOW );
-			pUserWnd->SetParent(GetHWND());
-			pUserWnd->CenterWindow();
-			::ShowWindow(*pUserWnd, SW_SHOW);
+			if( m_pUserWnd == NULL )
+			{
+				m_pUserWnd= new CUserWnd(_T("userwnd.xml"));
+				m_pUserWnd->Create(GetHWND(), _T("用户信息"), WS_POPUP | WS_VISIBLE, WS_EX_TOOLWINDOW | WS_EX_TOPMOST);
+				m_pUserWnd->SetParent(GetHWND());
+				m_pUserWnd->CenterWindow();
+
+			}
+			if(m_pUserWnd != NULL)
+				::ShowWindow(*m_pUserWnd, SW_SHOW);
+	
+			
 		}
 		else if(msg.pSender->GetName() == _T("btnim"))
 		{
+			if( m_pTaskWnd == NULL )
+			{
+				m_pTaskWnd = new CTaskWnd(_T("taskwnd.xml"));
+				m_pTaskWnd->Create(GetHWND(), _T("任务信息"), WS_POPUP | WS_VISIBLE, WS_EX_TOOLWINDOW| WS_EX_TOPMOST );
+				m_pTaskWnd->SetParent(GetHWND());
+				m_pTaskWnd->CenterWindow();
 
-			CTaskWnd  *pTaskWnd= new CTaskWnd(_T("taskwnd.xml"));
-			pTaskWnd->Create(GetHWND(), _T("任务信息"), WS_POPUP | WS_VISIBLE, WS_EX_TOOLWINDOW );
-			pTaskWnd->SetParent(GetHWND());
-			pTaskWnd->CenterWindow();
-			::ShowWindow(*pTaskWnd, SW_SHOW);
+			}
+			if(m_pTaskWnd != NULL)
+				::ShowWindow(*m_pTaskWnd, SW_SHOW);
 
 		}
 	}
@@ -696,8 +730,6 @@ void CFrameWnd::OnHotKey(WPARAM wp,LPARAM lp)
 
 CControlUI* CFrameWnd::CreateControl( LPCTSTR pstrClassName )
 {
-
-
 	if (_tcsicmp(pstrClassName, _T("Wnd")) == 0)
 	{
 
@@ -878,21 +910,24 @@ LRESULT CFrameWnd::HandleMessage( UINT uMsg,WPARAM wParam,LPARAM lParam )
 //修改http 头user-agent 然后发消息重新浏览
 void CFrameWnd::BeforeNavigate2( IDispatch *pDisp,VARIANT *&url,VARIANT *&Flags,VARIANT *&TargetFrameName,VARIANT *&PostData,VARIANT *&Headers,VARIANT_BOOL *&Cancel )
 {
-	CString strTest,strOut;
-
-	TCHAR szUrl[MAX_PATH] = {0};
+	TCHAR szUrl[2048] = {0};
 	_tcscpy( szUrl, (TCHAR*)(_bstr_t)url );
 	CString urlSS=szUrl;
 	//urlSS+=szUrl;
 
 	OutputDebugString(urlSS+"\r\n");
 	int pos = -1;
+	if (urlSS.Find(pSTART->GetHomePage())!=-1)
+	{
+		m_pLastOpt->Selected(false);
+	}
 	for(int i=0; i<m_vec_url.size(); i++)
 	{
 		wstring str =m_vec_url[i].c_str();
 		CString strHome = m_pWebBrowser->GetHomePage();
-		if(urlSS.Find(str.c_str()) !=-1 && strHome.Find(str.c_str()) == -1 && urlSS.Find(_T("iframe=1"))==-1)
+		if(urlSS.Find(str.c_str()) !=-1 && strHome.Find(str.c_str()) == -1 && urlSS.Find(_T("iframe=1"))==-1 )
 		{
+
 			*Cancel = TRUE;
 			pos = i;
 			break;
@@ -903,7 +938,7 @@ void CFrameWnd::BeforeNavigate2( IDispatch *pDisp,VARIANT *&url,VARIANT *&Flags,
 		CControlUI* pItem = m_PaintManager.FindControl(m_vec_btntext[pos].c_str());
 		COptionUI* pui =  static_cast<COptionUI*>(pItem);
 		pui->Selected(true);
-
+		m_pLastOpt = pui;
 		CTabLayoutUI* pTabLayout = static_cast<CTabLayoutUI*>(m_PaintManager.FindControl(_T("body_main_tablayout")));
 		CControlUI* pItem2 = m_PaintManager.FindControl(m_vec_wbtext[pos].c_str());
 		pTabLayout->SelectItem(pItem2);
@@ -956,7 +991,7 @@ void CFrameWnd::JumpToIndex(const CString& name)
 	CControlUI* pItem = m_PaintManager.FindControl(_T("btnindex"));
 	COptionUI* pui =  static_cast<COptionUI*>(pItem);
 	pui->Selected(true);
-
+	m_pLastOpt = pui;
 	CTabLayoutUI* pTabLayout = static_cast<CTabLayoutUI*>(m_PaintManager.FindControl(_T("body_main_tablayout")));
 	CControlUI* pItem2 = m_PaintManager.FindControl(_T("index"));
 	pTabLayout->SelectItem(pItem2);
@@ -968,6 +1003,7 @@ void CFrameWnd::JumpToYXK()
 	CControlUI* pItem = m_PaintManager.FindControl(_T("btnyxk"));
 	COptionUI* pui =  static_cast<COptionUI*>(pItem);
 	pui->Selected(true);
+	m_pLastOpt = pui;
 
 	CTabLayoutUI* pTabLayout = static_cast<CTabLayoutUI*>(m_PaintManager.FindControl(_T("body_main_tablayout")));
 	CControlUI* pItem2 = m_PaintManager.FindControl(_T("yxk"));

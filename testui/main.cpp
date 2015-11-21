@@ -3,6 +3,8 @@
 #include "GameManage.h"
 #include "DataSync.h"
 #include "helper.h"
+#include "../version.h"
+#include <Dbghelp.h>
 CString g_server;
 int g_port;
 int g_runtimes;
@@ -13,7 +15,7 @@ bool g_bShouldUpdateUserData;
 
 CString GetLocalVersion()
 {
-	return "1.0";
+	return VERSION_NUMBER;
 }
 
 
@@ -64,6 +66,42 @@ CString CreateUserDB(CString appPath)
 	return strUserDBPath;
 }
 
+LONG WINAPI ExpFilter(struct _EXCEPTION_POINTERS *pExp)
+{
+	HANDLE hFile = ::CreateFile(
+		_T("c:\\123.dmp"),
+		GENERIC_WRITE, 
+		0, 
+		NULL, 
+		CREATE_ALWAYS, 
+		FILE_ATTRIBUTE_NORMAL, 
+		NULL);
+	if(INVALID_HANDLE_VALUE != hFile)
+	{
+		MINIDUMP_EXCEPTION_INFORMATION einfo;
+		einfo.ThreadId			= ::GetCurrentThreadId();
+		einfo.ExceptionPointers	= pExp;
+		einfo.ClientPointers	= FALSE;
+
+		::MiniDumpWriteDump(
+			::GetCurrentProcess(), 
+			::GetCurrentProcessId(), 
+			hFile, 
+			MiniDumpWithFullMemory, 
+			&einfo, 
+			NULL, 
+			NULL);
+		::CloseHandle(hFile);
+	}
+
+	return EXCEPTION_EXECUTE_HANDLER;
+}
+
+void StartUnhandledExceptionFilter()
+{
+	::SetUnhandledExceptionFilter(ExpFilter);
+}
+
 int APIENTRY _tWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lpCmdLine, int nCmdShow)
 {
 // 	CPaintManagerUI::SetResourceZip(_T("testui.zip"));
@@ -72,6 +110,7 @@ int APIENTRY _tWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lpCm
 	{
 		return 0;
 	}
+	StartUnhandledExceptionFilter();
 	CString strUserID = ::__targv[1];
 	CString strUserAcct = ::__targv[2];
 	if(!is_user_login(strUserAcct))

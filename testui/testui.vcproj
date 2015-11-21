@@ -61,6 +61,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
+				AdditionalDependencies="Dbghelp.lib"
 				LinkIncremental="2"
 				AdditionalLibraryDirectories="D:\thirdpart\DuiLib_Redrain-master\DLL2008;D:\git\sqlite3Encrypt\Release;d:\code\curl\lib"
 				UACExecutionLevel="2"
@@ -138,6 +139,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
+				AdditionalDependencies="Dbghelp.lib"
 				LinkIncremental="1"
 				AdditionalLibraryDirectories="D:\thirdpart\DuiLib_Redrain-master\DLL2008;D:\thirdpart\DuiLib_Redrain-master\DLL2008;D:\git\sqlite3Encrypt\Release;d:\code\curl\lib"
 				IgnoreDefaultLibraryNames=""

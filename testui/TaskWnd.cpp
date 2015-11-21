@@ -45,8 +45,9 @@ void CTaskWnd::InitWindow()
 //修改http 头user-agent 然后发消息重新浏览
 void CTaskWnd::BeforeNavigate2( IDispatch *pDisp,VARIANT *&url,VARIANT *&Flags,VARIANT *&TargetFrameName,VARIANT *&PostData,VARIANT *&Headers,VARIANT_BOOL *&Cancel )
 {
-	static TCHAR *szUrl = new TCHAR[MAX_PATH];
-	ZeroMemory(szUrl, MAX_PATH);
+	//static TCHAR *szUrl = new TCHAR[MAX_PATH];
+	TCHAR szUrl[2048] = {0};
+	ZeroMemory(szUrl, 2048);
 	_tcscpy( szUrl, (TCHAR*)(_bstr_t)url );
 	CString urlSS=szUrl;
 	//urlSS+=szUrl;
@@ -56,7 +57,8 @@ void CTaskWnd::BeforeNavigate2( IDispatch *pDisp,VARIANT *&url,VARIANT *&Flags,V
 	if(urlSS.Find(strClose) !=-1)
 	{
 		*Cancel = TRUE;
-		Close(0);
+		::ShowWindow(GetHWND(), SW_HIDE);
+
 		return;
 		//::ShowWindow(GetHWND(), SW_HIDE);
 	}
@@ -65,7 +67,9 @@ void CTaskWnd::BeforeNavigate2( IDispatch *pDisp,VARIANT *&url,VARIANT *&Flags,V
 	{
 		*Cancel = TRUE;
 		::SendMessage(m_parentHwnd, WM_JUMP_FORTASK,(WPARAM)szUrl, 0 );
-		Close(0);
+		::ShowWindow(GetHWND(), SW_HIDE);
+
+		//Close(0);
 
 	}
 	
